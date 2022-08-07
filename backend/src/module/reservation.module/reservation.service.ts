@@ -1,34 +1,39 @@
 import { Injectable, UnauthorizedException, HttpException } from '@nestjs/common';
 import { Bike } from 'src/db/entities/bike.entity';
+import { Reservation } from 'src/db/entities/reservation.entity';
 import { User } from 'src/db/entities/user.entity';
 @Injectable()
-export class BikeService {
+export class ReservationService {
 
-    async getAllBikes(): Promise<any> {
+    async getAllReservations(): Promise<any> {
         try {
-            const bikes = await Bike.find({
-                relations: {
-                    reservations: true,
-                }
-            });
-            return { bikes, success: true }
+            const reservations = await Reservation.find();
+            return { reservations, success: true }
         } catch (error) {
             throw new Error(error);
         }
     }
 
-    async createBike({ name, color, location }): Promise<any> {
+    async createReservation({ bikeId, fromDate, toDate, userId }): Promise<any> {
         try {
-            const bike = new Bike();
-            bike.name = name;
-            bike.color = color;
-            bike.location = location;
-            await bike.save();
-            console.log(bike);
-            return { success: true, statusCode: 201 };
+            const bike = await Bike.findOne({ where: { id: bikeId } });
+            if (bike) {
+                const reservation = new Reservation();
+                reservation.bikeName = bike.name;
+                reservation.bikeId = bikeId;
+                reservation.fromDate = fromDate;
+                reservation.toDate = toDate;
+                reservation.userId = userId;
+                await reservation.save();
+                console.log(reservation);
+            }
+
+
+
         } catch (error) {
-            throw new HttpException(error.message, 400);
+
         }
+
     }
 
     // async getUser(token: string): Promise<any> {

@@ -6,6 +6,7 @@ import {
   Route,
 } from "react-router-dom";
 import SignUp from './components/Auth/SignUp';
+import Filter from './components/Home/Filter';
 
 function App() {
   return (
@@ -14,6 +15,7 @@ function App() {
       <Routes>
         <Route path="/login" element={<Login />}/>
         <Route path="/register" element={<SignUp />}/>
+        <Route path="/" element={<Filter />}/>
       </Routes>
     </BrowserRouter>
 
