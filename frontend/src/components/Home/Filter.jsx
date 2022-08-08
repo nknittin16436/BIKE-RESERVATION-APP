@@ -1,7 +1,6 @@
 import React from "react";
 import 'antd/dist/antd';
 import { DatePicker, Space } from "antd";
-import moment from 'moment';
 
 const { RangePicker } = DatePicker;
 

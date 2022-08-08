@@ -17,6 +17,6 @@ export class Bike extends BaseEntity {
     @Column({nullable:true,default:0})
     averageRating: number
 
-    @OneToMany(() => Reservation, (reservation) => reservation.user,{ nullable: true })
+    @OneToMany(() => Reservation, (reservation) => reservation.bike,{ nullable: true })
     reservations: Reservation[]
 }

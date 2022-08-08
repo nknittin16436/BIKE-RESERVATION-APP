@@ -5,9 +5,9 @@ import { User } from "./user.entity"
 @Entity()
 export class Reservation extends BaseEntity {
     @PrimaryGeneratedColumn("uuid")
-    id: number
+    id: string
 
-    @Column({nullable:true,default:true})
+    @Column({ nullable: true, default: true })
     status: boolean
 
     @Column()
@@ -16,10 +16,10 @@ export class Reservation extends BaseEntity {
     @Column()
     bikeId: string
 
-    @Column({nullable:true,default:0})
+    @Column({ nullable: true, default: 0 })
     rating: number
 
-    @Column({nullable:true,default:false})
+    @Column({ nullable: true, default: false })
     isRated: boolean
 
     @Column()
@@ -27,13 +27,15 @@ export class Reservation extends BaseEntity {
 
     @Column()
     toDate: string
-     
-    @Column()
-    userId:string
 
-    @ManyToOne(() => User, (user) => user.reservations,{ nullable: true })
+    @Column()
+    userId: string
+    @Column({nullable:true})
+    userName: string
+
+    @ManyToOne(() => User, (user) => user.reservations, { nullable: true })
     user: User
 
-    @ManyToOne(() => Bike, (bike) => bike.reservations,{ nullable: true })
+    @ManyToOne(() => Bike, (bike) => bike.reservations, { nullable: true })
     bike: Bike
 }

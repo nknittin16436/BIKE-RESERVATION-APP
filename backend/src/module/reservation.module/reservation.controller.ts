@@ -12,16 +12,16 @@ export class ReservationController {
     }
 
     // @UseGuards(RoleGuard)
-    @Post('')
-    createReservation(@Body() {bikeId,fromDate,toDate,userId}): any {
-        return this.reservationService.createReservation({bikeId,fromDate,toDate,userId});
+    @Get('/:id')
+    updateReservation(@Param('id') id: string): any {
+        return this.reservationService.updateReservation(id);
     }
 
     // // @UseGuards(RoleGuard)
-    // @Delete('/:id')
-    // deleteUser(@Param('id') id: string): any {
-    //     return this.reservationService.deleteUser(id);
-    // }
+    @Delete('/:id')
+    deleteUser(@Param('id') id: string): any {
+        return this.reservationService.deleteReservation(id);
+    }
     
 
     // @Get('/info')

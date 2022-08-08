@@ -6,7 +6,9 @@ import {
   Route,
 } from "react-router-dom";
 import SignUp from './components/Auth/SignUp';
-import Filter from './components/Home/Filter';
+import Home from './components/Home/Home';
+import AntdHome from './components/Home/AntdHome';
+import Reservation from './components/Reservation/Reservation';
 
 function App() {
   return (
@@ -15,7 +17,10 @@ function App() {
       <Routes>
         <Route path="/login" element={<Login />}/>
         <Route path="/register" element={<SignUp />}/>
-        <Route path="/" element={<Filter />}/>
+        <Route path="/" element={<Home />}/>
+        <Route path="/home" element={<Home />}/>
+        <Route path="/antd" element={<AntdHome />}/>
+        <Route path="/reservations" element={<Reservation />}/>
       </Routes>
     </BrowserRouter>
 

@@ -17,13 +17,15 @@ export class ReservationService {
     async createReservation({ bikeId, fromDate, toDate, userId }): Promise<any> {
         try {
             const bike = await Bike.findOne({ where: { id: bikeId } });
-            if (bike) {
+            const user = await User.findOne({ where: { id: userId } });
+            if (bike && user) {
                 const reservation = new Reservation();
                 reservation.bikeName = bike.name;
                 reservation.bikeId = bikeId;
                 reservation.fromDate = fromDate;
                 reservation.toDate = toDate;
                 reservation.userId = userId;
+                reservation.userName = user.name;
                 await reservation.save();
                 console.log(reservation);
             }
@@ -55,11 +57,14 @@ export class ReservationService {
 
 
 
-    async updateUser(id: string, name: string, email: string, role: string): Promise<any> {
+    async updateReservation(id: string): Promise<any> {
         try {
-            const user = await User.findOne({ where: { id: id } });
-            if (user) {
-                await User.update(id, { name, email, role });
+            const reservation = await Reservation.findOne({ where: { id: id } });
+            if (reservation) {
+                if (reservation.status) {
+
+                    await Reservation.update(id, { status: false });
+                }
                 return { success: true, statusCode: 200 }
             }
             else throw new HttpException('Unable to update user', 400);
@@ -68,11 +73,11 @@ export class ReservationService {
         }
     }
 
-    async deleteUser(id: string): Promise<any> {
+    async deleteReservation(id: string): Promise<any> {
         try {
-            const user = await User.findOne({ where: { id: id } });
-            if (user) {
-                await User.delete(id);
+            const reservation = await Reservation.findOne({ where: { id: id } });
+            if (reservation) {
+                await Reservation.delete(id);
                 return { success: true, statusCode: 200 }
             }
             else throw new HttpException('Unable to delete user', 400);
