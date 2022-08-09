@@ -1,4 +1,4 @@
-import { Body, Controller, Get, Post, Param, Delete, Patch, UseGuards ,Headers} from '@nestjs/common';
+import { Body, Controller, Get, Post, Param, Delete, Patch, UseGuards ,Headers, Query} from '@nestjs/common';
 // import { RoleGuard } from 'src/guards/role.guard';
 import { UserService } from './user.service';
 @Controller('/users')
@@ -22,10 +22,10 @@ export class UserController {
     }
 
     // // @UseGuards(RoleGuard)
-    // @Patch('/:id')
-    // doUserUpdate(@Param('id') id: string, @Body() { name, email, role }): any {
-    //     return this.userService.updateUser(id, name, email, role);
-    // }
+    @Patch('/:id')
+    doUserUpdate(@Param('id') id: string, @Body() { name, email, role }): any {
+        return this.userService.updateUser(id, name, email, role);
+    }
 
     // // @UseGuards(RoleGuard)
     // @Delete('/:id')

@@ -4,9 +4,9 @@ const url = "http://localhost:5000";
 
 
 
-export const getReservations = async () => {
+export const getBikes = async () => {
     try {
-        const res = await axios.get(`${url}/reservations`);
+        const res = await axios.get(`${url}/bikes`);
         console.log(res);
 
         return res.data;

@@ -2,7 +2,10 @@ import React, { useState } from "react";
 import "antd/dist/antd";
 import { Card, Button, Typography } from "antd";
 import "../../App.css";
-import { updateReservationStatus ,updateReservationRating} from "../../Service/ReservationService";
+import {
+  updateReservationStatus,
+  updateReservationRating,
+} from "../../Service/ReservationService";
 import { Rate } from "antd";
 const desc = ["terrible", "bad", "normal", "good", "wonderful"];
 const { Text } = Typography;
@@ -15,15 +18,15 @@ const ReservationCard = ({ reservation, getAllReservations }) => {
   const handleCancelReservation = async () => {
     const id = reservation.id;
     console.log(id);
-    await updateReservationStatus({ id});
+    await updateReservationStatus({ id });
     getAllReservations();
   };
 
   const submitReservationRating = async () => {
     const id = reservation.id;
-    console.log(rating,id);
-    await updateReservationRating({ id,rating });
-    getAllReservations();
+    console.log(rating, id);
+    await updateReservationRating({ id, rating });
+    await getAllReservations();
   };
 
   return (
@@ -33,15 +36,19 @@ const ReservationCard = ({ reservation, getAllReservations }) => {
       }}
       actions={[
         <div>
-          {!reservation.isRated ? (
-            <span>
-              <Rate tooltips={desc} onChange={setRating} value={rating} />
-              <Button type="success" onClick={submitReservationRating}>
-                Rate Reservation
-              </Button>
-            </span>
+          {reservation.status ? (
+            !reservation.isRated ? (
+              <span>
+                <Rate tooltips={desc} onChange={setRating} value={rating} />
+                <Button type="success" onClick={submitReservationRating}>
+                  Rate Reservation
+                </Button>
+              </span>
+            ) : (
+              <Text type="success">You've Already rated</Text>
+            )
           ) : (
-            <Text type="success">You've Already rated</Text>
+            ""
           )}
         </div>,
         <Button

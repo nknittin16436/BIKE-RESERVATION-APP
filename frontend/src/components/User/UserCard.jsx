@@ -5,6 +5,7 @@ import { Card, Button, Space, Input, Select } from "antd";
 import "../../App.css";
 import { updateReservations } from "../../Service/ReservationService";
 import { useNavigate } from "react-router-dom";
+import { editUser } from "../../Service/UserService";
 const { Option } = Select;
 const { Meta } = Card;
 
@@ -18,15 +19,17 @@ const UserCard = ({ user, getAllUsers }) => {
 
   const handleSeeReservations = async () => {
     const id = user.id;
-    navigate("/reservations");
+    navigate(`/reservation?userId=${user.id}`);
   };
 
   const handleEditUser = () => {
     setIsEditMode(true);
   };
 
-  const handleUpdateUser = () => {
+  const handleUpdateUser = async () => {
     console.log(editedName, editedEmail, editedRole);
+    await editUser(user.id, editedName, editedEmail, editedRole);
+    await getAllUsers();
     setIsEditMode(false);
   };
 
@@ -92,10 +95,7 @@ const UserCard = ({ user, getAllUsers }) => {
                 <Space wrap>
                   Role :
                   <Input.Group compact>
-                    <Select
-                      defaultValue={editedRole}
-                      onChange={setEditedRole}
-                    >
+                    <Select defaultValue={editedRole} onChange={setEditedRole}>
                       <Option value="regular">Regular</Option>
                       <Option value="manager">Manager</Option>
                     </Select>

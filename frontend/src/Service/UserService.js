@@ -34,8 +34,9 @@ export const loginUser = async ({email, password}) => {
             email: email,
             password: password,
         });
+        return res.data;
         console.log(res);
-        if (res.status === 200) {
+        if (res.status === 201) {
 
             return { accessToken: res.data.accessToken, success: true };
         }
@@ -89,12 +90,10 @@ export const editUser = async (id, name, email, role) => {
 
     try {
         // console.log(id);
-        const res = await axios.patch(`${url}/660/users/${id}`, {
+        const res = await axios.patch(`${url}/users/${id}`, {
             name: name,
             email: email,
             role: role,
-        }, {
-            headers: { Authorization: `Bearer ${token}` }
         });
         if (res.status === 200) {
             return { success: true };

@@ -1,4 +1,4 @@
-import { Body, Controller, Get, Post, Param, Delete, Patch, UseGuards ,Headers} from '@nestjs/common';
+import { Body, Controller, Get, Post, Param, Delete, Patch, UseGuards, Headers, Query } from '@nestjs/common';
 import { ReservationService } from './reservation.service';
 // import { RoleGuard } from 'src/guards/role.guard';
 @Controller('/reservations')
@@ -7,8 +7,13 @@ export class ReservationController {
 
     // @UseGuards(RoleGuard)
     @Get('')
-    getReservations(): any {
-        return this.reservationService.getAllReservations();
+    getReservations(@Query() { userId }): any {
+        return this.reservationService.getAllReservations(userId);
+    }
+
+    @Post('')
+    createReservation(@Body() { bikeId, fromDate, toDate, userId }): any {
+        return this.reservationService.createReservation({ bikeId, fromDate, toDate, userId });
     }
 
     // @UseGuards(RoleGuard)
@@ -18,8 +23,8 @@ export class ReservationController {
     }
 
     @Post('/:id')
-    updateReservationRating(@Param('id') id: string,@Body() { rating}): any {
-        return this.reservationService.updateReservationRating({id,rating});
+    updateReservationRating(@Param('id') id: string, @Body() { rating }): any {
+        return this.reservationService.updateReservationRating({ id, rating });
     }
 
     // // @UseGuards(RoleGuard)
@@ -27,7 +32,7 @@ export class ReservationController {
     deleteUser(@Param('id') id: string): any {
         return this.reservationService.deleteReservation(id);
     }
-    
+
 
     // @Get('/info')
     // getUser(@Headers('authtoken') token:string): any {

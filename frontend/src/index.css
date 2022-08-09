@@ -1,4 +1,5 @@
 @import '~antd/dist/antd.css';
+
 body {
   margin: 0;
   font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
@@ -18,9 +19,39 @@ code {
   margin: 16px;
   background: rgba(255, 255, 255, 0.2);
 }
+
 .site-layout .site-layout-background {
   background: #fff;
 }
-  [data-theme="dark"] .site-layout .site-layout-background {
-    background: #141414;
-  }
+
+[data-theme="dark"] .site-layout .site-layout-background {
+  background: #141414;
+}
+
+
+.logo {
+  height: 32px;
+  margin: 16px;
+  background: rgba(255, 255, 255, 0.2);
+}
+
+.site-layout-sub-header-background {
+  background: #fff;
+}
+
+.site-layout-background {
+  background: #fff;
+}
+
+[data-theme="dark"] .site-layout-sub-header-background {
+  background: #fff;
+}
+
+
+aside {
+  width: 420px !important;
+  background-color: #fff !important;
+  max-width: 420px !important;
+  min-width: 400px !important;
+  flex: 0 0 420px !important;
+}

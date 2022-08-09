@@ -4,7 +4,7 @@ import Button from "@mui/material/Button";
 import CssBaseline from "@mui/material/CssBaseline";
 import TextField from "@mui/material/TextField";
 import Grid from "@mui/material/Grid";
-import { Link } from "react-router-dom";
+import { Link, Navigate } from "react-router-dom";
 import Box from "@mui/material/Box";
 import LockOutlinedIcon from "@mui/icons-material/LockOutlined";
 import Typography from "@mui/material/Typography";
@@ -12,10 +12,14 @@ import Container from "@mui/material/Container";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
 import { LoginSchema } from "../../JoiSchema/Schema";
 import { loginUser } from "../../Service/UserService";
-
+import { useDispatch, useSelector } from "react-redux";
+import { useNavigate } from "react-router-dom";
 const theme = createTheme();
 
 const Login = () => {
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
+
   const handleSubmit = async (event) => {
     event.preventDefault();
     const data = new FormData(event.currentTarget);
@@ -27,10 +31,18 @@ const Login = () => {
       })
     );
 
-    await loginUser({
+    const res = await loginUser({
       email: data.get("email"),
       password: data.get("password"),
     });
+    console.log(res);
+    localStorage.setItem("bike-user", res.accessToken);
+    dispatch({ type: "isAuthenticated", payload: true });
+    dispatch({ type: "loggedInUser", payload: res.user });
+    if (res.user.role === "manager") {
+      dispatch({ type: "isManager", payload: true });
+    }
+    navigate("/");
     console.log({
       email: data.get("email"),
       password: data.get("password"),

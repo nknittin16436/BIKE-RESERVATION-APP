@@ -5,9 +5,9 @@ import { User } from 'src/db/entities/user.entity';
 @Injectable()
 export class ReservationService {
 
-    async getAllReservations(): Promise<any> {
+    async getAllReservations(userId): Promise<any> {
         try {
-            const reservations = await Reservation.find();
+            const reservations = await Reservation.find({where:{userId:userId}});
             return { reservations, success: true }
         } catch (error) {
             throw new Error(error);
