@@ -18,16 +18,16 @@ const theme = createTheme({
   },
 });
 
-const Reservation = () => {
-  const [reservations, setReservations] = useState([]);
+const Users = () => {
+  const [users, setUsers] = useState([]);
 
-  const getAllReservations = async () => {
-    const data = await getReservations();
-    setReservations(data.reservations);
+  const getAllUsers = async () => {
+    const data = await getUsers();
+    setUsers(data.reservations);
   };
 
   useEffect(() => {
-    getAllReservations();
+    getAllUsers();
   }, []);
   return (
     <div className="reservation">
@@ -46,22 +46,14 @@ const Reservation = () => {
                   container
                   spacing={2}
                   theme={theme}
-                  // alignItems="stretch"
                 >
-                  {reservations &&
-                    reservations.map((reservation) => (
-                      <Grid
-                        item
-                        xs={12}
-                        lg={6}
-                        sm={12}
-                        md={12}
-                        key={reservation.id}
-                      >
+                  {users &&
+                    users.map((user) => (
+                      <Grid item xs={12} lg={6} sm={12} md={12} key={user.id}>
                         <ReservationCard
-                          reservation={reservation}
-                          key={reservation.id}
-                          getAllReservations={getAllReservations}
+                          user={user}
+                          key={user.id}
+                          getAllUsers={getAllUsers}
                         />
                       </Grid>
                     ))}
@@ -75,4 +67,4 @@ const Reservation = () => {
   );
 };
 
-export default Reservation;
+export default Users;

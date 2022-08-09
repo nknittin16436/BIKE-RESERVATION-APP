@@ -6,7 +6,6 @@ const Home = () => {
   return (
     <div className="home__component">
       <div className="home__component__container">
-        <Navbar />
         <Filter />
       </div>
     </div>
