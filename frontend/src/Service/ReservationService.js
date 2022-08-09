@@ -22,7 +22,7 @@ export const getReservations = async () => {
     }
 }
 
-export const updateReservations = async ({ id }) => {
+export const updateReservationStatus = async ({ id }) => {
     try {
         const res = await axios.get(`${url}/reservations/${id}`);
         console.log(res);
@@ -39,5 +39,28 @@ export const updateReservations = async ({ id }) => {
         throw new Error(error.response.data)
     }
 }
+
+
+export const updateReservationRating = async ({ id, rating }) => {
+    try {
+        const res = await axios.post(`${url}/reservations/${id}`, {
+            rating: rating
+        });
+        console.log(res);
+
+        return res.data;
+        if (res.status === 201) {
+            return { success: true };
+        }
+        else {
+            return { success: false }
+        }
+    } catch (error) {
+        console.log(error);
+        throw new Error(error.response.data)
+    }
+}
+
+
 
 

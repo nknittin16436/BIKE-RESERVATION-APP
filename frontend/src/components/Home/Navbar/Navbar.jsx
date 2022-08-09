@@ -10,7 +10,7 @@ import Container from "@mui/material/Container";
 import Button from "@mui/material/Button";
 import MenuItem from "@mui/material/MenuItem";
 import EventSeatIcon from "@mui/icons-material/EventSeat";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 
 const pages = ["Bikes", "Reservations", "Users"];
 
@@ -37,7 +37,7 @@ const Navbar = () => {
   };
   const handleClickUsers = () => {
     handleCloseNavMenu();
-    navigate("users");
+    navigate("/users");
   };
   const handleClickLogout = () => {
     handleCloseNavMenu();
@@ -141,16 +141,25 @@ const Navbar = () => {
               }}
             >
               <MenuItem onClick={handleCloseNavMenu}>
-                <Typography textAlign="center">Home</Typography>
+                <Link to={"/"}>
+                  <Typography textAlign="center">Home</Typography>
+                </Link>
               </MenuItem>
               <MenuItem onClick={handleCloseNavMenu}>
-                <Typography textAlign="center">RESERVATIONS</Typography>
+                <Link to={"/reservations"}>
+                  <Typography textAlign="center">RESERVATIONS</Typography>
+                </Link>
+              </MenuItem>
+
+              <MenuItem onClick={handleCloseNavMenu}>
+                <Link to={"/users"}>
+                  <Typography textAlign="center">USERS</Typography>
+                </Link>
               </MenuItem>
               <MenuItem onClick={handleCloseNavMenu}>
-                <Typography textAlign="center">USERS</Typography>
-              </MenuItem>
-              <MenuItem onClick={handleCloseNavMenu}>
-                <Typography textAlign="center">LOGOUT</Typography>
+                <Link to={"/login"}>
+                  <Typography textAlign="center">LOGOUT</Typography>
+                </Link>
               </MenuItem>
             </Menu>
           </Box>

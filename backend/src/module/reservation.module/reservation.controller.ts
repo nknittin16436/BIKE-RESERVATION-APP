@@ -17,6 +17,11 @@ export class ReservationController {
         return this.reservationService.updateReservation(id);
     }
 
+    @Post('/:id')
+    updateReservationRating(@Param('id') id: string,@Body() { rating}): any {
+        return this.reservationService.updateReservationRating({id,rating});
+    }
+
     // // @UseGuards(RoleGuard)
     @Delete('/:id')
     deleteUser(@Param('id') id: string): any {

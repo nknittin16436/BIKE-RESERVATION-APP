@@ -1,6 +1,5 @@
 import React from "react";
 import Filter from "./Filter";
-import Navbar from "./Navbar/Navbar";
 
 const Home = () => {
   return (

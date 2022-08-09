@@ -10,6 +10,7 @@ import Home from './components/Home/Home';
 import AntdHome from './components/Home/AntdHome';
 import Reservation from './components/Reservation/Reservation';
 import Navbar from './components/Home/Navbar/Navbar';
+import Users from './components/User/Users';
 
 function App() {
   return (
@@ -22,6 +23,7 @@ function App() {
         <Route path="/" element={<Home />} />
         <Route path="/home" element={<Home />} />
         <Route path="/antd" element={<AntdHome />} />
+        <Route path="/users" element={<Users />} />
         <Route path="/reservations" element={<Reservation />} />
       </Routes>
     </BrowserRouter>

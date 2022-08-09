@@ -1,9 +1,10 @@
 import React, { useState, useEffect } from "react";
 import { Layout } from "antd";
 import Navbar from "../Home/Navbar/Navbar";
-import ReservationCard from "./ReservationCard";
+import UserCard from "./UserCard";
 import { createTheme, Grid } from "@mui/material";
 import { getReservations } from "../../Service/ReservationService";
+import { getUsers } from "../../Service/UserService";
 const { Header, Sider, Content } = Layout;
 
 const theme = createTheme({
@@ -23,7 +24,7 @@ const Users = () => {
 
   const getAllUsers = async () => {
     const data = await getUsers();
-    setUsers(data.reservations);
+    setUsers(data.users);
   };
 
   useEffect(() => {
@@ -50,7 +51,7 @@ const Users = () => {
                   {users &&
                     users.map((user) => (
                       <Grid item xs={12} lg={6} sm={12} md={12} key={user.id}>
-                        <ReservationCard
+                        <UserCard
                           user={user}
                           key={user.id}
                           getAllUsers={getAllUsers}

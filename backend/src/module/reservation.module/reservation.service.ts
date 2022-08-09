@@ -73,6 +73,20 @@ export class ReservationService {
         }
     }
 
+    async updateReservationRating({ id, rating }): Promise<any> {
+        try {
+            const reservation = await Reservation.findOne({ where: { id: id } });
+            if (reservation && !reservation.isRated) {
+                await Reservation.update(id, { rating: parseInt(rating) ,isRated:true });
+                return { success: true, statusCode: 200 }
+            }
+            else throw new HttpException('Unable to update user', 400);
+        } catch (error) {
+            throw new HttpException(error.message, 400);
+        }
+    }
+
+
     async deleteReservation(id: string): Promise<any> {
         try {
             const reservation = await Reservation.findOne({ where: { id: id } });

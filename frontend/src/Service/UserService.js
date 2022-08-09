@@ -49,12 +49,14 @@ export const loginUser = async ({email, password}) => {
     }
 }
 
-export const getAllUsers = async () => {
+export const getUsers = async () => {
     const token = localStorage.getItem('restaurant-user');
     try {
-        const res = await axios.get(`${url}/660/users`, {
+        const res = await axios.get(`${url}/users`, {
             headers: { Authorization: `Bearer ${token}` }
         });
+        console.log(res);
+        return res.data;
         if (res.status === 200) {
             return res.data;
         }
