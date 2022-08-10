@@ -1,31 +1,14 @@
 import React, { useState, useEffect } from "react";
 import "antd/dist/antd";
 import "../../../index.css";
-import {
-  UploadOutlined,
-  UserOutlined,
-  VideoCameraOutlined,
-} from "@ant-design/icons";
-import {
-  Layout,
-  Menu,
-  Input,
-  Space,
-  DatePicker,
-  Button,
-  Col,
-  InputNumber,
-  Row,
-  Select,
-  Slider,
-} from "antd";
+import { Layout, Input, Space, DatePicker, Button, Select } from "antd";
 import BikeCard from "./BikeCard";
 import { createTheme, Grid } from "@mui/material";
 import { getBikes } from "../../../Service/BikeService";
-
+import { useDispatch, useSelector } from "react-redux";
 const { Option } = Select;
 
-const { Header, Content, Footer, Sider } = Layout;
+const { Header, Content, Sider } = Layout;
 const { RangePicker } = DatePicker;
 
 const theme = createTheme({
@@ -41,6 +24,11 @@ const theme = createTheme({
 });
 
 const Bike = ({}) => {
+  const { isManager, isDateFilterAdded } = useSelector(
+    (state) => state.bikeReservation
+  );
+
+  const dispatch = useDispatch();
   const [rating, setRating] = useState(1);
   const [name, setName] = useState("");
   const [color, setColor] = useState("");
@@ -63,12 +51,14 @@ const Bike = ({}) => {
     console.log("hellooo");
     console.log("Date", date);
     console.log("DateString", dateString);
+    dispatch({ type: "isDateFilterAdded", payload: !isDateFilterAdded });
     setDuration(dateString);
   };
 
   const handleFilterSubmit = () => {
     console.log(name, location, color, rating, duration);
   };
+
   return (
     <Layout>
       <Sider
@@ -82,11 +72,14 @@ const Bike = ({}) => {
         }}
         style={{
           padding: 24,
-          minWidth: 400,
-          maxWidth: 400,
-          width: 420,
-          flex: "0 0 420",
+          height: '90vh',
+          // position: 'fixed',
+          // left: 0,
+          // top: 0,
+          // bottom: 0,
         }}
+
+        
       >
         <div
           style={{
@@ -171,6 +164,7 @@ const Bike = ({}) => {
                     <BikeCard
                       bike={bike}
                       key={bike.id}
+                      duration={duration}
                       getAllBikes={getAllBikes}
                     />
                   </Grid>

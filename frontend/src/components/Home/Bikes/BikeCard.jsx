@@ -1,14 +1,22 @@
 import React, { useState } from "react";
 import "antd/dist/antd";
-import { EditOutlined, SettingOutlined } from "@ant-design/icons";
-import { Card, Button, Space, Input, Select } from "antd";
+import { Card, Button, Space, Input, Rate, Typography } from "antd";
 import "../../../App.css";
 import { useNavigate } from "react-router-dom";
-const { Option } = Select;
+import { useSelector, useDispatch } from "react-redux";
+import { createBikeReservation, getBikeReservations } from "../../../Service/ReservationService";
 const { Meta } = Card;
+const { Text } = Typography;
 
-const BikeCard = ({ bike, getAllBikes }) => {
-  const isAdmin = true;
+const BikeCard = ({ bike, getAllBikes ,duration }) => {
+  const dispatch = useDispatch();
+  const { isManager, isDateFilterAdded ,loggedInUser} = useSelector(
+    (state) => state.bikeReservation
+  );
+  const bikeId = bike.id;
+  const userId=loggedInUser.id;
+
+
   const [isEditMode, setIsEditMode] = useState(false);
   const [editedName, setEditedName] = useState(bike.name);
   const [editedColor, setEditedColor] = useState(bike.color);
@@ -16,11 +24,14 @@ const BikeCard = ({ bike, getAllBikes }) => {
   const navigate = useNavigate();
 
   const handleSeeReservations = async () => {
-    // const id = user.id;
-    // navigate(`/reservation?userId=${user.id}`);
+    navigate(`/reservations/bike?bikeId=${bikeId}`);
   };
 
   const handleEditBike = () => {
+    setIsEditMode(true);
+  };
+
+  const handleDeleteBike = () => {
     setIsEditMode(true);
   };
 
@@ -30,7 +41,10 @@ const BikeCard = ({ bike, getAllBikes }) => {
     // await getAllUsers();
     setIsEditMode(false);
   };
-
+  const submitBookNowBike = async() => {
+    console.log("Book bike ",bikeId,userId,duration);
+    const data=await createBikeReservation({bikeId,fromDate:duration[0],toDate:duration[1],userId});
+  };
   return (
     <Card
       style={{
@@ -43,9 +57,22 @@ const BikeCard = ({ bike, getAllBikes }) => {
         />
       }
       actions={[
-        <SettingOutlined key="setting" />,
-        <EditOutlined key="edit" />,
-        <Button onClick={handleSeeReservations}>See Reservations</Button>,
+        <div>
+          {isDateFilterAdded ? (
+            <span>
+              <Button type="success" onClick={submitBookNowBike}>
+                Book Now
+              </Button>
+            </span>
+          ) : (
+            <Text type="danger">Select valid duration to book a bike</Text>
+          )}
+        </div>,
+        <Space>
+          {isManager && (
+            <Button onClick={handleSeeReservations}>See Reservations</Button>
+          )}
+        </Space>,
       ]}
       extra={
         <Space>
@@ -71,6 +98,9 @@ const BikeCard = ({ bike, getAllBikes }) => {
               <div>
                 <p>{`Color : ${bike.color}`}</p>
                 <p>{`Location : ${bike.location}`}</p>
+                <span>
+                  Rating : <Rate disabled defaultValue={bike.averageRating} />
+                </span>
               </div>
             )}
 

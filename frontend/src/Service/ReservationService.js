@@ -22,9 +22,47 @@ export const getReservations = async () => {
     }
 }
 
+export const createBikeReservation = async ({ bikeId, fromDate, toDate, userId }) => {
+    try {
+        const res = await axios.post(`${url}/reservations`, {
+            bikeId, fromDate, toDate, userId
+        });
+        console.log(res);
+
+        return res.data;
+        if (res.status === 201) {
+            return { success: true };
+        }
+        else {
+            return { success: false }
+        }
+    } catch (error) {
+        console.log(error);
+        throw new Error(error.response.data)
+    }
+}
+
 export const getUserReservations = async (userId) => {
     try {
         const res = await axios.get(`${url}/reservations?userId=${userId}`);
+        console.log(res);
+
+        return res.data;
+        if (res.status === 201) {
+            return { success: true };
+        }
+        else {
+            return { success: false }
+        }
+    } catch (error) {
+        console.log(error);
+        throw new Error(error.response.data)
+    }
+}
+
+export const getBikeReservations = async (bikeId) => {
+    try {
+        const res = await axios.get(`${url}/reservations/bike?bikeId=${bikeId}`);
         console.log(res);
 
         return res.data;

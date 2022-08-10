@@ -34,9 +34,9 @@ export class UserController {
     // }
     
 
-    // @Get('/info')
-    // getUser(@Headers('authtoken') token:string): any {
-    //     return this.userService.getUser(token);
-    // }
+    @Get('/:token')
+    getUser(@Param('token') token:string): any {
+        return this.userService.getUser(token);
+    }
 
 }

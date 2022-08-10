@@ -1,6 +1,7 @@
 import { Injectable, UnauthorizedException, HttpException } from '@nestjs/common';
 import { Bike } from 'src/db/entities/bike.entity';
 import { User } from 'src/db/entities/user.entity';
+import { Like } from 'typeorm';
 @Injectable()
 export class BikeService {
 
@@ -11,6 +12,24 @@ export class BikeService {
                     reservations: true,
                 }
             });
+            const bikeName = "Apache Rtr";
+            const bikeColor = "White";
+            const bikeLocation = "Gurgaon";
+            // const filterdBikes = await Bike.find({
+            //     where: [{
+            //         name: Like(`${bikeName}`),
+            //     }, {
+            //         color: Like(`${bikeColor}`),
+            //     }]
+            // });
+
+
+            const filterdBikes = await Bike.createQueryBuilder("bike")
+                .where(`bike.name like :name`, { name: `${bikeName}` })
+                .andWhere(`bike.color like :color`, { color: `${bikeColor}` })
+                .andWhere(`bike.location like :location`, { location: `${bikeLocation}` })
+                .getMany()
+            console.log(filterdBikes);
             return { bikes, success: true }
         } catch (error) {
             throw new Error(error);

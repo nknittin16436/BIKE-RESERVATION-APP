@@ -58,3 +58,7 @@
 .site-layout .site-layout-background {
   background: #fff;
 }
+
+.ant-card{
+  margin: auto !important;
+}

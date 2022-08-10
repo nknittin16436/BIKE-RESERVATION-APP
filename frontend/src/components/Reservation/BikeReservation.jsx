@@ -2,8 +2,13 @@ import React, { useState, useEffect } from "react";
 import { Layout } from "antd";
 import ReservationCard from "./ReservationCard";
 import { createTheme, Grid } from "@mui/material";
-import { getReservations, getUserReservations } from "../../Service/ReservationService";
-import {useSelector} from 'react-redux'
+import {
+    getBikeReservations,
+  getReservations,
+  getUserReservations,
+} from "../../Service/ReservationService";
+import { useSearchParams } from "react-router-dom";
+
 const { Content } = Layout;
 
 const theme = createTheme({
@@ -18,23 +23,24 @@ const theme = createTheme({
   },
 });
 
-const Reservation = () => {
-  const [reservations, setReservations] = useState([]);
-  const { isManager, loggedInUser } = useSelector(
-    (state) => state.bikeReservation
-  );
+const BikeReservation = () => {
+  const [searchParams, setSearchParams] = useSearchParams();
+  const bikeId = searchParams.get("bikeId");
 
-  const getAllReservations = async () => {
-    const data = await getUserReservations(loggedInUser.id);
+  const [reservations, setReservations] = useState([]);
+
+  const getAllBikeReservations = async () => {
+    const data = await getBikeReservations(bikeId);
     setReservations(data.reservations);
   };
 
   useEffect(() => {
-    getAllReservations();
+    getAllBikeReservations();
   }, []);
   return (
     <div className="reservation">
       <div className="reservation__container">
+        <h1>User Reservation</h1>
         <Layout>
           <Layout className="site-layout">
             <Content
@@ -64,7 +70,7 @@ const Reservation = () => {
                         <ReservationCard
                           reservation={reservation}
                           key={reservation.id}
-                          getAllReservations={getAllReservations}
+                          getAllReservations={getAllBikeReservations}
                         />
                       </Grid>
                     ))}
@@ -78,4 +84,4 @@ const Reservation = () => {
   );
 };
 
-export default Reservation;
+export default BikeReservation;

@@ -5,9 +5,25 @@ import { User } from 'src/db/entities/user.entity';
 @Injectable()
 export class ReservationService {
 
-    async getAllReservations(userId): Promise<any> {
+    async getAllReservations(): Promise<any> {
         try {
-            const reservations = await Reservation.find({where:{userId:userId}});
+            const reservations = await Reservation.find();
+            return { reservations, success: true }
+        } catch (error) {
+            throw new Error(error);
+        }
+    }
+    async getAllUserReservations(userId): Promise<any> {
+        try {
+            const reservations = await Reservation.find({ where: { userId: userId } });
+            return { reservations, success: true }
+        } catch (error) {
+            throw new Error(error);
+        }
+    }
+    async getAllBikeReservations(bikeId): Promise<any> {
+        try {
+            const reservations = await Reservation.find({ where: { bikeId: bikeId } });
             return { reservations, success: true }
         } catch (error) {
             throw new Error(error);
@@ -29,9 +45,6 @@ export class ReservationService {
                 await reservation.save();
                 console.log(reservation);
             }
-
-
-
         } catch (error) {
 
         }
@@ -77,7 +90,20 @@ export class ReservationService {
         try {
             const reservation = await Reservation.findOne({ where: { id: id } });
             if (reservation && !reservation.isRated) {
-                await Reservation.update(id, { rating: parseInt(rating) ,isRated:true });
+                await Reservation.update(id, { rating: parseInt(rating), isRated: true });
+                const bike = await Bike.findOne({ where: { id: reservation.bikeId }, relations: { reservations: true, } });
+                console.log(bike);
+                let averageRating = 0;
+                let ratedReservationLength=0;
+                for (const reservation of bike.reservations) {
+                    if(reservation.isRated){
+                        ratedReservationLength++;
+                    }
+                    averageRating += reservation.rating;
+                }
+                averageRating /= ratedReservationLength;
+                console.log(averageRating);
+                await Bike.update(reservation.bikeId, { averageRating: averageRating });
                 return { success: true, statusCode: 200 }
             }
             else throw new HttpException('Unable to update user', 400);

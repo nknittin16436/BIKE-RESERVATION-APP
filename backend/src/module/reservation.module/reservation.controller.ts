@@ -7,8 +7,18 @@ export class ReservationController {
 
     // @UseGuards(RoleGuard)
     @Get('')
-    getReservations(@Query() { userId }): any {
-        return this.reservationService.getAllReservations(userId);
+    getReservations(): any {
+        return this.reservationService.getAllReservations();
+    }
+
+    @Get('/user')
+    getUserReservations(@Query('userId') userId: string): any {
+        return this.reservationService.getAllUserReservations(userId);
+    }
+
+    @Get('/bike')
+    getBikeReservations(@Query('bikeId') bikeId: string): any {
+        return this.reservationService.getAllBikeReservations(bikeId);
     }
 
     @Post('')

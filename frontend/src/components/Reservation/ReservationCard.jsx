@@ -53,7 +53,7 @@ const ReservationCard = ({ reservation, getAllReservations }) => {
         </div>,
         <Button
           onClick={handleCancelReservation}
-          disabled={!reservation.status}
+          disabled={reservation.isRated || !reservation.status}
         >
           Cancel Reservation
         </Button>,

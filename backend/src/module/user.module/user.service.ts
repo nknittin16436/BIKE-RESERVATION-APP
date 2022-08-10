@@ -26,6 +26,7 @@ export class UserService {
             var decoded = jwt.verify(token, 'restaurantBackend');
             const userId = decoded.id;
             const user = await User.findOne({ where: { id: userId } });
+
             if (user) {
                 delete user.password;
                 return { user, success: true, statusCode: 200 }

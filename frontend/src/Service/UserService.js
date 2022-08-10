@@ -104,19 +104,12 @@ export const editUser = async (id, name, email, role) => {
     }
 }
 
-export const getUser = async (id) => {
-    const token = localStorage.getItem('restaurant-user');
-
+export const getUserDetails = async (token) => {
     try {
         // console.log(id);
-        const res = await axios.get(`${url}/660/users/${id}`,{
-            headers: { Authorization: `Bearer ${token}` }
-        });
-        if (res.status === 200) {
-            const data = res.data;
-            delete data['password'];
-            return { success: true, user: data };
-        }
+        const res = await axios.get(`${url}/users/${token}`);
+        console.log(res);
+        return res.data;
     } catch (error) {
         console.log(error);
         throw new Error(error.response.data);

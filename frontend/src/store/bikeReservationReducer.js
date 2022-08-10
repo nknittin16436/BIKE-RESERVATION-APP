@@ -12,6 +12,8 @@ const initialState = {
     loggedInUser: {},
     totalRestaurant: 0,
     page: 1,
+    isDateFilterAdded:false,
+    reservations:[]
 };
 
 export const bikeReservationReducer = createReducer(initialState, {
@@ -40,12 +42,15 @@ export const bikeReservationReducer = createReducer(initialState, {
         state.isAuthenticated = action.payload
     },
     isManager: (state, action) => {
-        state.isAdmin = action.payload
+        state.isManager = action.payload
+    },
+    isDateFilterAdded: (state, action) => {
+        state.isDateFilterAdded = action.payload
     },
     loggedInUser: (state, action) => {
         state.loggedInUser = action.payload
     },
-    totalRestaurant: (state, action) => {
-        state.totalRestaurant = action.payload
+    reservations: (state, action) => {
+        state.reservations = action.payload
     },
 })
