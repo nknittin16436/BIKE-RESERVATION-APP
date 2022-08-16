@@ -1,4 +1,4 @@
-import { Body, Controller, Get, Post, Param, Delete, Patch, UseGuards, Headers } from '@nestjs/common';
+import { Body, Controller, Get, Post, Param, Delete, Patch, UseGuards, Headers, Query } from '@nestjs/common';
 import { AdminGuard } from 'src/guards/admin.guard';
 import { AuthGuard } from 'src/guards/auth.guard';
 import { BikeService } from './bike.service';
@@ -8,8 +8,8 @@ export class BikeController {
 
     @UseGuards(AuthGuard)
     @Get('')
-    getBikes(): any {
-        return this.bikeService.getAllBikes();
+    getBikes(@Query() query): any {
+        return this.bikeService.getAllBikes(query);
     }
 
 

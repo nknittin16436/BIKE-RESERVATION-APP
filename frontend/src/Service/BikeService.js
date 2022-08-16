@@ -4,11 +4,11 @@ const url = "http://localhost:5000";
 
 
 
-export const getBikes = async () => {
+export const getBikes = async ({name="", location="", color="", rating="0", fromDate,toDate}) => {
     const token = localStorage.getItem('bike-user');
 
     try {
-        const res = await axios.get(`${url}/bikes`, {
+        const res = await axios.get(`${url}/bikes?name=${name}&location=${location}&color=${color}&rating=${rating}`, {
             headers: { authtoken: token }
         });
         console.log(res);

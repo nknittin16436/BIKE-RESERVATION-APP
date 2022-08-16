@@ -48,8 +48,6 @@ const UserCard = ({ user, getAllUsers }) => {
         width: 500,
       }}
       actions={[
-        <SettingOutlined key="setting" />,
-        <EditOutlined key="edit" />,
         <Button onClick={handleSeeReservations}>See Reservations</Button>,
       ]}
       extra={

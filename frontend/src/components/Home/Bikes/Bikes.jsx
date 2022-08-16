@@ -29,7 +29,7 @@ const Bike = ({}) => {
   );
 
   const dispatch = useDispatch();
-  const [rating, setRating] = useState(1);
+  const [rating, setRating] = useState("0");
   const [name, setName] = useState("");
   const [color, setColor] = useState("");
   const [location, setLocation] = useState("");
@@ -54,7 +54,7 @@ const Bike = ({}) => {
   };
 
   const getAllBikes = async () => {
-    const data = await getBikes();
+    const data = await getBikes({name, location, color, rating, fromDate:duration[0],toDate:duration[1]});
     console.log(data);
     setBikes(data.bikes);
   };
@@ -74,8 +74,12 @@ const Bike = ({}) => {
     setDuration(dateString);
   };
 
-  const handleFilterSubmit = () => {
-    console.log(name, location, color, rating, duration);
+  const handleFilterSubmit =async () => {
+    console.log({name, location, color, rating, duration});
+    const data = await getBikes({name, location, color, rating, fromDate:duration[0],toDate:duration[1]});
+    console.log(data);
+    setBikes(data.bikes);
+
   };
 
   return (
@@ -137,6 +141,7 @@ const Bike = ({}) => {
               Rating :
               <Input.Group compact>
                 <Select defaultValue={rating} onChange={setRating}>
+                  <Option value="0">0</Option>
                   <Option value="1">1</Option>
                   <Option value="2">2</Option>
                   <Option value="3">3</Option>

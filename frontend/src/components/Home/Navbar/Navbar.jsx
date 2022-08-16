@@ -152,7 +152,7 @@ const Navbar = () => {
               }}
             >
               <MenuItem onClick={handleCloseNavMenu}>
-                <Link to={"/home"}>
+                <Link to={"/"}>
                   <Typography textAlign="center">Home</Typography>
                 </Link>
               </MenuItem>

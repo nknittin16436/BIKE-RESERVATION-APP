@@ -18,11 +18,15 @@ import { useNavigate } from 'react-router-dom';
 import { getUserDetails } from './Service/UserService';
 import { useDispatch } from 'react-redux'
 import AllReservation from './components/Reservation/AllReservations';
+import ForbiddenAccess from './components/ProtectedRoute/Forbidden';
+import AdminRoute from './components/ProtectedRoute/AdminRoute';
+import LoggedIn from './components/ProtectedRoute/LoggedInRoute';
+import { useSelector } from 'react-redux'
 
 const App = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
-
+  const { loggedInUser } = useSelector((state) => state.bikeReservation)
   const getLoggedInUser = async () => {
     const token = localStorage.getItem('bike-user');
     if (token) {
@@ -47,19 +51,19 @@ const App = () => {
   return (
     <div>
 
-      <Navbar />
+       {loggedInUser && <Navbar />}
       <Routes>
         <Route path="/login" element={<Login />} />
         <Route path="/register" element={<SignUp />} />
-        <Route path="/" element={<Home />} />
-        <Route path="/bikes" element={<Bike />} />
-
-        <Route path="/home" element={<Home />} />
-        <Route path="/users" element={<Users />} />
-        <Route path="/reservations" element={<AllReservation />} />
-        <Route path="/reservation" element={<Reservation />} />
-        <Route path="/reservations/bike" element={<BikeReservation />} />
-        <Route path="/reservations/user" element={<UserReservation />} />
+        <Route path="/" element={<LoggedIn element={<Home />} />} />
+        <Route path="/home" element={<LoggedIn element={<Home />} />} />
+        <Route path="/bikes" element={<LoggedIn element={<Bike />} />} />
+        <Route path="/users" element={<AdminRoute element={<Users />} />} />
+        <Route path="/reservations" element={<AdminRoute element={<AllReservation />} />} />
+        <Route path="/reservation" element={<LoggedIn element={<Reservation />} />} />
+        <Route path="/reservations/bike" element={<AdminRoute element={<BikeReservation />} />} />
+        <Route path="/reservations/user" element={<AdminRoute element={<UserReservation />} />} />
+        <Route path="/forbidden" element={<ForbiddenAccess />} />
       </Routes>
     </div>
 
