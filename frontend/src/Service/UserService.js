@@ -51,10 +51,10 @@ export const loginUser = async ({ email, password }) => {
 }
 
 export const getUsers = async () => {
-    const token = localStorage.getItem('restaurant-user');
+    const token = localStorage.getItem('bike-user');
     try {
         const res = await axios.get(`${url}/users`, {
-            headers: { Authorization: `Bearer ${token}` }
+            headers: { authtoken: token }
         });
         console.log(res);
         return res.data;

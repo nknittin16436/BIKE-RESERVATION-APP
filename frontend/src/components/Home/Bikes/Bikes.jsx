@@ -40,7 +40,6 @@ const Bike = ({}) => {
   const [addBikeLocation, setAddBikeLocation] = useState("");
 
   const [bikes, setBikes] = useState([]);
-  const showModal = () => {};
 
   const handleSubmitAddBike = async () => {
     setIsModalVisible(false);
@@ -94,10 +93,6 @@ const Bike = ({}) => {
           style={{
             padding: 24,
             height: "90vh",
-            // position: 'fixed',
-            // left: 0,
-            // top: 0,
-            // bottom: 0,
           }}
         >
           <div

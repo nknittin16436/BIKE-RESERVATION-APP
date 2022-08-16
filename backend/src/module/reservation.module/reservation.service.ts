@@ -80,7 +80,7 @@ export class ReservationService {
                 }
                 return { success: true, statusCode: 200 }
             }
-            else throw new HttpException('Unable to update user', 400);
+            else throw new HttpException('Unable to update Reservation', 400);
         } catch (error) {
             throw new HttpException(error.message, 400);
         }
@@ -106,7 +106,7 @@ export class ReservationService {
                 await Bike.update(reservation.bikeId, { averageRating: averageRating });
                 return { success: true, statusCode: 200 }
             }
-            else throw new HttpException('Unable to update user', 400);
+            else throw new HttpException('Unable to Add Rating', 400);
         } catch (error) {
             throw new HttpException(error.message, 400);
         }

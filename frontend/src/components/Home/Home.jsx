@@ -1,6 +1,5 @@
 import React from "react";
 import Bike from "./Bikes/Bikes";
-import Filter from "./Filter";
 
 const Home = () => {
   return (

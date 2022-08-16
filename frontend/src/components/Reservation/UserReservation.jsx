@@ -39,7 +39,7 @@ const UserReservation = () => {
   return (
     <div className="reservation">
       <div className="reservation__container">
-        <h1>User Reservation</h1>
+        <h1>Your Reservations</h1>
         <Layout>
           <Layout className="site-layout">
             <Content

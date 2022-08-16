@@ -33,11 +33,15 @@ const Navbar = () => {
   };
   const handleClickReservations = () => {
     handleCloseNavMenu();
+    navigate("reservation");
+  };
+  const handleClickAllReservations = () => {
+    handleCloseNavMenu();
     navigate("reservations");
   };
   const handleClickUsers = () => {
     handleCloseNavMenu();
-    navigate("/users");
+    navigate("users");
   };
   const handleClickLogout = () => {
     handleCloseNavMenu();
@@ -97,7 +101,13 @@ const Navbar = () => {
               onClick={handleClickReservations}
               sx={{ my: 2, color: "white", display: "block" }}
             >
-              RESERVATIONS
+             YOUR RESERVATIONS
+            </Button>
+            <Button
+              onClick={handleClickAllReservations}
+              sx={{ my: 2, color: "white", display: "block" }}
+            >
+             ALL RESERVATIONS
             </Button>
             <Button
               onClick={handleClickUsers}
@@ -142,13 +152,19 @@ const Navbar = () => {
               }}
             >
               <MenuItem onClick={handleCloseNavMenu}>
-                <Link to={"/"}>
+                <Link to={"/home"}>
                   <Typography textAlign="center">Home</Typography>
                 </Link>
               </MenuItem>
               <MenuItem onClick={handleCloseNavMenu}>
+                <Link to={"/reservation"}>
+                  <Typography textAlign="center">YOUR RESERVATIONS</Typography>
+                </Link>
+              </MenuItem>
+
+              <MenuItem onClick={handleCloseNavMenu}>
                 <Link to={"/reservations"}>
-                  <Typography textAlign="center">RESERVATIONS</Typography>
+                  <Typography textAlign="center">ALL RESERVATIONS</Typography>
                 </Link>
               </MenuItem>
 

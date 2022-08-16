@@ -8,7 +8,6 @@ import {
 import { useEffect } from 'react';
 import SignUp from './components/Auth/SignUp';
 import Home from './components/Home/Home';
-import AntdHome from './components/Home/AntdHome';
 import Reservation from './components/Reservation/Reservation';
 import Navbar from './components/Home/Navbar/Navbar';
 import Users from './components/User/Users';
@@ -18,6 +17,7 @@ import BikeReservation from './components/Reservation/BikeReservation';
 import { useNavigate } from 'react-router-dom';
 import { getUserDetails } from './Service/UserService';
 import { useDispatch } from 'react-redux'
+import AllReservation from './components/Reservation/AllReservations';
 
 const App = () => {
   const navigate = useNavigate();
@@ -56,7 +56,8 @@ const App = () => {
 
         <Route path="/home" element={<Home />} />
         <Route path="/users" element={<Users />} />
-        <Route path="/reservations" element={<Reservation />} />
+        <Route path="/reservations" element={<AllReservation />} />
+        <Route path="/reservation" element={<Reservation />} />
         <Route path="/reservations/bike" element={<BikeReservation />} />
         <Route path="/reservations/user" element={<UserReservation />} />
       </Routes>

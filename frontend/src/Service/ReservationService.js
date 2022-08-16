@@ -5,8 +5,11 @@ const url = "http://localhost:5000";
 
 
 export const getReservations = async () => {
+    const token =localStorage.getItem('bike-user');
     try {
-        const res = await axios.get(`${url}/reservations`);
+        const res = await axios.get(`${url}/reservations`,{
+            headers:{authtoken:token}
+        });
         console.log(res);
 
         return res.data;
@@ -23,9 +26,13 @@ export const getReservations = async () => {
 }
 
 export const createBikeReservation = async ({ bikeId, fromDate, toDate, userId }) => {
+    const token = localStorage.getItem('bike-user');
+
     try {
         const res = await axios.post(`${url}/reservations`, {
             bikeId, fromDate, toDate, userId
+        }, {
+            headers: { authtoken: token }
         });
         console.log(res);
 
@@ -43,8 +50,12 @@ export const createBikeReservation = async ({ bikeId, fromDate, toDate, userId }
 }
 
 export const getUserReservations = async (userId) => {
+    const token =localStorage.getItem('bike-user');
+
     try {
-        const res = await axios.get(`${url}/reservations?userId=${userId}`);
+        const res = await axios.get(`${url}/reservations/user?userId=${userId}`,{
+            headers:{authtoken:token}
+        });
         console.log(res);
 
         return res.data;
@@ -79,8 +90,11 @@ export const getBikeReservations = async (bikeId) => {
 }
 
 export const updateReservationStatus = async ({ id }) => {
+    const token = localStorage.getItem('bike-user');
     try {
-        const res = await axios.get(`${url}/reservations/${id}`);
+        const res = await axios.get(`${url}/reservations/${id}`, {
+            headers: { authtoken: token }
+        });
         console.log(res);
 
         return res.data;
@@ -98,9 +112,13 @@ export const updateReservationStatus = async ({ id }) => {
 
 
 export const updateReservationRating = async ({ id, rating }) => {
+    const token = localStorage.getItem('bike-user');
+
     try {
         const res = await axios.post(`${url}/reservations/${id}`, {
             rating: rating
+        }, {
+            headers: { authtoken: token }
         });
         console.log(res);
 

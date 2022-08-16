@@ -23,7 +23,7 @@ const UserCard = ({ user, getAllUsers }) => {
   );
 
   const handleSeeReservations = async () => {
-    navigate(`/reservation?userId=${userId}`);
+    navigate(`/reservations/user?userId=${userId}`);
   };
 
   const handleEditUser = () => {

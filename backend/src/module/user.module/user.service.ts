@@ -23,7 +23,7 @@ export class UserService {
 
     async getUser(token: string): Promise<any> {
         try {
-            var decoded = jwt.verify(token, 'restaurantBackend');
+            var decoded = jwt.verify(token, 'bikeReservation');
             const userId = decoded.id;
             const user = await User.findOne({ where: { id: userId } });
 
@@ -47,7 +47,6 @@ export class UserService {
             const hashedPassword = await bcrypt.hashSync(password, 10);
             user.password = hashedPassword;
             await user.save();
-            console.log(user);
             return { success: true, statusCode: 201 };
         } catch (error) {
             throw new HttpException(error.message, 400);
