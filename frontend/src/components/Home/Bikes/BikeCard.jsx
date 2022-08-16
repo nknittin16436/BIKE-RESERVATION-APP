@@ -8,7 +8,7 @@ import {
   createBikeReservation,
   getBikeReservations,
 } from "../../../Service/ReservationService";
-import { deleteBike } from "../../../Service/BikeService";
+import { deleteBike, updateBike } from "../../../Service/BikeService";
 const { Meta } = Card;
 const { Text } = Typography;
 
@@ -41,8 +41,8 @@ const BikeCard = ({ bike, getAllBikes, duration }) => {
 
   const handleUpdateBike = async () => {
     console.log(editedName, editedColor, editedLocation);
-    // await editUser(user.id, editedName, editedColor, editedLocation);
-    // await getAllUsers();
+    await updateBike({ bikeId, editedName, editedColor, editedLocation });
+    await getAllBikes();
     setIsEditMode(false);
   };
   const submitBookNowBike = async () => {

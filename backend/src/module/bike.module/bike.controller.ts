@@ -1,4 +1,4 @@
-import { Body, Controller, Get, Post, Param, Delete, Patch, UseGuards ,Headers} from '@nestjs/common';
+import { Body, Controller, Get, Post, Param, Delete, Patch, UseGuards, Headers } from '@nestjs/common';
 import { AdminGuard } from 'src/guards/admin.guard';
 import { AuthGuard } from 'src/guards/auth.guard';
 import { BikeService } from './bike.service';
@@ -12,12 +12,18 @@ export class BikeController {
         return this.bikeService.getAllBikes();
     }
 
-   
 
-    // @UseGuards(RoleGuard)
+
+    @UseGuards(AdminGuard)
     @Post('')
     createBike(@Body() { name, color, location }): any {
-        return this.bikeService.createBike({ name, color, location});
+        return this.bikeService.createBike({ name, color, location });
+    }
+
+    @UseGuards(AdminGuard)
+    @Patch('/:id')
+    updateBike(@Body() { name, color, location }, @Param('id') id: string): any {
+        return this.bikeService.updateBike({ id, name, color, location });
     }
 
     @UseGuards(AdminGuard)
@@ -25,7 +31,7 @@ export class BikeController {
     deleteUser(@Param('id') id: string): any {
         return this.bikeService.deleteBike(id);
     }
-    
+
 
     // @Get('/info')
     // getUser(@Headers('authtoken') token:string): any {

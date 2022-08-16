@@ -127,5 +127,26 @@ export const deleteBike = async (id) => {
 }
 
 
+export const updateBike = async ({ bikeId, editedName, editedColor, editedLocation }) => {
+    const token = localStorage.getItem('bike-user');
+
+    try {
+        const res = await axios.patch(`${url}/bikes/${bikeId}`, {
+            name: editedName,
+            color: editedColor,
+            location: editedLocation
+        }, {
+            headers: { authtoken: token }
+        });
+        console.log(res);
+
+        return res.data;
+    } catch (error) {
+        console.log(error);
+        throw new Error(error.response.data)
+    }
+}
+
+
 
 

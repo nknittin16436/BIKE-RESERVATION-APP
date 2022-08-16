@@ -69,11 +69,11 @@ export class BikeService {
 
 
 
-    async updateUser(id: string, name: string, email: string, role: string): Promise<any> {
+    async updateBike({ id, name, color, location }): Promise<any> {
         try {
-            const user = await User.findOne({ where: { id: id } });
-            if (user) {
-                await User.update(id, { name, email, role });
+            const bike = await Bike.findOne({ where: { id: id } });
+            if (bike) {
+                await Bike.update(id, { name, color, location });
                 return { success: true, statusCode: 200 }
             }
             else throw new HttpException('Unable to update user', 400);
