@@ -60,7 +60,7 @@ export class UserService {
             await LoginSchema.validateAsync({ email: email, password: password });
             const user = await User.findOne({ where: { email: email } });
             if (user && bcrypt.compareSync(password, user.password)) {
-                const token = jwt.sign({ id: user.id, time: Date.now() }, 'restaurantBackend', { expiresIn: '24h' });
+                const token = jwt.sign({ id: user.id, time: Date.now() }, 'bikeReservation', { expiresIn: '24h' });
                 delete user.password;
                 return { user, accessToken: token, success: true, statusCode: 200 };
             }

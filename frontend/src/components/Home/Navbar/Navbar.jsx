@@ -41,6 +41,7 @@ const Navbar = () => {
   };
   const handleClickLogout = () => {
     handleCloseNavMenu();
+    localStorage.removeItem("bike-user");
     navigate("login");
   };
 
@@ -156,7 +157,12 @@ const Navbar = () => {
                   <Typography textAlign="center">USERS</Typography>
                 </Link>
               </MenuItem>
-              <MenuItem onClick={handleCloseNavMenu}>
+              <MenuItem
+                onClick={() => {
+                  handleCloseNavMenu();
+                  localStorage.removeItem("bike-user");
+                }}
+              >
                 <Link to={"/login"}>
                   <Typography textAlign="center">LOGOUT</Typography>
                 </Link>

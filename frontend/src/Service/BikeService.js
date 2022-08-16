@@ -5,8 +5,38 @@ const url = "http://localhost:5000";
 
 
 export const getBikes = async () => {
+    const token = localStorage.getItem('bike-user');
+
     try {
-        const res = await axios.get(`${url}/bikes`);
+        const res = await axios.get(`${url}/bikes`, {
+            headers: { authtoken: token }
+        });
+        console.log(res);
+
+        return res.data;
+        if (res.status === 201) {
+            return { success: true };
+        }
+        else {
+            return { success: false }
+        }
+    } catch (error) {
+        console.log(error);
+        throw new Error(error.response.data)
+    }
+}
+
+
+export const addNewBike = async ({ addBikeName, addBikeColor, addBikeLocation }) => {
+    const token = localStorage.getItem('bike-user');
+    try {
+        const res = await axios.post(`${url}/bikes`, {
+            name: addBikeName,
+            color: addBikeColor,
+            location: addBikeLocation
+        }, {
+            headers: { authtoken: token }
+        });
         console.log(res);
 
         return res.data;
@@ -73,6 +103,23 @@ export const updateReservationRating = async ({ id, rating }) => {
         else {
             return { success: false }
         }
+    } catch (error) {
+        console.log(error);
+        throw new Error(error.response.data)
+    }
+}
+
+
+export const deleteBike = async (id) => {
+    const token = localStorage.getItem('bike-user');
+
+    try {
+        const res = await axios.delete(`${url}/bikes/${id}`, {
+            headers: { authtoken: token }
+        });
+        console.log(res);
+
+        return res.data;
     } catch (error) {
         console.log(error);
         throw new Error(error.response.data)

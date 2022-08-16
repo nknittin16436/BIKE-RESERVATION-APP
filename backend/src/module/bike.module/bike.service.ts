@@ -82,14 +82,15 @@ export class BikeService {
         }
     }
 
-    async deleteUser(id: string): Promise<any> {
+    async deleteBike(id: string): Promise<any> {
         try {
-            const user = await User.findOne({ where: { id: id } });
-            if (user) {
-                await User.delete(id);
+            const bike = await Bike.findOne({ where: { id: id } });
+            console.log(bike)
+            if (bike) {
+                await Bike.delete(id);
                 return { success: true, statusCode: 200 }
             }
-            else throw new HttpException('Unable to delete user', 400);
+            else throw new HttpException('Unable to delete Bike', 400);
         } catch (error) {
             throw new HttpException(error.message, 400);
         }

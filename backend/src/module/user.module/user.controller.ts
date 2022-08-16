@@ -28,10 +28,10 @@ export class UserController {
     }
 
     // // @UseGuards(RoleGuard)
-    // @Delete('/:id')
-    // deleteUser(@Param('id') id: string): any {
-    //     return this.userService.deleteUser(id);
-    // }
+    @Delete('/:id')
+    deleteUser(@Param('id') id: string): any {
+        return this.userService.deleteUser(id);
+    }
     
 
     @Get('/:token')

@@ -5,25 +5,34 @@ import { Card, Button, Space, Input, Select } from "antd";
 import "../../App.css";
 import { updateReservations } from "../../Service/ReservationService";
 import { useNavigate } from "react-router-dom";
-import { editUser } from "../../Service/UserService";
+import { deleteUser, editUser } from "../../Service/UserService";
+import { useSelector } from "react-redux";
 const { Option } = Select;
 const { Meta } = Card;
 
 const UserCard = ({ user, getAllUsers }) => {
-  const isAdmin = true;
   const [isEditMode, setIsEditMode] = useState(false);
   const [editedName, setEditedName] = useState(user.name);
   const [editedEmail, setEditedEmail] = useState(user.email);
   const [editedRole, setEditedRole] = useState(user.role);
   const navigate = useNavigate();
+  const userId = user.id;
+
+  const { isManager, loggedInUser } = useSelector(
+    (state) => state.bikeReservation
+  );
 
   const handleSeeReservations = async () => {
-    const id = user.id;
-    navigate(`/reservation?userId=${user.id}`);
+    navigate(`/reservation?userId=${userId}`);
   };
 
   const handleEditUser = () => {
     setIsEditMode(true);
+  };
+
+  const handleDeleteUser = async () => {
+    await deleteUser(userId);
+    await getAllUsers();
   };
 
   const handleUpdateUser = async () => {
@@ -45,17 +54,21 @@ const UserCard = ({ user, getAllUsers }) => {
       ]}
       extra={
         <Space>
-          {!isEditMode && (
+          {isManager && !isEditMode && (
             <Button type="success" onClick={handleEditUser}>
               Edit
             </Button>
           )}
-          {isEditMode && (
+          {isManager && isEditMode && (
             <Button type="success" onClick={handleUpdateUser}>
               Update
             </Button>
           )}
-          <Button type="danger">Delete</Button>
+          {isManager && (
+            <Button type="danger" onClick={handleDeleteUser}>
+              Delete
+            </Button>
+          )}
         </Space>
       }
     >

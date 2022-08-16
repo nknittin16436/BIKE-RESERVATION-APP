@@ -2,7 +2,7 @@ import { Injectable, CanActivate, ExecutionContext, UnauthorizedException } from
 import * as jwt from 'jsonwebtoken';
 import { User } from 'src/db/entities/user.entity';
 @Injectable()
-export class AuthGuard implements CanActivate {
+export class AdminGuard implements CanActivate {
      async canActivate(
         context: ExecutionContext,
     ): Promise<boolean> {
@@ -12,12 +12,11 @@ export class AuthGuard implements CanActivate {
             var decoded = jwt.verify(token, 'bikeReservation');
             const userId = decoded.id;
             const user = await User.findOne({ where: { id: userId } });
-            if (user) {
+            if (user && user.role==="manager") {
                 return true;
             }
             return false;
         } catch (error) {
-
             throw new UnauthorizedException();
         }
     }

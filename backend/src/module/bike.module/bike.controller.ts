@@ -1,11 +1,12 @@
 import { Body, Controller, Get, Post, Param, Delete, Patch, UseGuards ,Headers} from '@nestjs/common';
+import { AdminGuard } from 'src/guards/admin.guard';
+import { AuthGuard } from 'src/guards/auth.guard';
 import { BikeService } from './bike.service';
-// import { RoleGuard } from 'src/guards/role.guard';
 @Controller('/bikes')
 export class BikeController {
     constructor(private readonly bikeService: BikeService) { }
 
-    // @UseGuards(RoleGuard)
+    @UseGuards(AuthGuard)
     @Get('')
     getBikes(): any {
         return this.bikeService.getAllBikes();
@@ -19,11 +20,11 @@ export class BikeController {
         return this.bikeService.createBike({ name, color, location});
     }
 
-    // // @UseGuards(RoleGuard)
-    // @Delete('/:id')
-    // deleteUser(@Param('id') id: string): any {
-    //     return this.bikeService.deleteUser(id);
-    // }
+    @UseGuards(AdminGuard)
+    @Delete('/:id')
+    deleteUser(@Param('id') id: string): any {
+        return this.bikeService.deleteBike(id);
+    }
     
 
     // @Get('/info')

@@ -30,12 +30,12 @@ export class Reservation extends BaseEntity {
 
     @Column()
     userId: string
-    @Column({nullable:true})
+    @Column({ nullable: true })
     userName: string
 
-    @ManyToOne(() => User, (user) => user.reservations, { nullable: true })
+    @ManyToOne(() => User, (user) => user.reservations, { nullable: true, onDelete: 'CASCADE' })
     user: User
 
-    @ManyToOne(() => Bike, (bike) => bike.reservations, { nullable: true })
+    @ManyToOne(() => Bike, (bike) => bike.reservations, { nullable: true, onDelete: 'CASCADE' })
     bike: Bike
 }

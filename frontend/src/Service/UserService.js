@@ -1,6 +1,6 @@
 import axios from "axios";
 // const url= "https://restaurant-review-nand-kumar.herokuapp.com";
-const url= "http://localhost:5000";
+const url = "http://localhost:5000";
 
 
 
@@ -10,7 +10,7 @@ export const registerUser = async ({ name, email, password, confirmPassword }) =
             name: name,
             email: email,
             password: password,
-            confirmPassword:confirmPassword
+            confirmPassword: confirmPassword
         });
         // console.log(res);
         if (res.status === 201) {
@@ -26,7 +26,7 @@ export const registerUser = async ({ name, email, password, confirmPassword }) =
 }
 
 
-export const loginUser = async ({email, password}) => {
+export const loginUser = async ({ email, password }) => {
 
     // console.log(loginEmail, loginPassword);
     try {
@@ -69,12 +69,12 @@ export const getUsers = async () => {
 
 
 export const deleteUser = async (id) => {
-    const token = localStorage.getItem('restaurant-user');
-
+    const token = localStorage.getItem('bike-user');
     try {
-        const res = await axios.delete(`${url}/660/users/${id}`, {
-            headers: { Authorization: `Bearer ${token}` }
+        const res = await axios.delete(`${url}/users/${id}`, {
+            headers: { authtoken: token }
         });
+        return res;
         if (res.status === 200) {
 
             return { success: true };
@@ -86,14 +86,15 @@ export const deleteUser = async (id) => {
 
 
 export const editUser = async (id, name, email, role) => {
-    const token = localStorage.getItem('restaurant-user');
-
+    const token = localStorage.getItem('bike-user');
     try {
         // console.log(id);
         const res = await axios.patch(`${url}/users/${id}`, {
             name: name,
             email: email,
             role: role,
+        }, {
+            headers: { authtoken: token }
         });
         if (res.status === 200) {
             return { success: true };

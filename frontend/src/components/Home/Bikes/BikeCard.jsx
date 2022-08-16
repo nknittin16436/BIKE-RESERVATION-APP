@@ -4,18 +4,21 @@ import { Card, Button, Space, Input, Rate, Typography } from "antd";
 import "../../../App.css";
 import { useNavigate } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
-import { createBikeReservation, getBikeReservations } from "../../../Service/ReservationService";
+import {
+  createBikeReservation,
+  getBikeReservations,
+} from "../../../Service/ReservationService";
+import { deleteBike } from "../../../Service/BikeService";
 const { Meta } = Card;
 const { Text } = Typography;
 
-const BikeCard = ({ bike, getAllBikes ,duration }) => {
+const BikeCard = ({ bike, getAllBikes, duration }) => {
   const dispatch = useDispatch();
-  const { isManager, isDateFilterAdded ,loggedInUser} = useSelector(
+  const { isManager, isDateFilterAdded, loggedInUser } = useSelector(
     (state) => state.bikeReservation
   );
   const bikeId = bike.id;
-  const userId=loggedInUser.id;
-
+  const userId = loggedInUser.id;
 
   const [isEditMode, setIsEditMode] = useState(false);
   const [editedName, setEditedName] = useState(bike.name);
@@ -31,8 +34,9 @@ const BikeCard = ({ bike, getAllBikes ,duration }) => {
     setIsEditMode(true);
   };
 
-  const handleDeleteBike = () => {
-    setIsEditMode(true);
+  const handleDeleteBike = async () => {
+    await deleteBike(bikeId);
+    await getAllBikes();
   };
 
   const handleUpdateBike = async () => {
@@ -41,9 +45,14 @@ const BikeCard = ({ bike, getAllBikes ,duration }) => {
     // await getAllUsers();
     setIsEditMode(false);
   };
-  const submitBookNowBike = async() => {
-    console.log("Book bike ",bikeId,userId,duration);
-    const data=await createBikeReservation({bikeId,fromDate:duration[0],toDate:duration[1],userId});
+  const submitBookNowBike = async () => {
+    console.log("Book bike ", bikeId, userId, duration);
+    const data = await createBikeReservation({
+      bikeId,
+      fromDate: duration[0],
+      toDate: duration[1],
+      userId,
+    });
   };
   return (
     <Card
@@ -76,17 +85,21 @@ const BikeCard = ({ bike, getAllBikes ,duration }) => {
       ]}
       extra={
         <Space>
-          {!isEditMode && (
+          {isManager && !isEditMode && (
             <Button type="success" onClick={handleEditBike}>
               Edit
             </Button>
           )}
-          {isEditMode && (
+          {isManager && isEditMode && (
             <Button type="success" onClick={handleUpdateBike}>
               Update
             </Button>
           )}
-          <Button type="danger">Delete</Button>
+          {isManager && (
+            <Button type="danger" onClick={handleDeleteBike}>
+              Delete
+            </Button>
+          )}
         </Space>
       }
     >
