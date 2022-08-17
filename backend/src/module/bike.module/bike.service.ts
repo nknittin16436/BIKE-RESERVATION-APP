@@ -16,27 +16,39 @@ export class BikeService {
                     averageRating: Between(parseInt(query.rating), 5)
                 }
             });
-            bikes = bikes.filter(bike => bike.name.toLowerCase().includes(query.name.toLowerCase()));
-            bikes = bikes.filter(bike => bike.color.toLowerCase().includes(query.color.toLowerCase()));
-            bikes = bikes.filter(bike => bike.location.toLowerCase().includes(query.location.toLowerCase()));
-            bikes = bikes.filter((bike) => {
-                let reservations = bike.reservations;
-                reservations = reservations.filter(reservation => reservation.status === true)
-                if (reservations.length === 0) {
-                    return true;
-                }
-                for (const reservation of reservations) {
-                    if (query.fromDate < reservation.fromDate && query.toDate < reservation.fromDate) {
-                        return true;
-                    }
+            if (query.name) {
+                bikes = bikes.filter(bike => bike.name.toLowerCase().includes(query.name.toLowerCase()));
+            }
+            if (query.color) {
 
-                    if (query.fromDate > reservation.fromDate && query.fromDate > reservation.toDate) {
+                bikes = bikes.filter(bike => bike.color.toLowerCase().includes(query.color.toLowerCase()));
+            }
+            if (query.location) {
+
+                bikes = bikes.filter(bike => bike.location.toLowerCase().includes(query.location.toLowerCase()));
+            }
+            if (query.fromDate && query.toDate) {
+                bikes = bikes.filter((bike) => {
+                    let reservations = bike.reservations;
+                    reservations = reservations.filter(reservation => reservation.status === true)
+                    if (reservations.length === 0) {
                         return true;
                     }
-                }
-            });
+                    for (const reservation of reservations) {
+                        if (query.fromDate < reservation.fromDate && query.toDate < reservation.fromDate) {
+                            return true;
+                        }
+
+                        if (query.fromDate > reservation.fromDate && query.fromDate > reservation.toDate) {
+                            return true;
+                        }
+                    }
+                });
+            }
             const totalBikes = bikes.length;
-            bikes = bikes.slice((query.page - 1) * query.pageSize, query.page * query.pageSize);
+            if (query.page && query.pageSize) {
+                bikes = bikes.slice((query.page - 1) * query.pageSize, query.page * query.pageSize);
+            }
 
             console.log(bikes);
             // const filterdBikes = await Bike.createQueryBuilder("bike")
