@@ -21,20 +21,22 @@ export class BikeService {
             bikes = bikes.filter(bike => bike.location.toLowerCase().includes(query.location.toLowerCase()));
             bikes = bikes.filter((bike) => {
                 let reservations = bike.reservations;
-                reservations=reservations.filter(reservation=>reservation.status===true)
-                if(reservations.length===0){
+                reservations = reservations.filter(reservation => reservation.status === true)
+                if (reservations.length === 0) {
                     return true;
                 }
-                for (const reservation of reservations){
-                    if(query.fromDate<reservation.fromDate && query.toDate< reservation.fromDate){
+                for (const reservation of reservations) {
+                    if (query.fromDate < reservation.fromDate && query.toDate < reservation.fromDate) {
                         return true;
                     }
 
-                    if(query.fromDate>reservation.fromDate && query.fromDate>reservation.toDate){
+                    if (query.fromDate > reservation.fromDate && query.fromDate > reservation.toDate) {
                         return true;
                     }
                 }
             });
+            const totalBikes = bikes.length;
+            bikes = bikes.slice((query.page - 1) * query.pageSize, query.page * query.pageSize);
 
             console.log(bikes);
             // const filterdBikes = await Bike.createQueryBuilder("bike")
@@ -43,7 +45,7 @@ export class BikeService {
             //     .andWhere(`bike.location like :location`, { location: `${bikeLocation}` })
             //     .getMany()
             // console.log(filterdBikes);
-            return { bikes, success: true }
+            return { bikes, totalBikes, success: true }
         } catch (error) {
             throw new Error(error);
         }
@@ -63,25 +65,6 @@ export class BikeService {
         }
     }
 
-    // async getUser(token: string): Promise<any> {
-    //     try {
-    //         var decoded = jwt.verify(token, 'restaurantBackend');
-    //         const userId = decoded.id;
-    //         const user = await User.findOne({ where: { id: userId } });
-    //         if (user) {
-    //             delete user.password;
-    //             return { user, success: true, statusCode: 200 }
-    //         }
-    //         throw new HttpException('User does not exist', 400);
-    //     } catch (error) {
-    //         throw new HttpException('User does not exist', 400);
-    //     }
-    // }
-
-
-
-
-
     async updateBike({ id, name, color, location }): Promise<any> {
         try {
             const bike = await Bike.findOne({ where: { id: id } });
@@ -89,7 +72,7 @@ export class BikeService {
                 await Bike.update(id, { name, color, location });
                 return { success: true, statusCode: 200 }
             }
-            else throw new HttpException('Unable to update user', 400);
+            else throw new HttpException('Unable to update Bike', 400);
         } catch (error) {
             throw new HttpException(error.message, 400);
         }
@@ -103,7 +86,7 @@ export class BikeService {
                 await Bike.delete(id);
                 return { success: true, statusCode: 200 }
             }
-            else throw new HttpException('Unable to delete Bike', 400);
+            else throw new HttpException('Unable to delete Bike / Bike not Found', 400);
         } catch (error) {
             throw new HttpException(error.message, 400);
         }

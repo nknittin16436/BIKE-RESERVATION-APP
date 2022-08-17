@@ -5,10 +5,10 @@ const url = "http://localhost:5000";
 
 
 export const getReservations = async () => {
-    const token =localStorage.getItem('bike-user');
+    const token = localStorage.getItem('bike-user');
     try {
-        const res = await axios.get(`${url}/reservations`,{
-            headers:{authtoken:token}
+        const res = await axios.get(`${url}/reservations`, {
+            headers: { authtoken: token }
         });
         console.log(res);
 
@@ -37,12 +37,7 @@ export const createBikeReservation = async ({ bikeId, fromDate, toDate, userId }
         console.log(res);
 
         return res.data;
-        if (res.status === 201) {
-            return { success: true };
-        }
-        else {
-            return { success: false }
-        }
+
     } catch (error) {
         console.log(error);
         throw new Error(error.response.data)
@@ -50,21 +45,16 @@ export const createBikeReservation = async ({ bikeId, fromDate, toDate, userId }
 }
 
 export const getUserReservations = async (userId) => {
-    const token =localStorage.getItem('bike-user');
+    const token = localStorage.getItem('bike-user');
 
     try {
-        const res = await axios.get(`${url}/reservations/user?userId=${userId}`,{
-            headers:{authtoken:token}
+        const res = await axios.get(`${url}/reservations/user?userId=${userId}`, {
+            headers: { authtoken: token }
         });
         console.log(res);
 
         return res.data;
-        if (res.status === 201) {
-            return { success: true };
-        }
-        else {
-            return { success: false }
-        }
+
     } catch (error) {
         console.log(error);
         throw new Error(error.response.data)
@@ -72,17 +62,16 @@ export const getUserReservations = async (userId) => {
 }
 
 export const getBikeReservations = async (bikeId) => {
+    const token = localStorage.getItem('bike-user');
+
     try {
-        const res = await axios.get(`${url}/reservations/bike?bikeId=${bikeId}`);
+        const res = await axios.get(`${url}/reservations/bike?bikeId=${bikeId}`, {
+            headers: { authtoken: token }
+        });
         console.log(res);
 
         return res.data;
-        if (res.status === 201) {
-            return { success: true };
-        }
-        else {
-            return { success: false }
-        }
+
     } catch (error) {
         console.log(error);
         throw new Error(error.response.data)
@@ -98,12 +87,7 @@ export const updateReservationStatus = async ({ id }) => {
         console.log(res);
 
         return res.data;
-        if (res.status === 201) {
-            return { success: true };
-        }
-        else {
-            return { success: false }
-        }
+
     } catch (error) {
         console.log(error);
         throw new Error(error.response.data)
@@ -123,12 +107,7 @@ export const updateReservationRating = async ({ id, rating }) => {
         console.log(res);
 
         return res.data;
-        if (res.status === 201) {
-            return { success: true };
-        }
-        else {
-            return { success: false }
-        }
+
     } catch (error) {
         console.log(error);
         throw new Error(error.response.data)

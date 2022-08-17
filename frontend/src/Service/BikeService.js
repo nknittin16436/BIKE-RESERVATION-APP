@@ -4,22 +4,16 @@ const url = "http://localhost:5000";
 
 
 
-export const getBikes = async ({name="", location="", color="", rating="0", fromDate,toDate}) => {
+export const getBikes = async ({name="", location="", color="", rating="0", fromDate='',toDate='',page,PAGE_SIZE}) => {
     const token = localStorage.getItem('bike-user');
 
     try {
-        const res = await axios.get(`${url}/bikes?name=${name}&location=${location}&color=${color}&rating=${rating}&fromDate=${fromDate}&toDate=${toDate}`, {
+        const res = await axios.get(`${url}/bikes?name=${name}&location=${location}&color=${color}&rating=${rating}&fromDate=${fromDate}&toDate=${toDate}&page=${page}&pageSize=${PAGE_SIZE}`, {
             headers: { authtoken: token }
         });
         console.log(res);
 
         return res.data;
-        if (res.status === 201) {
-            return { success: true };
-        }
-        else {
-            return { success: false }
-        }
     } catch (error) {
         console.log(error);
         throw new Error(error.response.data)
@@ -38,14 +32,7 @@ export const addNewBike = async ({ addBikeName, addBikeColor, addBikeLocation })
             headers: { authtoken: token }
         });
         console.log(res);
-
         return res.data;
-        if (res.status === 201) {
-            return { success: true };
-        }
-        else {
-            return { success: false }
-        }
     } catch (error) {
         console.log(error);
         throw new Error(error.response.data)

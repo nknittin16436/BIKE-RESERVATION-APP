@@ -13,7 +13,9 @@ const initialState = {
     totalRestaurant: 0,
     page: 1,
     isDateFilterAdded:false,
-    reservations:[]
+    reservations:[],
+    totalBikes:0
+
 };
 
 export const bikeReservationReducer = createReducer(initialState, {
@@ -52,5 +54,8 @@ export const bikeReservationReducer = createReducer(initialState, {
     },
     reservations: (state, action) => {
         state.reservations = action.payload
+    },
+    totalBikes: (state, action) => {
+        state.totalBikes = action.payload
     },
 })

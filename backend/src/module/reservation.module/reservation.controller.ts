@@ -3,6 +3,7 @@ import { AdminGuard } from 'src/guards/admin.guard';
 import { AdminRegular } from 'src/guards/adminregular.guard';
 import { AuthGuard } from 'src/guards/auth.guard';
 import { RatingGuard } from 'src/guards/rating.guard';
+import { UserReservationGuard } from 'src/guards/UserReservation.guard';
 import { ReservationService } from './reservation.service';
 // import { RoleGuard } from 'src/guards/role.guard';
 @Controller('/reservations')
@@ -14,12 +15,12 @@ export class ReservationController {
     getReservations(): any {
         return this.reservationService.getAllReservations();
     }
-    @UseGuards(AuthGuard)
+    @UseGuards(UserReservationGuard)
     @Get('/user')
     getUserReservations(@Query('userId') userId: string): any {
         return this.reservationService.getAllUserReservations(userId);
     }
-
+   @UseGuards(AdminGuard)
     @Get('/bike')
     getBikeReservations(@Query('bikeId') bikeId: string): any {
         return this.reservationService.getAllBikeReservations(bikeId);
@@ -35,7 +36,7 @@ export class ReservationController {
     @UseGuards(AdminRegular)
     @Get('/:id')
     updateReservation(@Param('id') id: string): any {
-        return this.reservationService.updateReservation(id);
+        return this.reservationService.updateReservationStatus(id);
     }
     @UseGuards(RatingGuard)
     @Post('/:id')
@@ -45,14 +46,8 @@ export class ReservationController {
 
     // // @UseGuards(RoleGuard)
     @Delete('/:id')
-    deleteUser(@Param('id') id: string): any {
+    deleteReservation(@Param('id') id: string): any {
         return this.reservationService.deleteReservation(id);
     }
-
-
-    // @Get('/info')
-    // getUser(@Headers('authtoken') token:string): any {
-    //     return this.reservationService.getUser(token);
-    // }
 
 }

@@ -10,7 +10,7 @@ export class ReservationService {
             const reservations = await Reservation.find();
             return { reservations, success: true }
         } catch (error) {
-            throw new Error(error);
+            throw new HttpException(error, error.status);
         }
     }
     async getAllUserReservations(userId): Promise<any> {
@@ -18,7 +18,8 @@ export class ReservationService {
             const reservations = await Reservation.find({ where: { userId: userId } });
             return { reservations, success: true }
         } catch (error) {
-            throw new Error(error);
+            throw new HttpException(error, error.status);
+
         }
     }
     async getAllBikeReservations(bikeId): Promise<any> {
@@ -26,14 +27,24 @@ export class ReservationService {
             const reservations = await Reservation.find({ where: { bikeId: bikeId } });
             return { reservations, success: true }
         } catch (error) {
-            throw new Error(error);
+            throw new HttpException(error, error.status);
         }
     }
 
     async createReservation({ bikeId, fromDate, toDate, userId }): Promise<any> {
         try {
             const bike = await Bike.findOne({ where: { id: bikeId } });
+            if (!bike) {
+                throw new HttpException('Invalid Bike Id', 400);
+            }
             const user = await User.findOne({ where: { id: userId } });
+            if (!user) {
+                throw new HttpException('Invalid User', 400);
+            }
+
+            if (fromDate > toDate) {
+                throw new HttpException('Enter valid Reservation Duration', 400);
+            }
             if (bike && user) {
                 const reservation = new Reservation();
                 reservation.bikeName = bike.name;
@@ -44,69 +55,53 @@ export class ReservationService {
                 reservation.userName = user.name;
                 await reservation.save();
                 console.log(reservation);
+                return { success: true, statusCode: 201 };
             }
         } catch (error) {
-
+            throw new HttpException(error, error.status);
         }
-
     }
 
-    // async getUser(token: string): Promise<any> {
-    //     try {
-    //         var decoded = jwt.verify(token, 'restaurantBackend');
-    //         const userId = decoded.id;
-    //         const user = await User.findOne({ where: { id: userId } });
-    //         if (user) {
-    //             delete user.password;
-    //             return { user, success: true, statusCode: 200 }
-    //         }
-    //         throw new HttpException('User does not exist', 400);
-    //     } catch (error) {
-    //         throw new HttpException('User does not exist', 400);
-    //     }
-    // }
-
-
-
-
-
-    async updateReservation(id: string): Promise<any> {
+    async updateReservationStatus(id: string): Promise<any> {
         try {
             const reservation = await Reservation.findOne({ where: { id: id } });
             if (reservation) {
                 if (reservation.status) {
-
                     await Reservation.update(id, { status: false });
                 }
                 return { success: true, statusCode: 200 }
             }
-            else throw new HttpException('Unable to update Reservation', 400);
+            else throw new HttpException('Unable to update Reservation Status', 400);
         } catch (error) {
-            throw new HttpException(error.message, 400);
+            throw new HttpException(error, error.status);
         }
     }
 
     async updateReservationRating({ id, rating }): Promise<any> {
         try {
-            const reservation = await Reservation.findOne({ where: { id: id } });
-            if (reservation && !reservation.isRated) {
-                await Reservation.update(id, { rating: parseInt(rating), isRated: true });
-                const bike = await Bike.findOne({ where: { id: reservation.bikeId }, relations: { reservations: true, } });
-                console.log(bike);
-                let averageRating = 0;
-                let ratedReservationLength=0;
-                for (const reservation of bike.reservations) {
-                    if(reservation.isRated){
-                        ratedReservationLength++;
+            if (rating > 0 && rating < 6) {
+                const reservation = await Reservation.findOne({ where: { id: id } });
+                if (reservation && !reservation.isRated) {
+                    await Reservation.update(id, { rating: parseInt(rating), isRated: true });
+                    const bike = await Bike.findOne({ where: { id: reservation.bikeId }, relations: { reservations: true, } });
+                    console.log(bike);
+                    let averageRating = 0;
+                    let ratedReservationLength = 0;
+                    for (const reservation of bike.reservations) {
+                        if (reservation.isRated) {
+                            ratedReservationLength++;
+                        }
+                        averageRating += reservation.rating;
                     }
-                    averageRating += reservation.rating;
+                    averageRating /= ratedReservationLength;
+                    console.log(averageRating);
+                    await Bike.update(reservation.bikeId, { averageRating: averageRating });
+                    return { success: true, statusCode: 200 }
                 }
-                averageRating /= ratedReservationLength;
-                console.log(averageRating);
-                await Bike.update(reservation.bikeId, { averageRating: averageRating });
-                return { success: true, statusCode: 200 }
+                else throw new HttpException('Unable to Add Reservation Rating', 400);
             }
-            else throw new HttpException('Unable to Add Rating', 400);
+            else throw new HttpException('Invalid Rating', 400);
+
         } catch (error) {
             throw new HttpException(error.message, 400);
         }
