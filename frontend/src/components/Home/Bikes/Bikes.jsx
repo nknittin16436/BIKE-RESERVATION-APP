@@ -54,7 +54,14 @@ const Bike = ({}) => {
   };
 
   const getAllBikes = async () => {
-    const data = await getBikes({name, location, color, rating, fromDate:duration[0],toDate:duration[1]});
+    const data = await getBikes({
+      name,
+      location,
+      color,
+      rating,
+      fromDate: duration[0],
+      toDate: duration[1],
+    });
     console.log(data);
     setBikes(data.bikes);
   };
@@ -70,16 +77,28 @@ const Bike = ({}) => {
     console.log("hellooo");
     console.log("Date", date);
     console.log("DateString", dateString);
-    dispatch({ type: "isDateFilterAdded", payload: !isDateFilterAdded });
     setDuration(dateString);
   };
 
-  const handleFilterSubmit =async () => {
-    console.log({name, location, color, rating, duration});
-    const data = await getBikes({name, location, color, rating, fromDate:duration[0],toDate:duration[1]});
+  const handleFilterSubmit = async () => {
+    console.log({ name, location, color, rating, duration });
+    const data = await getBikes({
+      name,
+      location,
+      color,
+      rating,
+      fromDate: duration[0],
+      toDate: duration[1],
+    });
     console.log(data);
     setBikes(data.bikes);
+    if (duration[0] !== "" && duration[1] !== "") {
+      dispatch({ type: "isDateFilterAdded", payload: true });
+    }
+    else{
+      dispatch({ type: "isDateFilterAdded", payload: false });
 
+    }
   };
 
   return (

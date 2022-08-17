@@ -8,7 +8,7 @@ export const getBikes = async ({name="", location="", color="", rating="0", from
     const token = localStorage.getItem('bike-user');
 
     try {
-        const res = await axios.get(`${url}/bikes?name=${name}&location=${location}&color=${color}&rating=${rating}`, {
+        const res = await axios.get(`${url}/bikes?name=${name}&location=${location}&color=${color}&rating=${rating}&fromDate=${fromDate}&toDate=${toDate}`, {
             headers: { authtoken: token }
         });
         console.log(res);
