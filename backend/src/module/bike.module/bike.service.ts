@@ -16,24 +16,27 @@ export class BikeService {
                     averageRating: Between(parseInt(query.rating), 5)
                 }
             });
-            bikes = bikes.filter(bike => bike.name.toLowerCase().includes(query.name.toLowerCase()))
-            bikes = bikes.filter(bike => bike.color.toLowerCase().includes(query.color.toLowerCase()))
-            bikes = bikes.filter(bike => bike.location.toLowerCase().includes(query.location.toLowerCase()))
+            bikes = bikes.filter(bike => bike.name.toLowerCase().includes(query.name.toLowerCase()));
+            bikes = bikes.filter(bike => bike.color.toLowerCase().includes(query.color.toLowerCase()));
+            bikes = bikes.filter(bike => bike.location.toLowerCase().includes(query.location.toLowerCase()));
+            bikes = bikes.filter((bike) => {
+                let reservations = bike.reservations;
+                reservations=reservations.filter(reservation=>reservation.status===true)
+                if(reservations.length===0){
+                    return true;
+                }
+                for (const reservation of reservations){
+                    if(query.fromDate<reservation.fromDate && query.toDate< reservation.fromDate){
+                        return true;
+                    }
+
+                    if(query.fromDate>reservation.fromDate && query.fromDate>reservation.toDate){
+                        return true;
+                    }
+                }
+            });
 
             console.log(bikes);
-
-
-
-            const bikeName = "Bajaj Pulsar";
-            const bikeColor = "White";
-            const bikeLocation = "Gurgaon";
-            // const filterdBikes = await Bike.find({
-            //     where: [{
-            //         name: Like(`${bikeName}`),
-            //     }]
-            // });
-
-
             // const filterdBikes = await Bike.createQueryBuilder("bike")
             //     .where(`bike.name like :name`, { name: `${bikeName}` })
             //     .andWhere(`bike.color like :color`, { color: `${bikeColor}` })
