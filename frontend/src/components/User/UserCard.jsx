@@ -1,9 +1,7 @@
 import React, { useState } from "react";
 import "antd/dist/antd";
-import { EditOutlined, SettingOutlined } from "@ant-design/icons";
 import { Card, Button, Space, Input, Select } from "antd";
 import "../../App.css";
-import { updateReservations } from "../../Service/ReservationService";
 import { useNavigate } from "react-router-dom";
 import { deleteUser, editUser } from "../../Service/UserService";
 import { useSelector } from "react-redux";
@@ -18,7 +16,7 @@ const UserCard = ({ user, getAllUsers }) => {
   const navigate = useNavigate();
   const userId = user.id;
 
-  const { isManager, loggedInUser } = useSelector(
+  const { isManager } = useSelector(
     (state) => state.bikeReservation
   );
 

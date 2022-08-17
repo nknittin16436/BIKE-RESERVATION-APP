@@ -21,7 +21,7 @@ export const registerUser = async ({ name, email, password, confirmPassword }) =
         }
     } catch (error) {
         console.log(error);
-        throw new Error(error.response.data)
+        throw new Error(error.response.data.message)
     }
 }
 
@@ -35,18 +35,9 @@ export const loginUser = async ({ email, password }) => {
             password: password,
         });
         return res.data;
-        console.log(res);
-        if (res.status === 201) {
-
-            return { accessToken: res.data.accessToken, success: true };
-        }
-        else {
-            const err = new Error("Invalid Email or password");
-            err.status = false;
-            throw err;
-        }
     } catch (error) {
         console.log(error);
+        throw new Error(error.response.data.message)
     }
 }
 

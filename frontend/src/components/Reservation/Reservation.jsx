@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import { Layout } from "antd";
 import ReservationCard from "./ReservationCard";
 import { createTheme, Grid } from "@mui/material";
-import { getReservations, getUserReservations } from "../../Service/ReservationService";
+import {  getUserReservations } from "../../Service/ReservationService";
 import {useSelector} from 'react-redux'
 const { Content } = Layout;
 
@@ -20,7 +20,7 @@ const theme = createTheme({
 
 const Reservation = () => {
   const [reservations, setReservations] = useState([]);
-  const { isManager, loggedInUser } = useSelector(
+  const {  loggedInUser } = useSelector(
     (state) => state.bikeReservation
   );
 

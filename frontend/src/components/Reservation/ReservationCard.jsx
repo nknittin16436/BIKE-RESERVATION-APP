@@ -14,7 +14,7 @@ const { Meta } = Card;
 
 const ReservationCard = ({ reservation, getAllReservations }) => {
   const [rating, setRating] = useState(0);
-  const { isManager, isDateFilterAdded, loggedInUser } = useSelector(
+  const { isManager, loggedInUser } = useSelector(
     (state) => state.bikeReservation
   );
 

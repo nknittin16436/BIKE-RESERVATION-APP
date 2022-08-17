@@ -3,7 +3,6 @@ import { Layout } from "antd";
 import ReservationCard from "./ReservationCard";
 import { createTheme, Grid } from "@mui/material";
 import {
-  getReservations,
   getUserReservations,
 } from "../../Service/ReservationService";
 import { useSearchParams } from "react-router-dom";

@@ -1,11 +1,14 @@
 import * as Joi from 'joi';
 
 export const LoginSchema = Joi.object({
-    password: Joi.string()
-        .pattern(new RegExp('^[a-zA-Z0-9$%#@]{8,30}$')),
-
     email: Joi.string()
         .email({ minDomainSegments: 2, tlds: { allow: ['com', 'net'] } })
+        .error(new Error('Invalid Email')),
+
+    password: Joi.string()
+        .pattern(new RegExp('^[a-zA-Z0-9$%#@]{8,30}$'))
+        .error(new Error('Password Should contain One upper case,one lower case,one number and one special character and atleast 8 characters long')),
+
 }).with('email', 'password');
 
 
@@ -15,14 +18,21 @@ export const SignUpSchema = Joi.object({
         .max(30)
         .trim()
         .required()
-        .pattern(new RegExp(/^\w+(?:\s+\w+)*$/)),
-
-    password: Joi.string()
-        .pattern(new RegExp('^[a-zA-Z0-9$%#@]{8,30}$')),
+        .pattern(new RegExp(/^\w+(?:\s+\w+)*$/))
+        .error(new Error('Enter a valid Name')),
 
     email: Joi.string()
-        .email({ minDomainSegments: 2, tlds: { allow: ['com', 'net'] } }),
+        .email({ minDomainSegments: 2, tlds: { allow: ['com', 'net'] } })
+        .error(new Error('Enter a valid Email')),
 
-    confirmPassword: Joi.ref('password'),
+    password: Joi.string()
+        .pattern(new RegExp('^[a-zA-Z0-9$%#@]{8,30}$'))
+        .error(new Error('Password Should contain One upper case,one lower case,one number and one special character and atleast 8 characters long')),
+
+
+
+
+    confirmPassword: Joi.ref('password')
+
 }).with('email', 'password');
 

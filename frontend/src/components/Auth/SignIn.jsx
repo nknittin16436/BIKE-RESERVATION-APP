@@ -1,4 +1,4 @@
-import * as React from "react";
+import React, { useState } from "react";
 import Avatar from "@mui/material/Avatar";
 import Button from "@mui/material/Button";
 import CssBaseline from "@mui/material/CssBaseline";
@@ -14,104 +14,117 @@ import { LoginSchema } from "../../JoiSchema/Schema";
 import { loginUser } from "../../Service/UserService";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
-import { ToastContainer, toast } from "react-toastify";
-import "react-toastify/dist/ReactToastify.css";
+import { useAlert } from "react-alert";
+import Loader from "../Loader/Loader";
 const theme = createTheme();
 
 const Login = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
+  const alert = useAlert();
+  const [loading, setLoading] = useState(false);
 
   const handleSubmit = async (event) => {
     event.preventDefault();
     const data = new FormData(event.currentTarget);
-    console.log(
-      "Joi",
+    try {
       await LoginSchema.validateAsync({
         email: data.get("email"),
         password: data.get("password"),
-      })
-    );
-
-    const res = await loginUser({
-      email: data.get("email"),
-      password: data.get("password"),
-    });
-    console.log(res);
-    localStorage.setItem("bike-user", res.accessToken);
-    dispatch({ type: "isAuthenticated", payload: true });
-    dispatch({ type: "loggedInUser", payload: res.user });
-    if (res.user.role === "manager") {
-      dispatch({ type: "isManager", payload: true });
+      });
+      setLoading(true);
+      const res = await loginUser({
+        email: data.get("email"),
+        password: data.get("password"),
+      });
+      console.log(res);
+      if (res.success) {
+        localStorage.setItem("bike-user", res.accessToken);
+        dispatch({ type: "isAuthenticated", payload: true });
+        dispatch({ type: "loggedInUser", payload: res.user });
+        if (res.user.role === "manager") {
+          dispatch({ type: "isManager", payload: true });
+        }
+        alert.show(`Welcome ${res.user.name}`);
+        navigate("/");
+      } else {
+        setLoading(false);
+        alert.show("Some error occured Please try again");
+      }
+    } catch (error) {
+      setLoading(false);
+      console.log(error);
+      alert.show(error.message);
     }
-    navigate("/");
-    console.log({
-      email: data.get("email"),
-      password: data.get("password"),
-    });
   };
 
   return (
-    <ThemeProvider theme={theme}>
-      <Container component="main" maxWidth="xs">
-        <CssBaseline />
-        <Box
-          sx={{
-            marginTop: 8,
-            display: "flex",
-            flexDirection: "column",
-            alignItems: "center",
-          }}
-        >
-          <Avatar sx={{ m: 1, bgcolor: "secondary.main" }}>
-            <LockOutlinedIcon />
-          </Avatar>
-          <Typography component="h1" variant="h5">
-            Login
-          </Typography>
-          <Box
-            component="form"
-            onSubmit={handleSubmit}
-            noValidate
-            sx={{ mt: 1 }}
-          >
-            <TextField
-              margin="normal"
-              required
-              fullWidth
-              id="email"
-              label="Email Address"
-              name="email"
-              autoComplete="email"
-              autoFocus
-            />
-            <TextField
-              margin="normal"
-              required
-              fullWidth
-              name="password"
-              label="Password"
-              type="password"
-              id="password"
-              autoComplete="current-password"
-            />
-            <Button
-              type="submit"
-              fullWidth
-              variant="contained"
-              sx={{ mt: 3, mb: 2 }}
+    <div className="sign__container">
+      {loading ? (
+        <Loader />
+      ) : (
+        <ThemeProvider theme={theme}>
+          <Container component="main" maxWidth="xs">
+            <CssBaseline />
+            <Box
+              sx={{
+                marginTop: 8,
+                display: "flex",
+                flexDirection: "column",
+                alignItems: "center",
+              }}
             >
-              Login
-            </Button>
-            <Grid container>
-              <Grid item>
-                <Link to="/register">Don't have an account? Sign Up</Link>
-              </Grid>
-            </Grid>
-          </Box>
-        </Box>
-      </Container>
-    </ThemeProvider>
+              <Avatar sx={{ m: 1, bgcolor: "secondary.main" }}>
+                <LockOutlinedIcon />
+              </Avatar>
+              <Typography component="h1" variant="h5">
+                Login
+              </Typography>
+              <Box
+                component="form"
+                onSubmit={handleSubmit}
+                noValidate
+                sx={{ mt: 1 }}
+              >
+                <TextField
+                  margin="normal"
+                  required
+                  fullWidth
+                  id="email"
+                  label="Email Address"
+                  name="email"
+                  autoComplete="email"
+                  autoFocus
+                />
+                <TextField
+                  margin="normal"
+                  required
+                  fullWidth
+                  name="password"
+                  label="Password"
+                  type="password"
+                  id="password"
+                  autoComplete="current-password"
+                />
+                <Button
+                  type="submit"
+                  fullWidth
+                  variant="contained"
+                  sx={{ mt: 3, mb: 2 }}
+                >
+                  Login
+                </Button>
+                <Grid container>
+                  <Grid item>
+                    <Link to="/register">Don't have an account? Sign Up</Link>
+                  </Grid>
+                </Grid>
+              </Box>
+            </Box>
+          </Container>
+        </ThemeProvider>
+      )}
+    </div>
   );
 };
 

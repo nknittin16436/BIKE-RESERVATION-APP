@@ -1,11 +1,9 @@
 import React, { useState, useEffect } from "react";
 import { Layout, Space, Modal, Button,Input } from "antd";
-import Navbar from "../Home/Navbar/Navbar";
 import UserCard from "./UserCard";
 import { createTheme, Grid } from "@mui/material";
-import { getReservations } from "../../Service/ReservationService";
 import { getUsers, registerUser } from "../../Service/UserService";
-const { Header, Sider, Content } = Layout;
+const { Content } = Layout;
 
 const theme = createTheme({
   breakpoints: {
