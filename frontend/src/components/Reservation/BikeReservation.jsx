@@ -23,6 +23,8 @@ const theme = createTheme({
 
 const BikeReservation = () => {
   const [searchParams, setSearchParams] = useSearchParams();
+  const [loading, setLoading] = useState(false);
+
   const bikeId = searchParams.get("bikeId");
 
   const [reservations, setReservations] = useState([]);
@@ -38,7 +40,7 @@ const BikeReservation = () => {
   return (
     <div className="reservation">
       <div className="reservation__container">
-        <h1>User Reservation</h1>
+        <h1>Bike Reservation</h1>
         <Layout>
           <Layout className="site-layout">
             <Content
@@ -69,6 +71,8 @@ const BikeReservation = () => {
                           reservation={reservation}
                           key={reservation.id}
                           getAllReservations={getAllBikeReservations}
+                          setLoading={setLoading}
+
                         />
                       </Grid>
                     ))}

@@ -13,15 +13,9 @@ export const getReservations = async () => {
         console.log(res);
 
         return res.data;
-        if (res.status === 201) {
-            return { success: true };
-        }
-        else {
-            return { success: false }
-        }
     } catch (error) {
         console.log(error);
-        throw new Error(error.response.data)
+        throw new Error(error.response.data.message)
     }
 }
 
@@ -40,7 +34,7 @@ export const createBikeReservation = async ({ bikeId, fromDate, toDate, userId }
 
     } catch (error) {
         console.log(error);
-        throw new Error(error.response.data)
+        throw new Error(error.response.data.message)
     }
 }
 
@@ -57,7 +51,7 @@ export const getUserReservations = async (userId) => {
 
     } catch (error) {
         console.log(error);
-        throw new Error(error.response.data)
+        throw new Error(error.response.data.message)
     }
 }
 
@@ -74,7 +68,7 @@ export const getBikeReservations = async (bikeId) => {
 
     } catch (error) {
         console.log(error);
-        throw new Error(error.response.data)
+        throw new Error(error.response.data.message)
     }
 }
 
@@ -90,7 +84,7 @@ export const updateReservationStatus = async ({ id }) => {
 
     } catch (error) {
         console.log(error);
-        throw new Error(error.response.data)
+        throw new Error(error.response.data.message)
     }
 }
 
@@ -110,7 +104,7 @@ export const updateReservationRating = async ({ id, rating }) => {
 
     } catch (error) {
         console.log(error);
-        throw new Error(error.response.data)
+        throw new Error(error.response.data.message)
     }
 }
 

@@ -50,7 +50,6 @@ const App = () => {
 
   return (
     <div>
-
       {loggedInUser && <Navbar />}
       <Routes>
         <Route path="/login" element={<Login />} />

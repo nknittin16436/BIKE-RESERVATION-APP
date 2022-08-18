@@ -68,8 +68,9 @@ export class ReservationService {
             if (reservation) {
                 if (reservation.status) {
                     await Reservation.update(id, { status: false });
+                    return { success: true, statusCode: 200 };
                 }
-                return { success: true, statusCode: 200 }
+                else throw new HttpException('Cannot cancel an already cancelled Reservation', 400);
             }
             else throw new HttpException('Unable to update Reservation Status', 400);
         } catch (error) {
@@ -81,7 +82,7 @@ export class ReservationService {
         try {
             if (rating > 0 && rating < 6) {
                 const reservation = await Reservation.findOne({ where: { id: id } });
-                if (reservation && !reservation.isRated) {
+                if (reservation && !reservation.isRated && reservation.status) {
                     await Reservation.update(id, { rating: parseInt(rating), isRated: true });
                     const bike = await Bike.findOne({ where: { id: reservation.bikeId }, relations: { reservations: true, } });
                     console.log(bike);

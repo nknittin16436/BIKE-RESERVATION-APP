@@ -3,7 +3,7 @@ import { Layout } from "antd";
 import ReservationCard from "./ReservationCard";
 import { createTheme, Grid } from "@mui/material";
 import { getReservations } from "../../Service/ReservationService";
-import {useSelector} from 'react-redux'
+import { useSelector } from "react-redux";
 const { Content } = Layout;
 
 const theme = createTheme({
@@ -20,9 +20,8 @@ const theme = createTheme({
 
 const AllReservation = () => {
   const [reservations, setReservations] = useState([]);
-  const { isManager } = useSelector(
-    (state) => state.bikeReservation
-  );
+  const [loading, setLoading] = useState(false);
+  const { isManager } = useSelector((state) => state.bikeReservation);
 
   const getAllReservations = async () => {
     const data = await getReservations();
@@ -32,7 +31,7 @@ const AllReservation = () => {
   useEffect(() => {
     getAllReservations();
   }, []);
-  
+
   return (
     <div className="reservation">
       <div className="reservation__container">
@@ -66,6 +65,7 @@ const AllReservation = () => {
                           reservation={reservation}
                           key={reservation.id}
                           getAllReservations={getAllReservations}
+                          setLoading={setLoading}
                         />
                       </Grid>
                     ))}

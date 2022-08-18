@@ -35,3 +35,27 @@ export const SignUpSchema = Joi.object({
 
 }).with('email', 'password');
 
+export const AddBikeSchema = Joi.object({
+    name: Joi.string()
+        .min(3)
+        .max(30)
+        .trim()
+        .required()
+        .pattern(new RegExp(/^\w+(?:\s+\w+)*$/))
+        .error(new Error('Enter a valid Name')),
+    color: Joi.string()
+        .min(3)
+        .max(30)
+        .trim()
+        .required()
+        .pattern(new RegExp(/^\w+(?:\s+\w+)*$/))
+        .error(new Error('Enter a valid Color')),
+    location: Joi.string()
+        .min(3)
+        .max(30)
+        .trim()
+        .required()
+        .pattern(new RegExp(/^\w+(?:\s+\w+)*$/))
+        .error(new Error('Enter a valid Location')),
+
+})

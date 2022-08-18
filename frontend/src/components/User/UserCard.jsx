@@ -6,6 +6,7 @@ import { useNavigate } from "react-router-dom";
 import { deleteUser, editUser } from "../../Service/UserService";
 import { useSelector } from "react-redux";
 import { useAlert } from "react-alert";
+import { UpdateUserSchema } from "../../JoiSchema/Schema";
 const { Option } = Select;
 const { Meta } = Card;
 
@@ -49,6 +50,10 @@ const UserCard = ({ user, getAllUsers, setLoading }) => {
   const handleUpdateUser = async () => {
     console.log(editedName, editedEmail, editedRole);
     try {
+      await UpdateUserSchema.validateAsync({
+        name: editedName,
+        email: editedEmail,
+      });
       setLoading(true);
       const res = await editUser(user.id, editedName, editedEmail, editedRole);
       setLoading(false);
@@ -66,6 +71,9 @@ const UserCard = ({ user, getAllUsers, setLoading }) => {
   };
   const handleUpdateCancelUser = () => {
     setIsEditMode(false);
+    setEditedName(user.name);
+    setEditedEmail(user.email);
+    setEditedRole(user.role);
   };
   return (
     <Card

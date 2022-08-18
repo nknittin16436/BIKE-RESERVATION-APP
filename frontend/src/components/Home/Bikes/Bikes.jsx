@@ -2,18 +2,24 @@ import React, { useState, useEffect } from "react";
 import "antd/dist/antd";
 import "../../../index.css";
 import Pagination from "react-js-pagination";
-
 import { Layout, Input, Space, DatePicker, Button, Select, Modal } from "antd";
 import BikeCard from "./BikeCard";
 import { createTheme, Grid } from "@mui/material";
-import { addNewBike, getBikes } from "../../../Service/BikeService";
+import {
+  addNewBike,
+  getBikes,
+  getFilteredBikes,
+} from "../../../Service/BikeService";
 import { useDispatch, useSelector } from "react-redux";
 import { AddBikeSchema } from "../../../JoiSchema/Schema";
 import { useAlert } from "react-alert";
 import Loader from "../../Loader/Loader";
+import moment from "moment";
+import "bootstrap/less/bootstrap.less";
+import "bootstrap-less";
 const { Option } = Select;
 
-const { Header, Content, Sider } = Layout;
+const { Content, Sider } = Layout;
 const { RangePicker } = DatePicker;
 
 const theme = createTheme({
@@ -31,7 +37,7 @@ const theme = createTheme({
 const Bike = ({}) => {
   const PAGE_SIZE = 5;
 
-  const { isManager, isDateFilterAdded, totalBikes } = useSelector(
+  const { isManager, filterMode, totalBikes } = useSelector(
     (state) => state.bikeReservation
   );
 
@@ -86,12 +92,6 @@ const Bike = ({}) => {
 
   const getAllBikes = async () => {
     const data = await getBikes({
-      name,
-      location,
-      color,
-      rating,
-      fromDate: duration[0],
-      toDate: duration[1],
       page: currentPage,
       PAGE_SIZE,
     });
@@ -104,19 +104,24 @@ const Bike = ({}) => {
     setIsModalVisible(true);
   };
   useEffect(() => {
-    getAllBikes();
-  }, [currentPage]);
+    if (filterMode) {
+      handleFilterSubmit();
+    } else {
+      getAllBikes();
+    }
+    console.log(bikes);
+  }, [currentPage, filterMode]);
 
   const handleChange = (date, dateString) => {
-    console.log("hellooo");
-    console.log("Date", date);
-    console.log("DateString", dateString);
     setDuration(dateString);
   };
 
   const handleFilterSubmit = async () => {
+    debugger;
     console.log({ name, location, color, rating, duration });
-    const data = await getBikes({
+    dispatch({ type: "filterMode", payload: true });
+
+    const data = await getFilteredBikes({
       name,
       location,
       color,
@@ -130,13 +135,27 @@ const Bike = ({}) => {
     dispatch({ type: "totalBikes", payload: data.totalBikes });
     setBikes(data.bikes);
     if (duration[0] !== "" && duration[1] !== "") {
+      console.log("Array two");
       dispatch({ type: "isDateFilterAdded", payload: true });
+    } else if (duration.length === 0) {
+      console.log("Array zero");
+
+      dispatch({ type: "isDateFilterAdded", payload: false });
     } else {
+      console.log("Array null");
+
       dispatch({ type: "isDateFilterAdded", payload: false });
     }
+    debugger;
   };
 
-  const handleRemoveFilter = () => {};
+  const handleRemoveFilter = () => {
+    dispatch({ type: "filterMode", payload: false });
+    setName("");
+    setColor("");
+    setLocation("");
+    setRating(0);
+  };
 
   return (
     <div className="bike__homapage">
@@ -213,7 +232,14 @@ const Bike = ({}) => {
                 <br />
                 <br />
                 <Space direction="vertical" size="large">
-                  Duration : <RangePicker showTime onChange={handleChange} />
+                  Duration :{" "}
+                  <RangePicker
+                    showTime
+                    onChange={handleChange}
+                    disabledDate={(current) => {
+                      return moment().add(-1, "days") >= current;
+                    }}
+                  />
                 </Space>
                 <br />
                 <br />
@@ -259,6 +285,7 @@ const Bike = ({}) => {
                               key={bike.id}
                               duration={duration}
                               getAllBikes={getAllBikes}
+                              setLoading={setLoading}
                             />
                           </Grid>
                         ))}
@@ -307,7 +334,6 @@ const Bike = ({}) => {
               </Space>
             </div>
           </Modal>
-
           <div className="paginationBox">
             <Pagination
               activePage={currentPage}

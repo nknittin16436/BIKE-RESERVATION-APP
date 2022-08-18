@@ -11,11 +11,11 @@ import Button from "@mui/material/Button";
 import MenuItem from "@mui/material/MenuItem";
 import EventSeatIcon from "@mui/icons-material/EventSeat";
 import { Link, useNavigate } from "react-router-dom";
-
-const pages = ["Bikes", "Reservations", "Users"];
+import { useDispatch } from "react-redux";
 
 const Navbar = () => {
   const navigate = useNavigate();
+  const dispatch = useDispatch();
 
   const [anchorElNav, setAnchorElNav] = React.useState(null);
 
@@ -46,6 +46,9 @@ const Navbar = () => {
   const handleClickLogout = () => {
     handleCloseNavMenu();
     localStorage.removeItem("bike-user");
+    dispatch({ type: "loggedInUser", payload: {} });
+    dispatch({ type: "isManager", payload: false });
+
     navigate("login");
   };
 
@@ -101,13 +104,13 @@ const Navbar = () => {
               onClick={handleClickReservations}
               sx={{ my: 2, color: "white", display: "block" }}
             >
-             YOUR RESERVATIONS
+              YOUR RESERVATIONS
             </Button>
             <Button
               onClick={handleClickAllReservations}
               sx={{ my: 2, color: "white", display: "block" }}
             >
-             ALL RESERVATIONS
+              ALL RESERVATIONS
             </Button>
             <Button
               onClick={handleClickUsers}
@@ -177,6 +180,8 @@ const Navbar = () => {
                 onClick={() => {
                   handleCloseNavMenu();
                   localStorage.removeItem("bike-user");
+                  dispatch({ type: "loggedInUser", payload: {} });
+                  dispatch({ type: "isManager", payload: false });
                 }}
               >
                 <Link to={"/login"}>

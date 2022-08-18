@@ -2,10 +2,9 @@ import React, { useState, useEffect } from "react";
 import { Layout } from "antd";
 import ReservationCard from "./ReservationCard";
 import { createTheme, Grid } from "@mui/material";
-import {
-  getUserReservations,
-} from "../../Service/ReservationService";
+import { getUserReservations } from "../../Service/ReservationService";
 import { useSearchParams } from "react-router-dom";
+import Loader from "../Loader/Loader";
 
 const { Content } = Layout;
 
@@ -26,10 +25,18 @@ const UserReservation = () => {
   const userId = searchParams.get("userId");
 
   const [reservations, setReservations] = useState([]);
+  const [loading, setLoading] = useState(false);
 
   const getAllReservations = async () => {
-    const data = await getUserReservations(userId);
-    setReservations(data.reservations);
+    try {
+      setLoading(true);
+      const data = await getUserReservations(userId);
+      setReservations(data.reservations);
+      setLoading(false);
+    } catch (error) {
+      setLoading(false);
+      alert.show(error.message);
+    }
   };
 
   useEffect(() => {
@@ -37,47 +44,52 @@ const UserReservation = () => {
   }, []);
   return (
     <div className="reservation">
-      <div className="reservation__container">
-        <h1>Your Reservations</h1>
-        <Layout>
-          <Layout className="site-layout">
-            <Content
-              className="site-layout-background"
-              style={{
-                margin: "50px 25px",
-                padding: 25,
-              }}
-            >
-              <div className="reservations__cards">
-                <Grid
-                  container
-                  spacing={2}
-                  theme={theme}
-                  // alignItems="stretch"
-                >
-                  {reservations &&
-                    reservations.map((reservation) => (
-                      <Grid
-                        item
-                        xs={12}
-                        lg={6}
-                        sm={12}
-                        md={12}
-                        key={reservation.id}
-                      >
-                        <ReservationCard
-                          reservation={reservation}
+      {loading ? (
+        <Loader />
+      ) : (
+        <div className="reservation__container">
+          <h1>User Reservations</h1>
+          <Layout>
+            <Layout className="site-layout">
+              <Content
+                className="site-layout-background"
+                style={{
+                  margin: "50px 25px",
+                  padding: 25,
+                }}
+              >
+                <div className="reservations__cards">
+                  <Grid
+                    container
+                    spacing={2}
+                    theme={theme}
+                    // alignItems="stretch"
+                  >
+                    {reservations &&
+                      reservations.map((reservation) => (
+                        <Grid
+                          item
+                          xs={12}
+                          lg={6}
+                          sm={12}
+                          md={12}
                           key={reservation.id}
-                          getAllReservations={getAllReservations}
-                        />
-                      </Grid>
-                    ))}
-                </Grid>
-              </div>
-            </Content>
+                        >
+                          <ReservationCard
+                            reservation={reservation}
+                            key={reservation.id}
+                            getAllReservations={getAllReservations}
+                            setLoading={setLoading}
+                          />
+                        </Grid>
+                      ))}
+                  </Grid>
+                </div>
+              </Content>
+            </Layout>
           </Layout>
-        </Layout>
-      </div>
+        </div>
+      )}
     </div>
   );
 };

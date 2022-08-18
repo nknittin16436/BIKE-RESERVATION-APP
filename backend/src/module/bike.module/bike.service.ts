@@ -1,11 +1,32 @@
 import { Injectable, UnauthorizedException, HttpException } from '@nestjs/common';
 import { Bike } from 'src/db/entities/bike.entity';
 import { User } from 'src/db/entities/user.entity';
+import { AddBikeSchema } from 'src/JoiSchema/joiSchema';
 import { Between } from 'typeorm';
 @Injectable()
 export class BikeService {
 
     async getAllBikes(query): Promise<any> {
+        try {
+            let bikes = await Bike.find({
+                relations: {
+                    reservations: true,
+                }
+            });
+            const totalBikes = bikes.length;
+            if (query.page && query.pageSize) {
+                bikes = bikes.slice((query.page - 1) * query.pageSize, query.page * query.pageSize);
+            }
+
+            console.log(bikes);
+            return { bikes, totalBikes, success: true }
+        } catch (error) {
+            throw new HttpException(error, error.status);
+
+        }
+    }
+
+    async getAllFilteredBikes(query): Promise<any> {
         console.log(query);
         try {
             let bikes = await Bike.find({
@@ -59,12 +80,14 @@ export class BikeService {
             // console.log(filterdBikes);
             return { bikes, totalBikes, success: true }
         } catch (error) {
-            throw new Error(error);
+            throw new HttpException(error, error.status);
+
         }
     }
 
     async createBike({ name, color, location }): Promise<any> {
         try {
+            await AddBikeSchema.validateAsync({ color: color, location: location, name: name });
             const bike = new Bike();
             bike.name = name;
             bike.color = color;
@@ -73,7 +96,8 @@ export class BikeService {
             console.log(bike);
             return { success: true, statusCode: 201 };
         } catch (error) {
-            throw new HttpException(error.message, 400);
+            throw new HttpException(error, error.status);
+
         }
     }
 
@@ -86,7 +110,9 @@ export class BikeService {
             }
             else throw new HttpException('Unable to update Bike', 400);
         } catch (error) {
-            throw new HttpException(error.message, 400);
+            throw new HttpException(error, error.status);
+
+
         }
     }
 
@@ -100,7 +126,8 @@ export class BikeService {
             }
             else throw new HttpException('Unable to delete Bike / Bike not Found', 400);
         } catch (error) {
-            throw new HttpException(error.message, 400);
+            throw new HttpException(error, error.status);
+
         }
     }
 

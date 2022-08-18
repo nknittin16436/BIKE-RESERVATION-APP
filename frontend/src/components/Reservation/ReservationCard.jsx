@@ -8,11 +8,13 @@ import {
 } from "../../Service/ReservationService";
 import { useSelector } from "react-redux";
 import { Rate } from "antd";
+import { useAlert } from "react-alert";
 const desc = ["terrible", "bad", "normal", "good", "wonderful"];
 const { Text } = Typography;
 const { Meta } = Card;
 
-const ReservationCard = ({ reservation, getAllReservations }) => {
+const ReservationCard = ({ reservation, getAllReservations, setLoading }) => {
+  const alert = useAlert();
   const [rating, setRating] = useState(0);
   const { isManager, loggedInUser } = useSelector(
     (state) => state.bikeReservation
@@ -21,15 +23,41 @@ const ReservationCard = ({ reservation, getAllReservations }) => {
   const handleCancelReservation = async () => {
     const id = reservation.id;
     console.log(id);
-    await updateReservationStatus({ id });
-    await getAllReservations();
+    try {
+      setLoading(true);
+      const res = await updateReservationStatus({ id });
+      if (res.success) {
+        alert.show("Reservation cancelled Succesfully");
+        setLoading(false);
+        await getAllReservations();
+      } else {
+        setLoading(false);
+        alert.show("Some Error occured");
+      }
+    } catch (error) {
+      setLoading(false);
+      alert.show(error.message);
+    }
   };
 
   const submitReservationRating = async () => {
     const id = reservation.id;
     console.log(rating, id);
-    await updateReservationRating({ id, rating });
-    await getAllReservations();
+    try {
+      setLoading(true);
+      const res = await updateReservationRating({ id, rating });
+      if (res.success) {
+        alert.show("Rating Added succesfully");
+        setLoading(false);
+        await getAllReservations();
+      } else {
+        setLoading(false);
+        alert.show("Some Error occured");
+      }
+    } catch (error) {
+      setLoading(false);
+      alert.show(error.message);
+    }
   };
 
   return (

@@ -12,6 +12,12 @@ export class BikeController {
         return this.bikeService.getAllBikes(query);
     }
 
+    @UseGuards(AuthGuard)
+    @Get('/filtered')
+    getFilteredBikes(@Query() query): any {
+        return this.bikeService.getAllFilteredBikes(query);
+    }
+
 
 
     @UseGuards(AdminGuard)

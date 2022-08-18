@@ -4,11 +4,26 @@ const url = "http://localhost:5000";
 
 
 
-export const getBikes = async ({name="", location="", color="", rating="0", fromDate='',toDate='',page,PAGE_SIZE}) => {
+export const getBikes = async ({ page, PAGE_SIZE }) => {
     const token = localStorage.getItem('bike-user');
 
     try {
-        const res = await axios.get(`${url}/bikes?name=${name}&location=${location}&color=${color}&rating=${rating}&fromDate=${fromDate}&toDate=${toDate}&page=${page}&pageSize=${PAGE_SIZE}`, {
+        const res = await axios.get(`${url}/bikes?page=${page}&pageSize=${PAGE_SIZE}`, {
+            headers: { authtoken: token }
+        });
+        console.log(res);
+
+        return res.data;
+    } catch (error) {
+        console.log(error);
+        throw new Error(error.response.data)
+    }
+}
+export const getFilteredBikes = async ({ name = "", location = "", color = "", rating = "0", fromDate = '', toDate = '', page, PAGE_SIZE }) => {
+    const token = localStorage.getItem('bike-user');
+
+    try {
+        const res = await axios.get(`${url}/bikes/filtered?name=${name}&location=${location}&color=${color}&rating=${rating}&fromDate=${fromDate}&toDate=${toDate}&page=${page}&pageSize=${PAGE_SIZE}`, {
             headers: { authtoken: token }
         });
         console.log(res);
@@ -35,7 +50,7 @@ export const addNewBike = async ({ addBikeName, addBikeColor, addBikeLocation })
         return res.data;
     } catch (error) {
         console.log(error);
-        throw new Error(error.response.data)
+        throw new Error(error.response.data.message)
     }
 }
 
@@ -45,15 +60,9 @@ export const getUserReservations = async (userId) => {
         console.log(res);
 
         return res.data;
-        if (res.status === 201) {
-            return { success: true };
-        }
-        else {
-            return { success: false }
-        }
     } catch (error) {
         console.log(error);
-        throw new Error(error.response.data)
+        throw new Error(error.response.data.message)
     }
 }
 
@@ -63,15 +72,9 @@ export const updateReservationStatus = async ({ id }) => {
         console.log(res);
 
         return res.data;
-        if (res.status === 201) {
-            return { success: true };
-        }
-        else {
-            return { success: false }
-        }
     } catch (error) {
         console.log(error);
-        throw new Error(error.response.data)
+        throw new Error(error.response.data.message)
     }
 }
 
@@ -92,7 +95,7 @@ export const updateReservationRating = async ({ id, rating }) => {
         }
     } catch (error) {
         console.log(error);
-        throw new Error(error.response.data)
+        throw new Error(error.response.data.message)
     }
 }
 
@@ -109,7 +112,7 @@ export const deleteBike = async (id) => {
         return res.data;
     } catch (error) {
         console.log(error);
-        throw new Error(error.response.data)
+        throw new Error(error.response.data.message)
     }
 }
 
@@ -130,7 +133,7 @@ export const updateBike = async ({ bikeId, editedName, editedColor, editedLocati
         return res.data;
     } catch (error) {
         console.log(error);
-        throw new Error(error.response.data)
+        throw new Error(error.response.data.message)
     }
 }
 

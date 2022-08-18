@@ -60,3 +60,19 @@ export const AddBikeSchema = Joi.object({
         .error(new Error('Enter a valid Location')),
 
 })
+
+export const UpdateUserSchema = Joi.object({
+    name: Joi.string()
+        .min(3)
+        .max(30)
+        .trim()
+        .required()
+        .pattern(new RegExp(/^\w+(?:\s+\w+)*$/))
+        .error(new Error('Enter a valid Name')),
+
+
+    email: Joi.string()
+        .email({ minDomainSegments: 2, tlds: { allow: ['com', 'net'] } })
+        .error(new Error('Enter a valid Email')),
+
+})

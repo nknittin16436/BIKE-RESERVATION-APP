@@ -9,10 +9,12 @@ import {
   getBikeReservations,
 } from "../../../Service/ReservationService";
 import { deleteBike, updateBike } from "../../../Service/BikeService";
+import { useAlert } from "react-alert";
+import { AddBikeSchema } from "../../../JoiSchema/Schema";
 const { Meta } = Card;
 const { Text } = Typography;
 
-const BikeCard = ({ bike, getAllBikes, duration }) => {
+const BikeCard = ({ bike, getAllBikes, duration, setLoading }) => {
   const dispatch = useDispatch();
   const { isManager, isDateFilterAdded, loggedInUser } = useSelector(
     (state) => state.bikeReservation
@@ -25,6 +27,7 @@ const BikeCard = ({ bike, getAllBikes, duration }) => {
   const [editedColor, setEditedColor] = useState(bike.color);
   const [editedLocation, setEditedLocation] = useState(bike.location);
   const navigate = useNavigate();
+  const alert = useAlert();
 
   const handleSeeReservations = async () => {
     navigate(`/reservations/bike?bikeId=${bikeId}`);
@@ -33,27 +36,81 @@ const BikeCard = ({ bike, getAllBikes, duration }) => {
   const handleEditBike = () => {
     setIsEditMode(true);
   };
+  const handleUpdateCancelBike = () => {
+    setIsEditMode(false);
+    setEditedName(bike.name);
+    setEditedColor(bike.color);
+    setEditedLocation(bike.location);
+  };
 
   const handleDeleteBike = async () => {
-    await deleteBike(bikeId);
-    await getAllBikes();
+    try {
+      setLoading(true);
+      const res = await deleteBike(bikeId);
+      if (res.success) {
+        setLoading(false);
+        alert.show("Bike Deleted succesfully");
+        await getAllBikes();
+      } else {
+        setLoading(false);
+        alert.show("Some error occured");
+      }
+    } catch (error) {
+      setLoading(false);
+      alert.show(error.message);
+    }
   };
 
   const handleUpdateBike = async () => {
     console.log(editedName, editedColor, editedLocation);
-    await updateBike({ bikeId, editedName, editedColor, editedLocation });
-    await getAllBikes();
-    setIsEditMode(false);
+    try {
+      await AddBikeSchema.validateAsync({
+        name: editedName,
+        color: editedColor,
+        location: editedLocation,
+      });
+      setLoading(true);
+      const res = await updateBike({
+        bikeId,
+        editedName,
+        editedColor,
+        editedLocation,
+      });
+      if (res.success) {
+        setLoading(false);
+        alert.show("Bike updated succesfully");
+        await getAllBikes();
+        setIsEditMode(false);
+      } else {
+        setIsEditMode(false);
+        setLoading(false);
+        alert.show("Some error occured");
+      }
+    } catch (error) {
+      setIsEditMode(false);
+      alert.show(error.message);
+    }
   };
+
   const submitBookNowBike = async () => {
     console.log("Book bike ", bikeId, userId, duration);
-    const data = await createBikeReservation({
-      bikeId,
-      fromDate: duration[0],
-      toDate: duration[1],
-      userId,
-    });
+
+    try {
+      const res = await createBikeReservation({
+        bikeId,
+        fromDate: duration[0],
+        toDate: duration[1],
+        userId,
+      });
+      if (res.success) {
+        alert.show("Bike booked succesfully");
+        await getAllBikes();
+      }
+    } catch (error) {
+      alert.show(error.message);
+    }
   };
+
   return (
     <Card
       style={{
@@ -86,12 +143,17 @@ const BikeCard = ({ bike, getAllBikes, duration }) => {
       extra={
         <Space>
           {isManager && !isEditMode && (
-            <Button type="success" onClick={handleEditBike}>
+            <Button type="primary" onClick={handleEditBike}>
               Edit
             </Button>
           )}
           {isManager && isEditMode && (
-            <Button type="success" onClick={handleUpdateBike}>
+            <Button type="success" onClick={handleUpdateCancelBike}>
+              Cancel
+            </Button>
+          )}
+          {isManager && isEditMode && (
+            <Button type="primary" onClick={handleUpdateBike}>
               Update
             </Button>
           )}
@@ -122,7 +184,7 @@ const BikeCard = ({ bike, getAllBikes, duration }) => {
                 <Space>
                   Name:{" "}
                   <Input
-                    placeholder="Enter Your Name"
+                    placeholder="Enter Bike Name"
                     value={editedName}
                     onChange={(e) => setEditedName(e.target.value)}
                   />
@@ -130,9 +192,9 @@ const BikeCard = ({ bike, getAllBikes, duration }) => {
                 <br />
                 <br />
                 <Space>
-                  Email:{" "}
+                  Color:{" "}
                   <Input
-                    placeholder="Enter Your Email"
+                    placeholder="Enter Bike Color"
                     value={editedColor}
                     onChange={(e) => setEditedColor(e.target.value)}
                   />
@@ -140,9 +202,9 @@ const BikeCard = ({ bike, getAllBikes, duration }) => {
                 <br />
                 <br />
                 <Space>
-                  Email:{" "}
+                  Location:{" "}
                   <Input
-                    placeholder="Enter Your Email"
+                    placeholder="Enter Bike Location"
                     value={editedLocation}
                     onChange={(e) => setEditedLocation(e.target.value)}
                   />
