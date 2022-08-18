@@ -15,8 +15,6 @@ import { AddBikeSchema } from "../../../JoiSchema/Schema";
 import { useAlert } from "react-alert";
 import Loader from "../../Loader/Loader";
 import moment from "moment";
-import "bootstrap/less/bootstrap.less";
-import "bootstrap-less";
 const { Option } = Select;
 
 const { Content, Sider } = Layout;
@@ -117,10 +115,9 @@ const Bike = ({}) => {
   };
 
   const handleFilterSubmit = async () => {
-    debugger;
-    console.log({ name, location, color, rating, duration });
+    console.log(name, location, color, rating, duration);
     dispatch({ type: "filterMode", payload: true });
-
+    debugger;
     const data = await getFilteredBikes({
       name,
       location,
@@ -134,13 +131,13 @@ const Bike = ({}) => {
     console.log(data);
     dispatch({ type: "totalBikes", payload: data.totalBikes });
     setBikes(data.bikes);
-    if (duration[0] !== "" && duration[1] !== "") {
+
+    if (duration.length === 0) {
+      console.log("Array zero");
+      dispatch({ type: "isDateFilterAdded", payload: false });
+    } else if (duration[0] !== "" && duration[1] !== "") {
       console.log("Array two");
       dispatch({ type: "isDateFilterAdded", payload: true });
-    } else if (duration.length === 0) {
-      console.log("Array zero");
-
-      dispatch({ type: "isDateFilterAdded", payload: false });
     } else {
       console.log("Array null");
 
@@ -244,10 +241,23 @@ const Bike = ({}) => {
                 <br />
                 <br />
                 <Space size="large">
-                  <Button onClick={handleFilterSubmit} type="primary">
+                  <Button
+                    onClick={() => {
+                      setCurrentPage(1);
+                      handleFilterSubmit();
+                    }}
+                    type="primary"
+                  >
                     Apply Filter
                   </Button>
-                  <Button onClick={handleRemoveFilter}>Remove Filter</Button>
+                  <Button
+                    onClick={() => {
+                      setCurrentPage(1);
+                      handleRemoveFilter();
+                    }}
+                  >
+                    Remove Filter
+                  </Button>
                 </Space>
               </div>
             </Sider>
@@ -334,21 +344,23 @@ const Bike = ({}) => {
               </Space>
             </div>
           </Modal>
-          <div className="paginationBox">
-            <Pagination
-              activePage={currentPage}
-              itemsCountPerPage={PAGE_SIZE}
-              totalItemsCount={Number(totalBikes)}
-              onChange={(e) => setCurrentPage(e)}
-              nextPageText="Next"
-              prevPageText="Prev"
-              firstPageText="1st"
-              lastPageText="Last"
-              itemClass="page-item"
-              linkClass="page-link"
-              activeClass="pageItemActive"
-              activeLinkClass="pageLinkActive"
-            />
+          <div className="pagination__box">
+            <div className="pagination__box__container">
+              <Pagination
+                activePage={currentPage}
+                itemsCountPerPage={PAGE_SIZE}
+                totalItemsCount={Number(totalBikes)}
+                onChange={(e) => setCurrentPage(e)}
+                nextPageText="Next"
+                prevPageText="Prev"
+                firstPageText="1st"
+                lastPageText="Last"
+                itemClass="page-item"
+                linkClass="page-link"
+                activeClass="pageItemActive"
+                activeLinkClass="pageLinkActive"
+              />
+            </div>
           </div>
         </div>
       )}

@@ -62,3 +62,10 @@
 .ant-card{
   margin: auto !important;
 }
+
+.pagination__box{
+  padding: 10px;
+  width: 90vw;
+  display: flex;
+  justify-content:center ;
+}
