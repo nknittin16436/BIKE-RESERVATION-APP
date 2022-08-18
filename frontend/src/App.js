@@ -31,11 +31,11 @@ const App = () => {
     const token = localStorage.getItem('bike-user');
     if (token) {
       const data = await getUserDetails(token);
+      dispatch({ type: "loggedInUser", payload: data.user });
       if (data.user.role === "manager") {
         dispatch({ type: "isManager", payload: true });
 
       }
-      dispatch({ type: "loggedInUser", payload: data.user });
       console.log(data);
     }
     else {
@@ -51,7 +51,7 @@ const App = () => {
   return (
     <div>
 
-       {loggedInUser && <Navbar />}
+      {loggedInUser && <Navbar />}
       <Routes>
         <Route path="/login" element={<Login />} />
         <Route path="/register" element={<SignUp />} />

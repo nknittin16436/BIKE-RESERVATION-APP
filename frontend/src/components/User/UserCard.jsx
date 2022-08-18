@@ -5,20 +5,20 @@ import "../../App.css";
 import { useNavigate } from "react-router-dom";
 import { deleteUser, editUser } from "../../Service/UserService";
 import { useSelector } from "react-redux";
+import { useAlert } from "react-alert";
 const { Option } = Select;
 const { Meta } = Card;
 
-const UserCard = ({ user, getAllUsers }) => {
+const UserCard = ({ user, getAllUsers, setLoading }) => {
   const [isEditMode, setIsEditMode] = useState(false);
   const [editedName, setEditedName] = useState(user.name);
   const [editedEmail, setEditedEmail] = useState(user.email);
   const [editedRole, setEditedRole] = useState(user.role);
   const navigate = useNavigate();
+  const alert = useAlert();
   const userId = user.id;
 
-  const { isManager } = useSelector(
-    (state) => state.bikeReservation
-  );
+  const { isManager } = useSelector((state) => state.bikeReservation);
 
   const handleSeeReservations = async () => {
     navigate(`/reservations/user?userId=${userId}`);
@@ -29,17 +29,44 @@ const UserCard = ({ user, getAllUsers }) => {
   };
 
   const handleDeleteUser = async () => {
-    await deleteUser(userId);
-    await getAllUsers();
+    try {
+      setLoading(true);
+      const res = await deleteUser(userId);
+      console.log(res);
+      setLoading(false);
+      if (res.success) {
+        alert.show("User Deleted Succesfully");
+        await getAllUsers();
+      } else {
+        alert.show("Some error occured");
+      }
+    } catch (error) {
+      setLoading(false);
+      alert.show(error.message);
+    }
   };
 
   const handleUpdateUser = async () => {
     console.log(editedName, editedEmail, editedRole);
-    await editUser(user.id, editedName, editedEmail, editedRole);
-    await getAllUsers();
+    try {
+      setLoading(true);
+      const res = await editUser(user.id, editedName, editedEmail, editedRole);
+      setLoading(false);
+      if (res.success) {
+        alert.show("User updated succesfully");
+        await getAllUsers();
+      } else {
+        alert.show("Some error occured");
+      }
+      setIsEditMode(false);
+    } catch (error) {
+      setLoading(false);
+      alert.show(error.message);
+    }
+  };
+  const handleUpdateCancelUser = () => {
     setIsEditMode(false);
   };
-
   return (
     <Card
       style={{
@@ -51,12 +78,17 @@ const UserCard = ({ user, getAllUsers }) => {
       extra={
         <Space>
           {isManager && !isEditMode && (
-            <Button type="success" onClick={handleEditUser}>
+            <Button type="primary" onClick={handleEditUser}>
               Edit
             </Button>
           )}
           {isManager && isEditMode && (
-            <Button type="success" onClick={handleUpdateUser}>
+            <Button type="success" onClick={handleUpdateCancelUser}>
+              Cancel
+            </Button>
+          )}
+          {isManager && isEditMode && (
+            <Button type="primary" onClick={handleUpdateUser}>
               Update
             </Button>
           )}

@@ -87,6 +87,7 @@ export class UserService {
 
 
     async updateUser(id: string, name: string, email: string, role: string): Promise<any> {
+        console.log(name, email, role);
         try {
             const user = await User.findOne({ where: { id: id } });
             if (user) {
@@ -95,8 +96,13 @@ export class UserService {
             }
             else throw new NotFoundException('User not found');
 
+
         } catch (error) {
-            throw new HttpException(error.message, 400);
+            if (error.errno === 19) {
+
+                throw new HttpException("Email already Exist", 400);
+            }
+            throw new HttpException(error, error.status);
         }
     }
 
@@ -109,7 +115,7 @@ export class UserService {
             }
             else throw new HttpException('Unable to delete user', 400);
         } catch (error) {
-            throw new HttpException(error.message, error.status);
+            throw new HttpException(error, error.status);
         }
     }
 

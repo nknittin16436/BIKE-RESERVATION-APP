@@ -27,8 +27,6 @@ export const registerUser = async ({ name, email, password, confirmPassword }) =
 
 
 export const loginUser = async ({ email, password }) => {
-
-    // console.log(loginEmail, loginPassword);
     try {
         const res = await axios.post(`${url}/users/login`, {
             email: email,
@@ -49,12 +47,9 @@ export const getUsers = async () => {
         });
         console.log(res);
         return res.data;
-        if (res.status === 200) {
-            return res.data;
-        }
     } catch (error) {
         console.log(error);
-        throw new Error("Invalid access token");
+        throw new Error(error.response.data.message);
     }
 }
 
@@ -65,34 +60,27 @@ export const deleteUser = async (id) => {
         const res = await axios.delete(`${url}/users/${id}`, {
             headers: { authtoken: token }
         });
-        return res;
-        if (res.status === 200) {
-
-            return { success: true };
-        }
+        return res.data;
     } catch (error) {
-        throw new Error(error.response.data);
+        throw new Error(error.response.data.message);
     }
 }
 
 
-export const editUser = async (id, name, email, role) => {
+export const editUser = async (id, editedName, editedEmail, editedRole) => {
     const token = localStorage.getItem('bike-user');
     try {
-        // console.log(id);
         const res = await axios.patch(`${url}/users/${id}`, {
-            name: name,
-            email: email,
-            role: role,
+            name: editedName,
+            email: editedEmail,
+            role: editedRole
         }, {
             headers: { authtoken: token }
         });
-        if (res.status === 200) {
-            return { success: true };
-        }
+        return res.data;
     } catch (error) {
         console.log(error);
-        throw new Error(error.response.data);
+        throw new Error(error.response.data.message)
     }
 }
 

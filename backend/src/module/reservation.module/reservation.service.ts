@@ -103,7 +103,7 @@ export class ReservationService {
             else throw new HttpException('Invalid Rating', 400);
 
         } catch (error) {
-            throw new HttpException(error.message, 400);
+            throw new HttpException(error, error.status);
         }
     }
 
@@ -117,7 +117,8 @@ export class ReservationService {
             }
             else throw new HttpException('Unable to delete user', 400);
         } catch (error) {
-            throw new HttpException(error.message, 400);
+            throw new HttpException(error, error.status);
+
         }
     }
 
