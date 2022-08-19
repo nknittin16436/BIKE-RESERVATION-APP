@@ -63,3 +63,44 @@ export const AddBikeSchema = Joi.object({
 
 
 })
+export const NameSchema = Joi.object({
+    name: Joi.string()
+        .min(3)
+        .max(30)
+        .trim()
+        .required()
+        .pattern(new RegExp(/^\w+(?:\s+\w+)*$/))
+        .error(new Error('Enter a valid Name')),
+})
+export const LocationSchema = Joi.object({
+    location: Joi.string()
+        .min(3)
+        .max(30)
+        .trim()
+        .required()
+        .pattern(new RegExp(/^\w+(?:\s+\w+)*$/))
+        .error(new Error('Enter a valid Location')),
+})
+export const ColorSchema = Joi.object({
+    color: Joi.string()
+        .min(3)
+        .max(30)
+        .trim()
+        .required()
+        .pattern(new RegExp(/^\w+(?:\s+\w+)*$/))
+        .error(new Error('Enter a valid Color')),
+})
+export const EmailSchema = Joi.object({
+    email: Joi.string()
+        .email({ minDomainSegments: 2, tlds: { allow: ['com', 'net'] } })
+        .error(new Error('Enter a valid Email')),
+})
+export const RoleSchema = Joi.object({
+    role: Joi.string()
+        .pattern(new RegExp(/^(manager|regular)$/))
+        .error(new Error('Enter a valid Role')),
+})
+export const BikeStatusSchema = Joi.object({
+    isAvailable: Joi.boolean().required()
+        .error(new Error('Enter a valid Bike Available Status')),
+})

@@ -2,7 +2,7 @@ import { Injectable, UnauthorizedException, HttpException, HttpStatus, NotFoundE
 import { User } from 'src/db/entities/user.entity';
 import * as jwt from 'jsonwebtoken';
 import * as bcrypt from 'bcryptjs';
-import { LoginSchema, SignUpSchema } from 'src/JoiSchema/joiSchema';
+import { EmailSchema, LoginSchema, NameSchema, RoleSchema, SignUpSchema } from 'src/JoiSchema/joiSchema';
 
 
 @Injectable()
@@ -89,6 +89,22 @@ export class UserService {
     async updateUser(id: string, name: string, email: string, role: string): Promise<any> {
         console.log(name, email, role);
         try {
+
+            try {
+                if (name === "" || name) {
+                    await NameSchema.validateAsync({ name: name });
+                }
+                if (email === "" || email) {
+                    await EmailSchema.validateAsync({ email: email });
+                }
+                if (role === "" || role) {
+                    await RoleSchema.validateAsync({ role: role });
+
+                }
+            } catch (error) {
+                throw new HttpException(error.message, 400);
+
+            }
             const user = await User.findOne({ where: { id: id } });
             if (user) {
                 await User.update(id, { name, email, role });

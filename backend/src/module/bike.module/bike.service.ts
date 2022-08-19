@@ -1,8 +1,7 @@
-import { Injectable, UnauthorizedException, HttpException } from '@nestjs/common';
+import { Injectable, HttpException } from '@nestjs/common';
 import { Bike } from 'src/db/entities/bike.entity';
 import { User } from 'src/db/entities/user.entity';
-import { AddBikeSchema } from 'src/JoiSchema/joiSchema';
-import { Between } from 'typeorm';
+import { AddBikeSchema, BikeStatusSchema, ColorSchema, LocationSchema, NameSchema } from 'src/JoiSchema/joiSchema';
 import * as jwt from 'jsonwebtoken';
 @Injectable()
 export class BikeService {
@@ -133,8 +132,30 @@ export class BikeService {
 
     async updateBike({ id, name, color, location, isAvailable }): Promise<any> {
         try {
+            console.log("try1")
+            try {
+                console.log("try2")
+                if (name === "" || name) {
+                    console.log(name);
+                    await NameSchema.validateAsync({ name: name });
+                }
+                if (location === "" || location) {
+                    console.log(location);
+                    await LocationSchema.validateAsync({ location: location });
+                }
+                if (color === "" || color) {
+                    await ColorSchema.validateAsync({ color: color });
+                }
+                if (isAvailable === "" || isAvailable) {
+                    await BikeStatusSchema.validateAsync({ isAvailable: isAvailable });
+                }
+            } catch (error) {
+                throw new HttpException(error.message, 400);
+
+            }
             const bike = await Bike.findOne({ where: { id: id } });
             if (bike) {
+
                 await Bike.update(id, { name, color, location, isAvailable });
                 return { success: true, statusCode: 200 }
             }
