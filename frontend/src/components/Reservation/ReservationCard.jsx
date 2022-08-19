@@ -70,7 +70,7 @@ const ReservationCard = ({ reservation, getAllReservations, setLoading }) => {
               !reservation.isRated ? (
                 <span>
                   <Rate tooltips={desc} onChange={setRating} value={rating} />
-                  <Button type="success" onClick={submitReservationRating}>
+                  <Button type="primary" onClick={submitReservationRating}>
                     Rate Reservation
                   </Button>
                 </span>
@@ -89,6 +89,7 @@ const ReservationCard = ({ reservation, getAllReservations, setLoading }) => {
             <Button
               onClick={handleCancelReservation}
               disabled={reservation.isRated || !reservation.status}
+              type="danger"
             >
               Cancel Reservation
             </Button>
