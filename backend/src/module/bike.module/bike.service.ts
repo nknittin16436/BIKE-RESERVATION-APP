@@ -85,28 +85,35 @@ export class BikeService {
         }
     }
 
-    async createBike({ name, color, location,isAvailable }): Promise<any> {
+    async createBike({ name, color, location, isAvailable }): Promise<any> {
+        console.log("9hello");
         try {
-            await AddBikeSchema.validateAsync({ color: color, location: location, name: name });
+            try {
+                await AddBikeSchema.validateAsync({ color: color, location: location, name: name, isAvailable: isAvailable });
+            } catch (error) {
+                throw new HttpException(error.message, 400);
+            }
             const bike = new Bike();
             bike.name = name;
             bike.color = color;
             bike.location = location;
             bike.isAvailable = isAvailable;
             await bike.save();
+            console.log("9hello succss");
             console.log(bike);
             return { success: true, statusCode: 201 };
         } catch (error) {
+            console.log(error);
             throw new HttpException(error, error.status);
 
         }
     }
 
-    async updateBike({ id, name, color, location,isAvailable }): Promise<any> {
+    async updateBike({ id, name, color, location, isAvailable }): Promise<any> {
         try {
             const bike = await Bike.findOne({ where: { id: id } });
             if (bike) {
-                await Bike.update(id, { name, color, location,isAvailable });
+                await Bike.update(id, { name, color, location, isAvailable });
                 return { success: true, statusCode: 200 }
             }
             else throw new HttpException('Unable to update Bike Invalid bike Id', 400);

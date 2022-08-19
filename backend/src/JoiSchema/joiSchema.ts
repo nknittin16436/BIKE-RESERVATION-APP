@@ -58,4 +58,8 @@ export const AddBikeSchema = Joi.object({
         .pattern(new RegExp(/^\w+(?:\s+\w+)*$/))
         .error(new Error('Enter a valid Location')),
 
+    isAvailable: Joi.boolean().required()
+        .error(new Error('Enter a valid Bike Available Status')),
+
+
 })

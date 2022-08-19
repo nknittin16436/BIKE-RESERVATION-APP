@@ -61,6 +61,7 @@ const Bike = ({}) => {
         name: addBikeName,
         color: addBikeColor,
         location: addBikeLocation,
+        isAvailable: addIsAvailable
       });
       setIsModalVisible(false);
       setLoading(true);

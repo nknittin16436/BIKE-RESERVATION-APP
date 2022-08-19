@@ -13,8 +13,8 @@ export class Bike extends BaseEntity {
 
     @Column()
     location: string
-    
-    @Column({nullable:true,default:false})
+
+    @Column({default:false})
     isAvailable: boolean
 
 
