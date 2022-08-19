@@ -6,7 +6,6 @@ import { useNavigate } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
 import {
   createBikeReservation,
-  getBikeReservations,
 } from "../../../Service/ReservationService";
 import { deleteBike, updateBike } from "../../../Service/BikeService";
 import { useAlert } from "react-alert";
@@ -16,8 +15,7 @@ const { Meta } = Card;
 const { Text } = Typography;
 
 const BikeCard = ({ bike, getAllBikes, duration, setLoading }) => {
-  const dispatch = useDispatch();
-  const { isManager, isDateFilterAdded, loggedInUser } = useSelector(
+  const { isManager, isDateFilterAdded } = useSelector(
     (state) => state.bikeReservation
   );
   const bikeId = bike.id;
@@ -67,6 +65,7 @@ const BikeCard = ({ bike, getAllBikes, duration, setLoading }) => {
         name: editedName,
         color: editedColor,
         location: editedLocation,
+        isAvailable:editedIsAvailable
       });
       setLoading(true);
       const res = await updateBike({
@@ -100,8 +99,8 @@ const BikeCard = ({ bike, getAllBikes, duration, setLoading }) => {
         toDate: duration[1],
       });
       if (res.success) {
-        alert.show("Bike booked succesfully");
         await getAllBikes();
+        alert.show("Bike booked succesfully");
       }
     } catch (error) {
       alert.show(error.message);
@@ -121,7 +120,7 @@ const BikeCard = ({ bike, getAllBikes, duration, setLoading }) => {
       }
       actions={[
         <div>
-          {isDateFilterAdded ? (
+          {isDateFilterAdded && bike.isAvailable ? (
             <span>
               <Button type="success" onClick={submitBookNowBike}>
                 Book Now

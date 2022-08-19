@@ -61,10 +61,9 @@ const Bike = ({}) => {
         name: addBikeName,
         color: addBikeColor,
         location: addBikeLocation,
-        isAvailable: addIsAvailable
+        isAvailable: addIsAvailable,
       });
       setIsModalVisible(false);
-      setLoading(true);
       const res = await addNewBike({
         addBikeName,
         addBikeColor,
@@ -72,15 +71,12 @@ const Bike = ({}) => {
         addIsAvailable,
       });
       if (res.success) {
-        setLoading(false);
         alert.show("Bike Added Succesfully");
         await getAllBikes();
       } else {
-        setLoading(false);
         alert.show("Some Error Occured");
       }
     } catch (error) {
-      setLoading(false);
       console.log(error);
       alert.show(error.message);
     }
@@ -151,6 +147,7 @@ const Bike = ({}) => {
     setColor("");
     setLocation("");
     setRating(0);
+    setDuration([]);
   };
 
   return (
@@ -294,7 +291,7 @@ const Bike = ({}) => {
                               bike={bike}
                               key={bike.id}
                               duration={duration}
-                              getAllBikes={getAllBikes}
+                              getAllBikes={handleFilterSubmit}
                               setLoading={setLoading}
                             />
                           </Grid>
