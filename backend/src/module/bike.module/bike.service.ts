@@ -64,18 +64,26 @@ export class BikeService {
             if (query.fromDate && query.toDate) {
                 bikes = bikes.filter((bike) => {
                     let reservations = bike.reservations;
+                    console.log(bike.name, reservations)
                     reservations = reservations.filter(reservation => reservation.status === true)
                     if (reservations.length === 0) {
                         return true;
                     }
+                    let trueCount = 0;
                     for (const reservation of reservations) {
+
                         if (query.fromDate < reservation.fromDate && query.toDate < reservation.fromDate) {
-                            return true;
+                            console.log("1");
+                            trueCount++;
+                        }
+                        if ((query.fromDate > reservation.fromDate) && (query.fromDate > reservation.toDate)) {
+                            console.log("2", query.fromDate, reservation);
+                            trueCount++;
                         }
 
-                        if (query.fromDate > reservation.fromDate && query.fromDate > reservation.toDate) {
-                            return true;
-                        }
+                    }
+                    if(trueCount===reservations.length){
+                        return true;
                     }
                 });
             }

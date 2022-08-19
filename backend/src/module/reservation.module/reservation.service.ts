@@ -3,6 +3,8 @@ import { Bike } from 'src/db/entities/bike.entity';
 import { Reservation } from 'src/db/entities/reservation.entity';
 import { User } from 'src/db/entities/user.entity';
 import * as jwt from 'jsonwebtoken';
+import * as moment from 'moment'
+
 @Injectable()
 export class ReservationService {
 
@@ -34,20 +36,54 @@ export class ReservationService {
 
     async createReservation({ bikeId, fromDate, toDate, authtoken }): Promise<any> {
         try {
-            const bike = await Bike.findOne({ where: { id: bikeId } });
+            const bike = await Bike.findOne({
+                relations: {
+                    reservations: true,
+                }, where: { id: bikeId }
+            });
             if (!bike) {
                 throw new HttpException('Invalid Bike Id', 400);
             }
-            var decoded = jwt.verify(authtoken, 'bikeReservation');
-            console.log(decoded);
+            const decoded = jwt.verify(authtoken, 'bikeReservation');
             const userId = decoded.id;
             const user = await User.findOne({ where: { id: userId } });
             if (!user) {
                 throw new HttpException('Invalid User', 400);
             }
 
-            if (fromDate > toDate) {
-                throw new HttpException('Enter valid Reservation Duration', 400);
+            if (fromDate < moment(Date.now()).format('YYYY-MM-DD H:mm:ss')) {
+                throw new HttpException('Start date should be greater then current date', 400);
+            }
+            if (fromDate < moment(Date.now()).format('YYYY-MM-DD H:mm:ss') || fromDate > toDate) {
+                throw new HttpException('From date cannot be greater than to date', 400);
+            }
+            let isReservationAvailable = false;
+            let reservations = bike.reservations;
+            console.log(bike, reservations)
+            reservations = reservations.filter(reservation => reservation.status === true)
+            if (reservations.length === 0) {
+                isReservationAvailable = true;
+            }
+            let trueCount = 0;
+            for (const reservation of reservations) {
+
+                if (fromDate < reservation.fromDate && toDate < reservation.fromDate) {
+                    console.log("1");
+                    trueCount++;
+                }
+                if ((fromDate > reservation.fromDate) && (fromDate > reservation.toDate)) {
+                    console.log("2", fromDate, reservation);
+                    trueCount++;
+                }
+
+            }
+            if (trueCount === reservations.length) {
+                isReservationAvailable = true;
+            }
+
+            if (!isReservationAvailable) {
+                throw new HttpException('Bike cannot be booked on given duration', 400);
+
             }
             if (bike.isAvailable) {
                 const reservation = new Reservation();
@@ -63,6 +99,7 @@ export class ReservationService {
             }
             else throw new HttpException('This bike is Not Available', 400);
         } catch (error) {
+            console.log(error)
             throw new HttpException(error, error.status);
         }
     }
