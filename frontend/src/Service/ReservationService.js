@@ -10,11 +10,11 @@ export const getReservations = async () => {
         const res = await axios.get(`${url}/reservations`, {
             headers: { authtoken: token }
         });
-        console.log(res);
+        // console.log(res);
 
         return res.data;
     } catch (error) {
-        console.log(error);
+        // console.log(error);
         throw new Error(error.response.data.message)
     }
 }
@@ -28,12 +28,12 @@ export const createBikeReservation = async ({ bikeId, fromDate, toDate }) => {
         }, {
             headers: { authtoken: token }
         });
-        console.log(res);
+        // console.log(res);
 
         return res.data;
 
     } catch (error) {
-        console.log(error);
+        // console.log(error);
         throw new Error(error.response.data.message)
     }
 }
@@ -45,12 +45,12 @@ export const getUserReservations = async (userId) => {
         const res = await axios.get(`${url}/reservations/user?userId=${userId}`, {
             headers: { authtoken: token }
         });
-        console.log(res);
+        // console.log(res);
 
         return res.data;
 
     } catch (error) {
-        console.log(error);
+        // console.log(error);
         throw new Error(error.response.data.message)
     }
 }
@@ -62,12 +62,12 @@ export const getBikeReservations = async (bikeId) => {
         const res = await axios.get(`${url}/reservations/bike?bikeId=${bikeId}`, {
             headers: { authtoken: token }
         });
-        console.log(res);
+        // console.log(res);
 
         return res.data;
 
     } catch (error) {
-        console.log(error);
+        // console.log(error);
         throw new Error(error.response.data.message)
     }
 }
@@ -78,12 +78,12 @@ export const updateReservationStatus = async ({ id }) => {
         const res = await axios.get(`${url}/reservations/${id}`, {
             headers: { authtoken: token }
         });
-        console.log(res);
+        // console.log(res);
 
         return res.data;
 
     } catch (error) {
-        console.log(error);
+        // console.log(error);
         throw new Error(error.response.data.message)
     }
 }
@@ -98,12 +98,12 @@ export const updateReservationRating = async ({ id, rating }) => {
         }, {
             headers: { authtoken: token }
         });
-        console.log(res);
+        // console.log(res);
 
         return res.data;
 
     } catch (error) {
-        console.log(error);
+        // console.log(error);
         throw new Error(error.response.data.message)
     }
 }

@@ -11,11 +11,11 @@ export const getBikes = async ({ page, PAGE_SIZE }) => {
         const res = await axios.get(`${url}/bikes?page=${page}&pageSize=${PAGE_SIZE}`, {
             headers: { authtoken: token }
         });
-        console.log(res);
+        // console.log(res);
 
         return res.data;
     } catch (error) {
-        console.log(error);
+        // console.log(error);
         throw new Error(error.response.data)
     }
 }
@@ -26,11 +26,11 @@ export const getFilteredBikes = async ({ name = "", location = "", color = "", r
         const res = await axios.get(`${url}/bikes/filtered?name=${name}&location=${location}&color=${color}&rating=${rating}&fromDate=${fromDate}&toDate=${toDate}&page=${page}&pageSize=${PAGE_SIZE}`, {
             headers: { authtoken: token }
         });
-        console.log(res);
+        // console.log(res);
 
         return res.data;
     } catch (error) {
-        console.log(error);
+        // console.log(error);
         throw new Error(error.response.data)
     }
 }
@@ -47,7 +47,7 @@ export const addNewBike = async ({ addBikeName, addBikeColor, addBikeLocation ,a
         }, {
             headers: { authtoken: token }
         });
-        console.log(res);
+        // console.log(res);
         return res.data;
     } catch (error) {
         console.log(error);
@@ -62,7 +62,7 @@ export const getUserReservations = async (userId) => {
 
         return res.data;
     } catch (error) {
-        console.log(error);
+        // console.log(error);
         throw new Error(error.response.data.message)
     }
 }
@@ -70,11 +70,11 @@ export const getUserReservations = async (userId) => {
 export const updateReservationStatus = async ({ id }) => {
     try {
         const res = await axios.get(`${url}/reservations/${id}`);
-        console.log(res);
+        // console.log(res);
 
         return res.data;
     } catch (error) {
-        console.log(error);
+        // console.log(error);
         throw new Error(error.response.data.message)
     }
 }
@@ -85,17 +85,11 @@ export const updateReservationRating = async ({ id, rating }) => {
         const res = await axios.post(`${url}/reservations/${id}`, {
             rating: rating
         });
-        console.log(res);
+        // console.log(res);
 
         return res.data;
-        if (res.status === 201) {
-            return { success: true };
-        }
-        else {
-            return { success: false }
-        }
     } catch (error) {
-        console.log(error);
+        // console.log(error);
         throw new Error(error.response.data.message)
     }
 }
@@ -108,11 +102,11 @@ export const deleteBike = async (id) => {
         const res = await axios.delete(`${url}/bikes/${id}`, {
             headers: { authtoken: token }
         });
-        console.log(res);
+        // console.log(res);
 
         return res.data;
     } catch (error) {
-        console.log(error);
+        // console.log(error);
         throw new Error(error.response.data.message)
     }
 }
@@ -130,11 +124,11 @@ export const updateBike = async ({ bikeId, editedName, editedColor, editedLocati
         }, {
             headers: { authtoken: token }
         });
-        console.log(res);
+        // console.log(res);
 
         return res.data;
     } catch (error) {
-        console.log(error);
+        // console.log(error);
         throw new Error(error.response.data.message)
     }
 }

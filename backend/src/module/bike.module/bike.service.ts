@@ -40,15 +40,16 @@ export class BikeService {
                 relations: {
                     reservations: true,
                 }
-                , where: {
-                    averageRating: Between(parseInt(query.rating), 5)
-                }
             });
             var decoded = jwt.verify(authtoken, 'bikeReservation');
             const userId = decoded.id;
             const user = await User.findOne({ where: { id: userId } });
             if (user.role === "regular") {
                 bikes = bikes.filter((bike) => bike.isAvailable === true)
+            }
+            if (query.rating) {
+
+                bikes = bikes.filter(bike => bike.averageRating >= query.rating);
             }
             if (query.name) {
                 bikes = bikes.filter(bike => bike.name.toLowerCase().includes(query.name.toLowerCase()));
@@ -82,7 +83,7 @@ export class BikeService {
                         }
 
                     }
-                    if(trueCount===reservations.length){
+                    if (trueCount === reservations.length) {
                         return true;
                     }
                 });

@@ -20,7 +20,7 @@ export const registerUser = async ({ name, email, password, confirmPassword }) =
             return { success: false }
         }
     } catch (error) {
-        console.log(error);
+        // console.log(error);
         throw new Error(error.response.data.message)
     }
 }
@@ -34,7 +34,7 @@ export const loginUser = async ({ email, password }) => {
         });
         return res.data;
     } catch (error) {
-        console.log(error);
+        // console.log(error);
         throw new Error(error.response.data.message)
     }
 }
@@ -45,10 +45,10 @@ export const getUsers = async () => {
         const res = await axios.get(`${url}/users`, {
             headers: { authtoken: token }
         });
-        console.log(res);
+        // console.log(res);
         return res.data;
     } catch (error) {
-        console.log(error);
+        // console.log(error);
         throw new Error(error.response.data.message);
     }
 }
@@ -79,19 +79,18 @@ export const editUser = async (id, editedName, editedEmail, editedRole) => {
         });
         return res.data;
     } catch (error) {
-        console.log(error);
+        // console.log(error);
         throw new Error(error.response.data.message)
     }
 }
 
 export const getUserDetails = async (token) => {
     try {
-        // console.log(id);
         const res = await axios.get(`${url}/users/${token}`);
-        console.log(res);
+        // console.log(res);
         return res.data;
     } catch (error) {
-        console.log(error);
+        // console.log(error);
         throw new Error(error.response.data);
 
     }

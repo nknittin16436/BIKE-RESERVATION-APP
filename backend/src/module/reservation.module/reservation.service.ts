@@ -114,7 +114,7 @@ export class ReservationService {
                 }
                 else throw new HttpException('Cannot cancel an already cancelled Reservation', 400);
             }
-            else throw new HttpException('Unable to update Reservation Status', 400);
+            else throw new HttpException('Unable to update Reservation Status Invalid', 400);
         } catch (error) {
             throw new HttpException(error, error.status);
         }
