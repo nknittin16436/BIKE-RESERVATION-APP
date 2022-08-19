@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import "antd/dist/antd";
-import { Card, Button, Space, Input, Rate, Typography } from "antd";
+import { Card, Button, Space, Input, Rate, Typography, Select } from "antd";
 import "../../../App.css";
 import { useNavigate } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
@@ -11,6 +11,7 @@ import {
 import { deleteBike, updateBike } from "../../../Service/BikeService";
 import { useAlert } from "react-alert";
 import { AddBikeSchema } from "../../../JoiSchema/Schema";
+const { Option } = Select;
 const { Meta } = Card;
 const { Text } = Typography;
 
@@ -20,12 +21,11 @@ const BikeCard = ({ bike, getAllBikes, duration, setLoading }) => {
     (state) => state.bikeReservation
   );
   const bikeId = bike.id;
-  const userId = loggedInUser.id;
-
   const [isEditMode, setIsEditMode] = useState(false);
   const [editedName, setEditedName] = useState(bike.name);
   const [editedColor, setEditedColor] = useState(bike.color);
   const [editedLocation, setEditedLocation] = useState(bike.location);
+  const [editedIsAvailable, setEditedIsAvailable] = useState(bike.isAvailable);
   const navigate = useNavigate();
   const alert = useAlert();
 
@@ -62,7 +62,6 @@ const BikeCard = ({ bike, getAllBikes, duration, setLoading }) => {
   };
 
   const handleUpdateBike = async () => {
-    console.log(editedName, editedColor, editedLocation);
     try {
       await AddBikeSchema.validateAsync({
         name: editedName,
@@ -75,6 +74,7 @@ const BikeCard = ({ bike, getAllBikes, duration, setLoading }) => {
         editedName,
         editedColor,
         editedLocation,
+        editedIsAvailable,
       });
       if (res.success) {
         setLoading(false);
@@ -93,14 +93,11 @@ const BikeCard = ({ bike, getAllBikes, duration, setLoading }) => {
   };
 
   const submitBookNowBike = async () => {
-    console.log("Book bike ", bikeId, userId, duration);
-
     try {
       const res = await createBikeReservation({
         bikeId,
         fromDate: duration[0],
         toDate: duration[1],
-        userId,
       });
       if (res.success) {
         alert.show("Bike booked succesfully");
@@ -119,7 +116,7 @@ const BikeCard = ({ bike, getAllBikes, duration, setLoading }) => {
       cover={
         <img
           alt="example"
-          src="https://gw.alipayobjects.com/zos/rmsportal/JiqGstEfoWAOHiTxclqi.png"
+          src="https://images.unsplash.com/photo-1502744688674-c619d1586c9e?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1170&q=80"
         />
       }
       actions={[
@@ -174,8 +171,21 @@ const BikeCard = ({ bike, getAllBikes, duration, setLoading }) => {
                 <p>{`Color : ${bike.color}`}</p>
                 <p>{`Location : ${bike.location}`}</p>
                 <span>
-                  Rating : <Rate disabled defaultValue={bike.averageRating} />
+                  Rating : <Rate disabled defaultValue={bike.averageRating} />{" "}
+                  <br />
+                  <br />
                 </span>
+                {bike.isAvailable && (
+                  <span>
+                    Status: <Text type="success"> Available</Text>
+                  </span>
+                )}
+
+                {isManager && !bike.isAvailable && (
+                  <Space>
+                    Status : <Text type="danger"> Currently Unavailable</Text>
+                  </Space>
+                )}
               </div>
             )}
 
@@ -208,6 +218,20 @@ const BikeCard = ({ bike, getAllBikes, duration, setLoading }) => {
                     value={editedLocation}
                     onChange={(e) => setEditedLocation(e.target.value)}
                   />
+                </Space>
+                <br />
+                <br />
+                <Space wrap>
+                  Available :
+                  <Input.Group compact>
+                    <Select
+                      defaultValue={editedIsAvailable}
+                      onChange={setEditedIsAvailable}
+                    >
+                      <Option value={false}>No</Option>
+                      <Option value={true}>Yes</Option>
+                    </Select>
+                  </Input.Group>
                 </Space>
               </div>
             )}

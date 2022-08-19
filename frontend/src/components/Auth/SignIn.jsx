@@ -37,7 +37,6 @@ const Login = () => {
         email: data.get("email"),
         password: data.get("password"),
       });
-      console.log(res);
       if (res.success) {
         localStorage.setItem("bike-user", res.accessToken);
         dispatch({ type: "isAuthenticated", payload: true });
@@ -53,7 +52,6 @@ const Login = () => {
       }
     } catch (error) {
       setLoading(false);
-      console.log(error);
       alert.show(error.message);
     }
   };

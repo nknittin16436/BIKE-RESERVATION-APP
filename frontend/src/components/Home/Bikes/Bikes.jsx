@@ -49,6 +49,7 @@ const Bike = ({}) => {
   const [addBikeName, setAddBikeName] = useState("");
   const [addBikeColor, setAddBikeColor] = useState("");
   const [addBikeLocation, setAddBikeLocation] = useState("");
+  const [addIsAvailable, setAddIsAvailable] = useState(false);
   const [currentPage, setCurrentPage] = useState(1);
   const [bikes, setBikes] = useState([]);
   const [loading, setLoading] = useState(false);
@@ -63,11 +64,11 @@ const Bike = ({}) => {
       });
       setIsModalVisible(false);
       setLoading(true);
-      console.log(addBikeName, addBikeColor, addBikeLocation);
       const res = await addNewBike({
         addBikeName,
         addBikeColor,
         addBikeLocation,
+        addIsAvailable,
       });
       if (res.success) {
         setLoading(false);
@@ -89,13 +90,14 @@ const Bike = ({}) => {
   };
 
   const getAllBikes = async () => {
-    const data = await getBikes({
-      page: currentPage,
-      PAGE_SIZE,
-    });
-    console.log(data);
-    dispatch({ type: "totalBikes", payload: data.totalBikes });
-    setBikes(data.bikes);
+    try {
+      const data = await getBikes({
+        page: currentPage,
+        PAGE_SIZE,
+      });
+      dispatch({ type: "totalBikes", payload: data.totalBikes });
+      setBikes(data.bikes);
+    } catch (error) {}
   };
 
   const handleAddBike = () => {
@@ -107,7 +109,6 @@ const Bike = ({}) => {
     } else {
       getAllBikes();
     }
-    console.log(bikes);
   }, [currentPage, filterMode]);
 
   const handleChange = (date, dateString) => {
@@ -115,35 +116,32 @@ const Bike = ({}) => {
   };
 
   const handleFilterSubmit = async () => {
-    console.log(name, location, color, rating, duration);
-    dispatch({ type: "filterMode", payload: true });
-    debugger;
-    const data = await getFilteredBikes({
-      name,
-      location,
-      color,
-      rating,
-      fromDate: duration[0],
-      toDate: duration[1],
-      page: currentPage,
-      PAGE_SIZE,
-    });
-    console.log(data);
-    dispatch({ type: "totalBikes", payload: data.totalBikes });
-    setBikes(data.bikes);
+    // console.log(name, location, color, rating, duration);
+    try {
+      dispatch({ type: "filterMode", payload: true });
+      const data = await getFilteredBikes({
+        name,
+        location,
+        color,
+        rating,
+        fromDate: duration[0],
+        toDate: duration[1],
+        page: currentPage,
+        PAGE_SIZE,
+      });
+      dispatch({ type: "totalBikes", payload: data.totalBikes });
+      setBikes(data.bikes);
 
-    if (duration.length === 0) {
-      console.log("Array zero");
-      dispatch({ type: "isDateFilterAdded", payload: false });
-    } else if (duration[0] !== "" && duration[1] !== "") {
-      console.log("Array two");
-      dispatch({ type: "isDateFilterAdded", payload: true });
-    } else {
-      console.log("Array null");
-
-      dispatch({ type: "isDateFilterAdded", payload: false });
+      if (duration.length === 0) {
+        dispatch({ type: "isDateFilterAdded", payload: false });
+      } else if (duration[0] !== "" && duration[1] !== "") {
+        dispatch({ type: "isDateFilterAdded", payload: true });
+      } else {
+        dispatch({ type: "isDateFilterAdded", payload: false });
+      }
+    } catch (error) {
+      alert.show(error.message);
     }
-    debugger;
   };
 
   const handleRemoveFilter = () => {
@@ -272,18 +270,19 @@ const Bike = ({}) => {
                 <div className="bikes__container">
                   <Button
                     style={{
+                      backgroundColor: "#95de64",
                       display: "flex",
                       alignItems: "center",
                       justifyContent: "center",
                     }}
                     onClick={handleAddBike}
                   >
-                    Add a bike
+                    Add a New bike
                   </Button>
                   <div className="bike__cards">
                     <Grid
                       container
-                      spacing={2}
+                      spacing={3}
                       theme={theme}
                       // alignItems="stretch"
                     >
@@ -341,6 +340,20 @@ const Bike = ({}) => {
                   value={addBikeLocation}
                   onChange={(e) => setAddBikeLocation(e.target.value)}
                 />
+              </Space>
+              <br />
+              <br />
+              <Space wrap>
+                Available :
+                <Input.Group compact>
+                  <Select
+                    defaultValue={addIsAvailable}
+                    onChange={setAddIsAvailable}
+                  >
+                    <Option value={false}>No</Option>
+                    <Option value={true}>Yes</Option>
+                  </Select>
+                </Input.Group>
               </Space>
             </div>
           </Modal>

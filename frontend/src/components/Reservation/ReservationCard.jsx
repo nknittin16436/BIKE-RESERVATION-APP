@@ -22,7 +22,6 @@ const ReservationCard = ({ reservation, getAllReservations, setLoading }) => {
 
   const handleCancelReservation = async () => {
     const id = reservation.id;
-    console.log(id);
     try {
       setLoading(true);
       const res = await updateReservationStatus({ id });
@@ -42,7 +41,6 @@ const ReservationCard = ({ reservation, getAllReservations, setLoading }) => {
 
   const submitReservationRating = async () => {
     const id = reservation.id;
-    console.log(rating, id);
     try {
       setLoading(true);
       const res = await updateReservationRating({ id, rating });

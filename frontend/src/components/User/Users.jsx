@@ -85,9 +85,6 @@ const Users = () => {
         <Loader />
       ) : (
         <div className="users__homepage__container">
-          <Space>
-            <Button onClick={handleAddUser}>Add User</Button>
-          </Space>
           <div className="users__container">
             <Layout>
               <Layout className="site-layout">
@@ -98,6 +95,20 @@ const Users = () => {
                     padding: 25,
                   }}
                 >
+                  {" "}
+                  <Space>
+                    <Button
+                      style={{
+                        backgroundColor: "#95de64",
+                        display: "flex",
+                        alignItems: "center",
+                        justifyContent: "center",
+                      }}
+                      onClick={handleAddUser}
+                    >
+                      Add User
+                    </Button>
+                  </Space>
                   <div className="users__cards">
                     <Grid container spacing={2} theme={theme}>
                       {users &&

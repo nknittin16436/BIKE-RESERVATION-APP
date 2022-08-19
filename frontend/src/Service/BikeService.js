@@ -36,13 +36,14 @@ export const getFilteredBikes = async ({ name = "", location = "", color = "", r
 }
 
 
-export const addNewBike = async ({ addBikeName, addBikeColor, addBikeLocation }) => {
+export const addNewBike = async ({ addBikeName, addBikeColor, addBikeLocation ,addIsAvailable}) => {
     const token = localStorage.getItem('bike-user');
     try {
         const res = await axios.post(`${url}/bikes`, {
             name: addBikeName,
             color: addBikeColor,
-            location: addBikeLocation
+            location: addBikeLocation,
+            isAvailable:addIsAvailable,
         }, {
             headers: { authtoken: token }
         });
@@ -117,14 +118,15 @@ export const deleteBike = async (id) => {
 }
 
 
-export const updateBike = async ({ bikeId, editedName, editedColor, editedLocation }) => {
+export const updateBike = async ({ bikeId, editedName, editedColor, editedLocation,editedIsAvailable }) => {
     const token = localStorage.getItem('bike-user');
 
     try {
         const res = await axios.patch(`${url}/bikes/${bikeId}`, {
             name: editedName,
             color: editedColor,
-            location: editedLocation
+            location: editedLocation,
+            isAvailable:editedIsAvailable
         }, {
             headers: { authtoken: token }
         });

@@ -19,12 +19,12 @@ export const getReservations = async () => {
     }
 }
 
-export const createBikeReservation = async ({ bikeId, fromDate, toDate, userId }) => {
+export const createBikeReservation = async ({ bikeId, fromDate, toDate }) => {
     const token = localStorage.getItem('bike-user');
 
     try {
         const res = await axios.post(`${url}/reservations`, {
-            bikeId, fromDate, toDate, userId
+            bikeId, fromDate, toDate
         }, {
             headers: { authtoken: token }
         });
