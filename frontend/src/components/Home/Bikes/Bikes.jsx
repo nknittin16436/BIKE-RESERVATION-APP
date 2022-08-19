@@ -176,7 +176,7 @@ const Bike = ({}) => {
           <div className="bike__filter__container">
             <Layout>
               <Sider
-              // theme={theme1}
+                // theme={theme1}
                 breakpoint="lg"
                 collapsedWidth="0"
                 onBreakpoint={(broken) => {
@@ -217,7 +217,7 @@ const Bike = ({}) => {
 
                   <br />
                   <br />
-                  <Space >
+                  <Space>
                     Location :{" "}
                     <Input
                       placeholder="Bike Location"
@@ -285,23 +285,21 @@ const Bike = ({}) => {
                   }}
                 >
                   <div className="bikes__container">
-                    <Button
-                      style={{
-                        backgroundColor: "#95de64",
-                        display: "flex",
-                        alignItems: "center",
-                        justifyContent: "center",
-                      }}
-                      onClick={handleAddBike}
-                    >
-                      Add a New bike
-                    </Button>
-                    <div className="bike__cards">
-                      <Grid
-                        container
-                        spacing={3}
-                        theme={theme}
+                    {isManager && (
+                      <Button
+                        style={{
+                          backgroundColor: "#95de64",
+                          display: "flex",
+                          alignItems: "center",
+                          justifyContent: "center",
+                        }}
+                        onClick={handleAddBike}
                       >
+                        Add a New bike
+                      </Button>
+                    )}
+                    <div className="bike__cards">
+                      <Grid container spacing={3} theme={theme}>
                         {bikes &&
                           bikes.map((bike) => (
                             <Grid item xs={12} key={bike.id}>
