@@ -32,7 +32,7 @@ export class ReservationService {
         }
     }
 
-    async createReservation({ bikeId, fromDate, toDate,authtoken }): Promise<any> {
+    async createReservation({ bikeId, fromDate, toDate, authtoken }): Promise<any> {
         try {
             const bike = await Bike.findOne({ where: { id: bikeId } });
             if (!bike) {
@@ -49,7 +49,7 @@ export class ReservationService {
             if (fromDate > toDate) {
                 throw new HttpException('Enter valid Reservation Duration', 400);
             }
-            if (bike && user) {
+            if (bike.isAvailable) {
                 const reservation = new Reservation();
                 reservation.bikeName = bike.name;
                 reservation.bikeId = bikeId;
@@ -61,6 +61,7 @@ export class ReservationService {
                 console.log(reservation);
                 return { success: true, statusCode: 201 };
             }
+            else throw new HttpException('This bike is Not Available', 400);
         } catch (error) {
             throw new HttpException(error, error.status);
         }

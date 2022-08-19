@@ -8,28 +8,28 @@ export class BikeController {
 
     @UseGuards(AuthGuard)
     @Get('')
-    getBikes(@Query() query): any {
-        return this.bikeService.getAllBikes(query);
+    getBikes(@Query() query, @Headers() { authtoken }): any {
+        return this.bikeService.getAllBikes({ query, authtoken });
     }
 
     @UseGuards(AuthGuard)
     @Get('/filtered')
-    getFilteredBikes(@Query() query): any {
-        return this.bikeService.getAllFilteredBikes(query);
+    getFilteredBikes(@Query() query, @Headers() { authtoken }): any {
+        return this.bikeService.getAllFilteredBikes({ query, authtoken });
     }
 
 
 
     @UseGuards(AdminGuard)
     @Post('')
-    createBike(@Body() { name, color, location ,isAvailable}): any {
-        return this.bikeService.createBike({ name, color, location,isAvailable });
+    createBike(@Body() { name, color, location, isAvailable }): any {
+        return this.bikeService.createBike({ name, color, location, isAvailable });
     }
 
     @UseGuards(AdminGuard)
     @Patch('/:id')
-    updateBike(@Body() { name, color, location,isAvailable }, @Param('id') id: string): any {
-        return this.bikeService.updateBike({ id, name, color, location ,isAvailable});
+    updateBike(@Body() { name, color, location, isAvailable }, @Param('id') id: string): any {
+        return this.bikeService.updateBike({ id, name, color, location, isAvailable });
     }
 
     @UseGuards(AdminGuard)

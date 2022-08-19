@@ -3,21 +3,28 @@ import { Bike } from 'src/db/entities/bike.entity';
 import { User } from 'src/db/entities/user.entity';
 import { AddBikeSchema } from 'src/JoiSchema/joiSchema';
 import { Between } from 'typeorm';
+import * as jwt from 'jsonwebtoken';
 @Injectable()
 export class BikeService {
 
-    async getAllBikes(query): Promise<any> {
+    async getAllBikes({ query, authtoken }): Promise<any> {
         try {
             let bikes = await Bike.find({
                 relations: {
                     reservations: true,
                 }
             });
+
+            var decoded = jwt.verify(authtoken, 'bikeReservation');
+            const userId = decoded.id;
+            const user = await User.findOne({ where: { id: userId } });
+            if (user.role === "regular") {
+                bikes = bikes.filter((bike) => bike.isAvailable === true)
+            }
             const totalBikes = bikes.length;
             if (query.page && query.pageSize) {
                 bikes = bikes.slice((query.page - 1) * query.pageSize, query.page * query.pageSize);
             }
-
             console.log(bikes);
             return { bikes, totalBikes, success: true }
         } catch (error) {
@@ -26,7 +33,7 @@ export class BikeService {
         }
     }
 
-    async getAllFilteredBikes(query): Promise<any> {
+    async getAllFilteredBikes({ query, authtoken }): Promise<any> {
         console.log(query);
         try {
             let bikes = await Bike.find({
@@ -37,6 +44,12 @@ export class BikeService {
                     averageRating: Between(parseInt(query.rating), 5)
                 }
             });
+            var decoded = jwt.verify(authtoken, 'bikeReservation');
+            const userId = decoded.id;
+            const user = await User.findOne({ where: { id: userId } });
+            if (user.role === "regular") {
+                bikes = bikes.filter((bike) => bike.isAvailable === true)
+            }
             if (query.name) {
                 bikes = bikes.filter(bike => bike.name.toLowerCase().includes(query.name.toLowerCase()));
             }
