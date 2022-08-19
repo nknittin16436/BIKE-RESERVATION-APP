@@ -77,6 +77,7 @@ const BikeReservation = () => {
                       </Grid>
                     ))}
                 </Grid>
+                {reservations.length===0 && <h3>No reservations yet</h3>}
               </div>
             </Content>
           </Layout>
