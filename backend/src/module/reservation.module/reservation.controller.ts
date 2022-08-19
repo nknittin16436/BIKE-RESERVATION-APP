@@ -29,8 +29,8 @@ export class ReservationController {
 
     @UseGuards(AuthGuard)
     @Post('')
-    createReservation(@Body() { bikeId, fromDate, toDate, userId }): any {
-        return this.reservationService.createReservation({ bikeId, fromDate, toDate, userId });
+    createReservation(@Body() { bikeId, fromDate, toDate}, @Headers() {authtoken}): any {
+        return this.reservationService.createReservation({ bikeId, fromDate, toDate,authtoken });
     }
 
     @UseGuards(AdminRegular)

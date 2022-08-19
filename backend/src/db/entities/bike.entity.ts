@@ -13,6 +13,10 @@ export class Bike extends BaseEntity {
 
     @Column()
     location: string
+    
+    @Column({nullable:true,default:false})
+    isAvailable: boolean
+
 
     @Column({nullable:true,default:0})
     averageRating: number

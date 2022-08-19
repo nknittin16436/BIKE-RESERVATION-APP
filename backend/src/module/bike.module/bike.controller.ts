@@ -22,14 +22,14 @@ export class BikeController {
 
     @UseGuards(AdminGuard)
     @Post('')
-    createBike(@Body() { name, color, location }): any {
-        return this.bikeService.createBike({ name, color, location });
+    createBike(@Body() { name, color, location ,isAvailable}): any {
+        return this.bikeService.createBike({ name, color, location,isAvailable });
     }
 
     @UseGuards(AdminGuard)
     @Patch('/:id')
-    updateBike(@Body() { name, color, location }, @Param('id') id: string): any {
-        return this.bikeService.updateBike({ id, name, color, location });
+    updateBike(@Body() { name, color, location,isAvailable }, @Param('id') id: string): any {
+        return this.bikeService.updateBike({ id, name, color, location ,isAvailable});
     }
 
     @UseGuards(AdminGuard)

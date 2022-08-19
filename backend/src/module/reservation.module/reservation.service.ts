@@ -2,6 +2,7 @@ import { Injectable, UnauthorizedException, HttpException } from '@nestjs/common
 import { Bike } from 'src/db/entities/bike.entity';
 import { Reservation } from 'src/db/entities/reservation.entity';
 import { User } from 'src/db/entities/user.entity';
+import * as jwt from 'jsonwebtoken';
 @Injectable()
 export class ReservationService {
 
@@ -31,12 +32,15 @@ export class ReservationService {
         }
     }
 
-    async createReservation({ bikeId, fromDate, toDate, userId }): Promise<any> {
+    async createReservation({ bikeId, fromDate, toDate,authtoken }): Promise<any> {
         try {
             const bike = await Bike.findOne({ where: { id: bikeId } });
             if (!bike) {
                 throw new HttpException('Invalid Bike Id', 400);
             }
+            var decoded = jwt.verify(authtoken, 'bikeReservation');
+            console.log(decoded);
+            const userId = decoded.id;
             const user = await User.findOne({ where: { id: userId } });
             if (!user) {
                 throw new HttpException('Invalid User', 400);
