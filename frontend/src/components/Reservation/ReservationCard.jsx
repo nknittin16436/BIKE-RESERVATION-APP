@@ -85,10 +85,10 @@ const ReservationCard = ({ reservation, getAllReservations, setLoading }) => {
           )}
         </div>,
         <span>
-          {(isManager || reservation.userId === loggedInUser.id) && (
+          {(reservation.userId === loggedInUser.id) && (
             <Button
               onClick={handleCancelReservation}
-              disabled={reservation.isRated || !reservation.status}
+              disabled={!reservation.status}
               type="danger"
             >
               Cancel Reservation
@@ -111,9 +111,11 @@ const ReservationCard = ({ reservation, getAllReservations, setLoading }) => {
           <div>
             <p>{`User Name : ${reservation.userName}`}</p>
             <p>{`Duration : ${reservation.fromDate} to ${reservation.toDate}`}</p>
-            <span>
-              Rating : <Rate disabled defaultValue={reservation.rating} />
-            </span>
+            {reservation.isRated && (
+              <span>
+                Rating : <Rate disabled defaultValue={reservation.rating} />
+              </span>
+            )}
           </div>
         }
       />

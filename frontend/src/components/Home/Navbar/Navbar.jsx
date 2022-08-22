@@ -171,17 +171,21 @@ const Navbar = () => {
                 </Link>
               </MenuItem>
 
-              <MenuItem onClick={handleCloseNavMenu}>
-                <Link to={"/reservations"}>
-                  <Typography textAlign="center">ALL RESERVATIONS</Typography>
-                </Link>
-              </MenuItem>
+              {isManager && (
+                <MenuItem onClick={handleCloseNavMenu}>
+                  <Link to={"/reservations"}>
+                    <Typography textAlign="center">ALL RESERVATIONS</Typography>
+                  </Link>
+                </MenuItem>
+              )}
 
-              <MenuItem onClick={handleCloseNavMenu}>
-                <Link to={"/users"}>
-                  <Typography textAlign="center">USERS</Typography>
-                </Link>
-              </MenuItem>
+              {isManager && (
+                <MenuItem onClick={handleCloseNavMenu}>
+                  <Link to={"/users"}>
+                    <Typography textAlign="center">USERS</Typography>
+                  </Link>
+                </MenuItem>
+              )}
               <MenuItem
                 onClick={() => {
                   handleCloseNavMenu();
