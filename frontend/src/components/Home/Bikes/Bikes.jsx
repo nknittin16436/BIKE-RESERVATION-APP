@@ -44,7 +44,6 @@ const theme1 = createTheme({
 });
 
 const Bike = ({}) => {
-  const PAGE_SIZE = 5;
 
   const { isManager, filterMode, totalBikes } = useSelector(
     (state) => state.bikeReservation
@@ -104,9 +103,7 @@ const Bike = ({}) => {
   const getAllBikes = async () => {
     try {
       const data = await getBikes({
-        page: currentPage,
-        PAGE_SIZE,
-      });
+        page: currentPage      });
       dispatch({ type: "totalBikes", payload: data.totalBikes });
       setBikes(data.bikes);
     } catch (error) {
@@ -141,11 +138,13 @@ const Bike = ({}) => {
         fromDate: duration[0],
         toDate: duration[1],
         page: currentPage,
-        PAGE_SIZE,
       });
       dispatch({ type: "totalBikes", payload: data.totalBikes });
+      if(data.totalBikes===0){
+        alert.show('No bikes Found For Given Filter');
+      }
       setBikes(data.bikes);
-
+      
       if (duration.length === 0) {
         dispatch({ type: "isDateFilterAdded", payload: false });
       } else if (duration[0] !== "" && duration[1] !== "") {
@@ -376,7 +375,7 @@ const Bike = ({}) => {
             <div className="pagination__box__container">
               <Pagination
                 activePage={currentPage}
-                itemsCountPerPage={PAGE_SIZE}
+                itemsCountPerPage={5}
                 totalItemsCount={Number(totalBikes)}
                 onChange={(e) => setCurrentPage(e)}
                 nextPageText="Next"

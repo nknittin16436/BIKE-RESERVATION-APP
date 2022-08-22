@@ -51,6 +51,10 @@ const Users = () => {
         setLoading(false);
         alert.show("User Added Succesfully");
         setIsModalVisible(false);
+        setName("");
+        setEmail("");
+        setPassword("");
+        setConfirmPassword("");
         await getAllUsers();
       } else {
         setLoading(false);
@@ -59,7 +63,7 @@ const Users = () => {
       }
     } catch (error) {
       setLoading(false);
-      setIsModalVisible(false);
+      // setIsModalVisible(false);
       alert.show(error.message);
     }
   };

@@ -3,6 +3,7 @@ import { Bike } from 'src/db/entities/bike.entity';
 import { User } from 'src/db/entities/user.entity';
 import { AddBikeSchema, BikeStatusSchema, ColorSchema, LocationSchema, NameSchema } from 'src/JoiSchema/joiSchema';
 import * as jwt from 'jsonwebtoken';
+const pageSize=5;
 @Injectable()
 export class BikeService {
 
@@ -21,8 +22,8 @@ export class BikeService {
                 bikes = bikes.filter((bike) => bike.isAvailable === true)
             }
             const totalBikes = bikes.length;
-            if (query.page && query.pageSize) {
-                bikes = bikes.slice((query.page - 1) * query.pageSize, query.page * query.pageSize);
+            if (query.page && pageSize) {
+                bikes = bikes.slice((query.page - 1) * pageSize, query.page * pageSize);
             }
             console.log(bikes);
             return { bikes, totalBikes, success: true }
@@ -88,8 +89,8 @@ export class BikeService {
                 });
             }
             const totalBikes = bikes.length;
-            if (query.page && query.pageSize) {
-                bikes = bikes.slice((query.page - 1) * query.pageSize, query.page * query.pageSize);
+            if (query.page && pageSize) {
+                bikes = bikes.slice((query.page - 1) * pageSize, query.page * pageSize);
             }
 
             console.log(bikes);
