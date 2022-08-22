@@ -1,5 +1,4 @@
 import axios from "axios";
-// const url= "https://restaurant-review-nand-kumar.herokuapp.com";
 const url = "http://localhost:5000";
 
 
@@ -91,7 +90,7 @@ export const getUserDetails = async (token) => {
         return res.data;
     } catch (error) {
         // console.log(error);
-        throw new Error(error.response.data);
+        throw new Error(error.response.data.message);
 
     }
 }

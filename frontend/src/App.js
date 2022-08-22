@@ -52,7 +52,7 @@ const App = () => {
 
   return (
     <div>
-      {loggedInUser.name && <Navbar />}
+      {loggedInUser && loggedInUser.name && <Navbar />}
       <Routes>
         <Route path="/login" element={<Login />} />
         <Route path="/register" element={<SignUp />} />

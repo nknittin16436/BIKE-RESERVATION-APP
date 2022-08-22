@@ -11,13 +11,15 @@ import Button from "@mui/material/Button";
 import MenuItem from "@mui/material/MenuItem";
 import EventSeatIcon from "@mui/icons-material/EventSeat";
 import { Link, useNavigate } from "react-router-dom";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 
 const Navbar = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
 
   const [anchorElNav, setAnchorElNav] = React.useState(null);
+
+  const { isManager } = useSelector((state) => state.bikeReservation);
 
   const handleOpenNavMenu = (event) => {
     setAnchorElNav(event.currentTarget);
@@ -106,18 +108,22 @@ const Navbar = () => {
             >
               YOUR RESERVATIONS
             </Button>
-            <Button
-              onClick={handleClickAllReservations}
-              sx={{ my: 2, color: "white", display: "block" }}
-            >
-              ALL RESERVATIONS
-            </Button>
-            <Button
-              onClick={handleClickUsers}
-              sx={{ my: 2, color: "white", display: "block" }}
-            >
-              USERS
-            </Button>
+            {isManager && (
+              <Button
+                onClick={handleClickAllReservations}
+                sx={{ my: 2, color: "white", display: "block" }}
+              >
+                ALL RESERVATIONS
+              </Button>
+            )}
+            {isManager && (
+              <Button
+                onClick={handleClickUsers}
+                sx={{ my: 2, color: "white", display: "block" }}
+              >
+                USERS
+              </Button>
+            )}
             <Button
               onClick={handleClickLogout}
               sx={{ my: 2, color: "white", display: "block" }}

@@ -1,5 +1,4 @@
 import axios from "axios";
-// const url= "https://restaurant-review-nand-kumar.herokuapp.com";
 const url = "http://localhost:5000";
 
 
@@ -16,7 +15,7 @@ export const getBikes = async ({ page, PAGE_SIZE }) => {
         return res.data;
     } catch (error) {
         // console.log(error);
-        throw new Error(error.response.data)
+        throw new Error(error.response.data.message)
     }
 }
 export const getFilteredBikes = async ({ name = "", location = "", color = "", rating = "0", fromDate = '', toDate = '', page, PAGE_SIZE }) => {
@@ -31,7 +30,7 @@ export const getFilteredBikes = async ({ name = "", location = "", color = "", r
         return res.data;
     } catch (error) {
         // console.log(error);
-        throw new Error(error.response.data)
+        throw new Error(error.response.data.message)
     }
 }
 
