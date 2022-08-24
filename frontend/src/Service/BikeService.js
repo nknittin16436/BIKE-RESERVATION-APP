@@ -3,7 +3,7 @@ const url = "http://localhost:5000";
 
 
 
-export const getBikes = async ({ page}) => {
+export const getBikes = async ({ page }) => {
     const token = localStorage.getItem('bike-user');
 
     try {
@@ -20,9 +20,24 @@ export const getBikes = async ({ page}) => {
 }
 export const getFilteredBikes = async ({ name = "", location = "", color = "", rating = "0", fromDate = '', toDate = '', page }) => {
     const token = localStorage.getItem('bike-user');
-
+    let query = `?rating=${rating}&page=${page}`;
+    if(name){
+        query+=`&name=${name}`
+    }
+    if(color){
+        query+=`&color=${color}`
+    }
+    if(location){
+        query+=`&location=${location}`
+    }
+    if(fromDate){
+        query+=`&fromDate=${fromDate}`
+    }
+    if(toDate){
+        query+=`&toDate=${toDate}`
+    }
     try {
-        const res = await axios.get(`${url}/bikes/filtered?name=${name}&location=${location}&color=${color}&rating=${rating}&fromDate=${fromDate}&toDate=${toDate}&page=${page}`, {
+        const res = await axios.get(`${url}/bikes/filtered${query}`, {
             headers: { authtoken: token }
         });
         // console.log(res);
@@ -35,14 +50,14 @@ export const getFilteredBikes = async ({ name = "", location = "", color = "", r
 }
 
 
-export const addNewBike = async ({ addBikeName, addBikeColor, addBikeLocation ,addIsAvailable}) => {
+export const addNewBike = async ({ addBikeName, addBikeColor, addBikeLocation, addIsAvailable }) => {
     const token = localStorage.getItem('bike-user');
     try {
         const res = await axios.post(`${url}/bikes`, {
             name: addBikeName,
             color: addBikeColor,
             location: addBikeLocation,
-            isAvailable:addIsAvailable,
+            isAvailable: addIsAvailable,
         }, {
             headers: { authtoken: token }
         });
@@ -111,7 +126,7 @@ export const deleteBike = async (id) => {
 }
 
 
-export const updateBike = async ({ bikeId, editedName, editedColor, editedLocation,editedIsAvailable }) => {
+export const updateBike = async ({ bikeId, editedName, editedColor, editedLocation, editedIsAvailable }) => {
     const token = localStorage.getItem('bike-user');
 
     try {
@@ -119,7 +134,7 @@ export const updateBike = async ({ bikeId, editedName, editedColor, editedLocati
             name: editedName,
             color: editedColor,
             location: editedLocation,
-            isAvailable:editedIsAvailable
+            isAvailable: editedIsAvailable
         }, {
             headers: { authtoken: token }
         });

@@ -1,4 +1,4 @@
-import { Entity, PrimaryGeneratedColumn, Column, BaseEntity,OneToMany } from "typeorm"
+import { Entity, PrimaryGeneratedColumn, Column, BaseEntity,OneToMany ,JoinTable} from "typeorm"
 import { Reservation } from "./reservation.entity"
 @Entity()
 export class User extends BaseEntity {
@@ -19,4 +19,7 @@ export class User extends BaseEntity {
 
     @OneToMany(() => Reservation, (reservation) => reservation.user)
     reservations: Reservation[]
+
+   
+
 }

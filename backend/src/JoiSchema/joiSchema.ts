@@ -19,8 +19,6 @@ export const SignUpSchema = Joi.object({
         .required()
         .pattern(new RegExp(/^\w+(?:\s+\w+)*$/))
         .error(new Error('Enter a valid Name')),
-
-
     password: Joi.string()
         .pattern(new RegExp('^[a-zA-Z0-9$%#@]{8,30}$'))
         .error(new Error('Password Should contain One upper case,one lower case,one number and one special character and atleast 8 characters long')),
@@ -31,8 +29,8 @@ export const SignUpSchema = Joi.object({
         .error(new Error('Enter a valid Email')),
 
 
-    confirmPassword: Joi.ref('password')
-
+    confirmPassword: Joi.string().required().valid(Joi.ref('password'))
+        .error(new Error('Password and Confirm Password Do not Match')),
 }).with('email', 'password');
 
 export const AddBikeSchema = Joi.object({

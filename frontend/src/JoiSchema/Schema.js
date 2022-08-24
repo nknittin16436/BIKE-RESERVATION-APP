@@ -32,7 +32,10 @@ export const SignUpSchema = Joi.object({
 
 
 
-    confirmPassword: Joi.ref('password')
+    // confirmPassword: Joi.ref('password')
+    confirmPassword: Joi.string().required().valid(Joi.ref('password'))
+    .error(new Error('Password and Confirm Password Do not Match')),
+
 
 }).with('email', 'password');
 
