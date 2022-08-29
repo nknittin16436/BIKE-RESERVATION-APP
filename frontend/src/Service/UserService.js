@@ -6,8 +6,8 @@ const url = "http://localhost:5000";
 export const registerUser = async ({ name, email, password, confirmPassword }) => {
     try {
         const res = await axios.post(`${url}/users/signup`, {
-            name: name,
-            email: email,
+            name: name.trim(),
+            email: email.trim(),
             password: password,
             confirmPassword: confirmPassword
         });
@@ -70,8 +70,8 @@ export const editUser = async (id, editedName, editedEmail, editedRole) => {
     const token = localStorage.getItem('bike-user');
     try {
         const res = await axios.patch(`${url}/users/${id}`, {
-            name: editedName,
-            email: editedEmail,
+            name: editedName.trim(),
+            email: editedEmail.trim(),
             role: editedRole
         }, {
             headers: { authtoken: token }

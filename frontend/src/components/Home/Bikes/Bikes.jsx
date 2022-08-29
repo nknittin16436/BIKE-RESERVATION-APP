@@ -31,20 +31,8 @@ const theme = createTheme({
     },
   },
 });
-const theme1 = createTheme({
-  breakpoints: {
-    values: {
-      xs: 1030,
-      sm: 1115,
-      md: 1536,
-      lg: 1115,
-      xl: 1115,
-    },
-  },
-});
 
 const Bike = ({}) => {
-
   const { isManager, filterMode, totalBikes } = useSelector(
     (state) => state.bikeReservation
   );
@@ -54,7 +42,7 @@ const Bike = ({}) => {
   const [name, setName] = useState("");
   const [color, setColor] = useState("");
   const [location, setLocation] = useState("");
-  const [duration, setDuration] = useState([]);
+  const [duration, setDuration] = useState([null, null]);
   const [isModalVisible, setIsModalVisible] = useState(false);
   const [addBikeName, setAddBikeName] = useState("");
   const [addBikeColor, setAddBikeColor] = useState("");
@@ -103,7 +91,8 @@ const Bike = ({}) => {
   const getAllBikes = async () => {
     try {
       const data = await getBikes({
-        page: currentPage      });
+        page: currentPage,
+      });
       dispatch({ type: "totalBikes", payload: data.totalBikes });
       setBikes(data.bikes);
     } catch (error) {
@@ -123,11 +112,12 @@ const Bike = ({}) => {
   }, [currentPage, filterMode]);
 
   const handleChange = (date, dateString) => {
+    console.log(date, dateString);
     setDuration(dateString);
   };
 
   const handleFilterSubmit = async () => {
-    // console.log(name, location, color, rating, duration);
+    console.log(name, location, color, rating, duration);
     try {
       dispatch({ type: "filterMode", payload: true });
       const data = await getFilteredBikes({
@@ -140,11 +130,11 @@ const Bike = ({}) => {
         page: currentPage,
       });
       dispatch({ type: "totalBikes", payload: data.totalBikes });
-      if(data.totalBikes===0){
-        alert.show('No bikes Found For Given Filter');
+      if (data.totalBikes === 0) {
+        alert.show("No bikes Found For Given Filter");
       }
       setBikes(data.bikes);
-      
+
       if (duration.length === 0) {
         dispatch({ type: "isDateFilterAdded", payload: false });
       } else if (duration[0] !== "" && duration[1] !== "") {
@@ -163,7 +153,8 @@ const Bike = ({}) => {
     setColor("");
     setLocation("");
     setRating(0);
-    setDuration([]);
+    setDuration(["", ""]);
+    console.log(duration)
   };
 
   return (
@@ -178,10 +169,8 @@ const Bike = ({}) => {
                 // theme={theme1}
                 breakpoint="lg"
                 collapsedWidth="0"
-                onBreakpoint={(broken) => {
-                }}
-                onCollapse={(collapsed, type) => {
-                }}
+                onBreakpoint={(broken) => {}}
+                onCollapse={(collapsed, type) => {}}
                 style={{
                   padding: 24,
                   height: "90vh",
@@ -244,6 +233,7 @@ const Bike = ({}) => {
                     Duration :{" "}
                     <RangePicker
                       showTime
+                      defaultValue={duration}
                       onChange={handleChange}
                       disabledDate={(current) => {
                         return moment().add(-1, "days") >= current;

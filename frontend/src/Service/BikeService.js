@@ -21,20 +21,20 @@ export const getBikes = async ({ page }) => {
 export const getFilteredBikes = async ({ name = "", location = "", color = "", rating = "0", fromDate = '', toDate = '', page }) => {
     const token = localStorage.getItem('bike-user');
     let query = `?rating=${rating}&page=${page}`;
-    if(name){
-        query+=`&name=${name}`
+    if (name) {
+        query += `&name=${name}`
     }
-    if(color){
-        query+=`&color=${color}`
+    if (color) {
+        query += `&color=${color}`
     }
-    if(location){
-        query+=`&location=${location}`
+    if (location) {
+        query += `&location=${location}`
     }
-    if(fromDate){
-        query+=`&fromDate=${fromDate}`
+    if (fromDate) {
+        query += `&fromDate=${fromDate}`
     }
-    if(toDate){
-        query+=`&toDate=${toDate}`
+    if (toDate) {
+        query += `&toDate=${toDate}`
     }
     try {
         const res = await axios.get(`${url}/bikes/filtered${query}`, {
@@ -54,9 +54,9 @@ export const addNewBike = async ({ addBikeName, addBikeColor, addBikeLocation, a
     const token = localStorage.getItem('bike-user');
     try {
         const res = await axios.post(`${url}/bikes`, {
-            name: addBikeName,
-            color: addBikeColor,
-            location: addBikeLocation,
+            name: addBikeName.trim(),
+            color: addBikeColor.trim(),
+            location: addBikeLocation.trim(),
             isAvailable: addIsAvailable,
         }, {
             headers: { authtoken: token }
@@ -131,9 +131,9 @@ export const updateBike = async ({ bikeId, editedName, editedColor, editedLocati
 
     try {
         const res = await axios.patch(`${url}/bikes/${bikeId}`, {
-            name: editedName,
-            color: editedColor,
-            location: editedLocation,
+            name: editedName.trim(),
+            color: editedColor.trim(),
+            location: editedLocation.trim(),
             isAvailable: editedIsAvailable
         }, {
             headers: { authtoken: token }

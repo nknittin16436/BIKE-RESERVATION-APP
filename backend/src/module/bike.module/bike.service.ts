@@ -3,7 +3,7 @@ import { Bike } from 'src/db/entities/bike.entity';
 import { User } from 'src/db/entities/user.entity';
 import { AddBikeSchema, BikeStatusSchema, ColorSchema, LocationSchema, NameSchema } from 'src/JoiSchema/joiSchema';
 import * as jwt from 'jsonwebtoken';
-const pageSize=5;
+const pageSize = 5;
 @Injectable()
 export class BikeService {
 
@@ -111,14 +111,14 @@ export class BikeService {
         console.log("9hello");
         try {
             try {
-                await AddBikeSchema.validateAsync({ color: color, location: location, name: name, isAvailable: isAvailable });
+                await AddBikeSchema.validateAsync({ color: color.trim(), location: location.trim(), name: name.trim(), isAvailable: isAvailable });
             } catch (error) {
                 throw new HttpException(error.message, 400);
             }
             const bike = new Bike();
-            bike.name = name;
-            bike.color = color;
-            bike.location = location;
+            bike.name = name.trim();
+            bike.color = color.trim();
+            bike.location = location.trim();
             bike.isAvailable = isAvailable;
             await bike.save();
             console.log("9hello succss");
@@ -138,17 +138,17 @@ export class BikeService {
                 console.log("try2")
                 if (name === "" || name) {
                     console.log(name);
-                    await NameSchema.validateAsync({ name: name });
+                    await NameSchema.validateAsync({ name: name.trim() });
                 }
                 if (location === "" || location) {
                     console.log(location);
-                    await LocationSchema.validateAsync({ location: location });
+                    await LocationSchema.validateAsync({ location: location.trim() });
                 }
                 if (color === "" || color) {
                     await ColorSchema.validateAsync({ color: color });
                 }
                 if (isAvailable === "" || isAvailable) {
-                    await BikeStatusSchema.validateAsync({ isAvailable: isAvailable });
+                    await BikeStatusSchema.validateAsync({ isAvailable: isAvailable.trim() });
                 }
             } catch (error) {
                 throw new HttpException(error.message, 400);
@@ -157,7 +157,7 @@ export class BikeService {
             const bike = await Bike.findOne({ where: { id: id } });
             if (bike) {
 
-                await Bike.update(id, { name, color, location, isAvailable });
+                await Bike.update(id, { name: name.trim(), color: color.trim(), location: location.trim(), isAvailable });
                 return { success: true, statusCode: 200 }
             }
             else throw new HttpException('Unable to update Bike Invalid bike Id', 400);
