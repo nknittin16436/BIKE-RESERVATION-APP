@@ -25,14 +25,29 @@ const SignUp = () => {
 
   const handleSubmit = async (event) => {
     event.preventDefault();
+
     try {
       const data = new FormData(event.currentTarget);
+      const email = data.get("email");
+      data.set(
+        "email",
+        email.slice(0, email.indexOf("@")).toLowerCase() +
+          email.slice(email.indexOf("@"))
+      );
+      console.log(
+        data.get("name"),
+        data.get("email"),
+        data.get("password"),
+        data.get("confirmPassword")
+      );
+
       await SignUpSchema.validateAsync({
         name: data.get("name"),
         email: data.get("email"),
         password: data.get("password"),
         confirmPassword: data.get("confirmPassword"),
       });
+
       setLoading(true);
       const res = await registerUser({
         name: data.get("name"),
@@ -44,9 +59,8 @@ const SignUp = () => {
         setLoading(false);
         alert.show("Registerd Succesfully Login to Continue");
         navigate("/login");
-      }
-      else{
-        alert.show('Some error occured Please try again');
+      } else {
+        alert.show("Some error occured Please try again");
       }
     } catch (error) {
       setLoading(false);

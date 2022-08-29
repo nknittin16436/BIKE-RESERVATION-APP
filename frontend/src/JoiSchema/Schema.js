@@ -3,6 +3,7 @@ import * as Joi from 'joi';
 export const LoginSchema = Joi.object({
     email: Joi.string()
         .email({ minDomainSegments: 2, tlds: { allow: ['com', 'net'] } })
+        .trim()
         .error(new Error('Invalid Email')),
 
     password: Joi.string()
@@ -23,6 +24,7 @@ export const SignUpSchema = Joi.object({
 
     email: Joi.string()
         .email({ minDomainSegments: 2, tlds: { allow: ['com', 'net'] } })
+        .trim()
         .error(new Error('Enter a valid Email')),
 
     password: Joi.string()
@@ -34,10 +36,10 @@ export const SignUpSchema = Joi.object({
 
     // confirmPassword: Joi.ref('password')
     confirmPassword: Joi.string().required().valid(Joi.ref('password'))
-    .error(new Error('Password and Confirm Password Do not Match')),
+        .error(new Error('Password and Confirm Password Do not Match')),
 
 
-}).with('email', 'password');
+}).with('confirmPassword', 'password');
 
 export const AddBikeSchema = Joi.object({
     name: Joi.string()

@@ -40,20 +40,22 @@ export class UserService {
 
     async createUser(name: string, email: string, password: string, confirmPassword): Promise<any> {
         try {
-            const isUser = await User.findOne({ where: { email: email } });
+            const insensitiveEmail = email.slice(0, email.indexOf("@")).toLowerCase() +
+                email.slice(email.indexOf("@"));
+            const isUser = await User.findOne({ where: { email: insensitiveEmail } });
             if (isUser) {
                 throw new HttpException('Email already Exist', 400);
             }
             try {
 
-                await SignUpSchema.validateAsync({ email: email, password: password, confirmPassword: confirmPassword, name: name });
+                await SignUpSchema.validateAsync({ email: insensitiveEmail, password: password, confirmPassword: confirmPassword, name: name });
             } catch (error) {
                 throw new HttpException(error.message, 400);
 
             }
             const user = new User();
             user.name = name;
-            user.email = email;
+            user.email = insensitiveEmail;
             const hashedPassword = await bcrypt.hashSync(password, 10);
             user.password = hashedPassword;
             await user.save();
@@ -66,13 +68,15 @@ export class UserService {
 
     async doUserLogin(email: string, password: string): Promise<any> {
         try {
+            const insensitiveEmail = email.slice(0, email.indexOf("@")).toLowerCase() +
+                email.slice(email.indexOf("@"));
             try {
-                await LoginSchema.validateAsync({ email: email, password: password });
+                await LoginSchema.validateAsync({ email: insensitiveEmail, password: password });
             } catch (error) {
                 throw new HttpException(error.message, 400);
 
             }
-            const user = await User.findOne({ where: { email: email } });
+            const user = await User.findOne({ where: { email: insensitiveEmail } });
             if (user && bcrypt.compareSync(password, user.password)) {
                 const token = jwt.sign({ id: user.id, time: Date.now() }, 'bikeReservation', { expiresIn: '24h' });
                 delete user.password;
@@ -89,13 +93,15 @@ export class UserService {
     async updateUser(id: string, name: string, email: string, role: string): Promise<any> {
         console.log(name, email, role);
         try {
+            const insensitiveEmail = email.slice(0, email.indexOf("@")).toLowerCase() +
+                email.slice(email.indexOf("@"));
 
             try {
                 if (name === "" || name) {
                     await NameSchema.validateAsync({ name: name });
                 }
                 if (email === "" || email) {
-                    await EmailSchema.validateAsync({ email: email });
+                    await EmailSchema.validateAsync({ email: insensitiveEmail });
                 }
                 if (role === "" || role) {
                     await RoleSchema.validateAsync({ role: role });
@@ -107,7 +113,7 @@ export class UserService {
             }
             const user = await User.findOne({ where: { id: id } });
             if (user) {
-                await User.update(id, { name, email, role });
+                await User.update(id, { name, email: insensitiveEmail, role });
                 return { success: true, statusCode: 200 }
             }
             else throw new NotFoundException('User not found');

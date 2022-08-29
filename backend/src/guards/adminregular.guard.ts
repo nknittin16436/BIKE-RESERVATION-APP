@@ -16,7 +16,7 @@ export class AdminRegular implements CanActivate {
                 var decoded = jwt.verify(token, 'bikeReservation');
                 const userId = decoded.id;
                 const user = await User.findOne({ where: { id: userId } });
-                if (user && (user.role === "manager" || reservation.userId === userId)) {
+                if (user && reservation.userId === userId) {
                     return true;
                 }
             }

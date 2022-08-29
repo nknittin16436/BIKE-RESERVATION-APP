@@ -27,6 +27,12 @@ const Login = () => {
   const handleSubmit = async (event) => {
     event.preventDefault();
     const data = new FormData(event.currentTarget);
+    const email = data.get("email");
+    data.set(
+      "email",
+      email.slice(0, email.indexOf("@")).toLowerCase() +
+        email.slice(email.indexOf("@"))
+    );
     try {
       await LoginSchema.validateAsync({
         email: data.get("email"),
