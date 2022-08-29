@@ -2,15 +2,11 @@
 
 import { createReducer } from "@reduxjs/toolkit";
 const initialState = {
-    restaurants: [],
     loading: false,
-    reviews: [],
-    highlightedReviews: [],
     users: [],
     isAuthenticated: false,
     isManager: false,
     loggedInUser: {},
-    totalRestaurant: 0,
     page: 1,
     isDateFilterAdded:false,
     reservations:[],

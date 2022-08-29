@@ -33,7 +33,7 @@ const theme = createTheme({
 });
 
 const Bike = ({}) => {
-  const { isManager, filterMode, totalBikes } = useSelector(
+  const { isManager, filterMode, totalBikes, isDateFilterAdded } = useSelector(
     (state) => state.bikeReservation
   );
 
@@ -109,7 +109,7 @@ const Bike = ({}) => {
     } else {
       getAllBikes();
     }
-  }, [currentPage, filterMode]);
+  }, [currentPage, filterMode, isDateFilterAdded]);
 
   const handleChange = (date, dateString) => {
     console.log(date, dateString);
@@ -149,12 +149,13 @@ const Bike = ({}) => {
 
   const handleRemoveFilter = () => {
     dispatch({ type: "filterMode", payload: false });
+    handleChange();
     setName("");
     setColor("");
     setLocation("");
     setRating(0);
-    setDuration(["", ""]);
-    console.log(duration)
+    console.log(duration);
+    dispatch({ type: "isDateFilterAdded", payload: false });
   };
 
   return (
@@ -233,7 +234,6 @@ const Bike = ({}) => {
                     Duration :{" "}
                     <RangePicker
                       showTime
-                      defaultValue={duration}
                       onChange={handleChange}
                       disabledDate={(current) => {
                         return moment().add(-1, "days") >= current;
