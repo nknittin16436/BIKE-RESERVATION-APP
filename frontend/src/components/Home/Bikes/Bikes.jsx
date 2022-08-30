@@ -420,7 +420,7 @@ const Bike = () => {
                 lastPageText="Last"
                 itemClass="page-item"
                 linkClass="page-link"
-                activeClass="pageItemActive"
+                // activeClass="pageItemActive"
                 activeLinkClass="pageLinkActive"
               />
             </div>

@@ -29,7 +29,7 @@ export class BikeService {
             if (query.page && pageSize) {
                 bikes = bikes.slice((query.page - 1) * pageSize, query.page * pageSize);
             }
-            console.log(bikes);
+            // console.log(bikes);
             return { bikes, totalBikes, success: true }
         } catch (error) {
             throw new HttpException(error, error.status);
@@ -38,7 +38,7 @@ export class BikeService {
     }
 
     async getAllFilteredBikes({ query, authtoken }): Promise<any> {
-        console.log(query);
+        // console.log(query);
         try {
             var decoded = jwt.verify(authtoken, 'bikeReservation');
             const userId = decoded.id;
