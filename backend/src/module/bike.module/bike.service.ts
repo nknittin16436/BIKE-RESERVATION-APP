@@ -3,22 +3,26 @@ import { Bike } from 'src/db/entities/bike.entity';
 import { User } from 'src/db/entities/user.entity';
 import { AddBikeSchema, BikeStatusSchema, ColorSchema, LocationSchema, NameSchema } from 'src/JoiSchema/joiSchema';
 import * as jwt from 'jsonwebtoken';
+import { Reservation } from 'src/db/entities/reservation.entity';
 const pageSize = 5;
 @Injectable()
 export class BikeService {
 
     async getAllBikes({ query, authtoken }): Promise<any> {
         try {
-            let bikes = await Bike.find({
-                relations: {
-                    reservations: true,
-                }
-            });
-
             var decoded = jwt.verify(authtoken, 'bikeReservation');
             const userId = decoded.id;
             const user = await User.findOne({ where: { id: userId } });
+            if (user.role === "manager") {
+                var bikes = await Bike.find({
+                    relations: {
+                        reservations: true,
+                    }
+                });
+            }
+
             if (user.role === "regular") {
+                var bikes = await Bike.find();
                 bikes = bikes.filter((bike) => bike.isAvailable === true)
             }
             const totalBikes = bikes.length;
@@ -36,15 +40,22 @@ export class BikeService {
     async getAllFilteredBikes({ query, authtoken }): Promise<any> {
         console.log(query);
         try {
-            let bikes = await Bike.find({
-                relations: {
-                    reservations: true,
-                }
-            });
             var decoded = jwt.verify(authtoken, 'bikeReservation');
             const userId = decoded.id;
             const user = await User.findOne({ where: { id: userId } });
+            if (user.role === "manager") {
+                var bikes = await Bike.find({
+                    relations: {
+                        reservations: true,
+                    }
+                });
+            }
             if (user.role === "regular") {
+                var bikes = await Bike.find({
+                    relations: {
+                        reservations: true,
+                    }
+                });
                 bikes = bikes.filter((bike) => bike.isAvailable === true)
             }
             if (query.rating) {
@@ -91,6 +102,11 @@ export class BikeService {
             const totalBikes = bikes.length;
             if (query.page && pageSize) {
                 bikes = bikes.slice((query.page - 1) * pageSize, query.page * pageSize);
+            }
+            if (user.role === "regular") {
+                bikes.forEach(bike => {
+                    delete bike.reservations;
+                });
             }
 
             console.log(bikes);
@@ -145,23 +161,32 @@ export class BikeService {
                     await LocationSchema.validateAsync({ location: location.trim() });
                 }
                 if (color === "" || color) {
-                    await ColorSchema.validateAsync({ color: color });
+                    await ColorSchema.validateAsync({ color: color.trim() });
                 }
                 if (isAvailable === "" || isAvailable) {
-                    await BikeStatusSchema.validateAsync({ isAvailable: isAvailable.trim() });
+                    await BikeStatusSchema.validateAsync({ isAvailable: isAvailable });
                 }
             } catch (error) {
                 throw new HttpException(error.message, 400);
 
             }
-            const bike = await Bike.findOne({ where: { id: id } });
+            const bike = await Bike.findOne({
+                where: { id: id }, relations: {
+                    reservations: true,
+                }
+            });
             if (bike) {
 
                 await Bike.update(id, { name: name.trim(), color: color.trim(), location: location.trim(), isAvailable });
+                const reservations = bike.reservations;
+                for (const reservation of reservations) {
+                    await Reservation.update(reservation.id, { bikeName: name.trim() });
+                }
                 return { success: true, statusCode: 200 }
             }
             else throw new HttpException('Unable to update Bike Invalid bike Id', 400);
         } catch (error) {
+            console.log(error)
             throw new HttpException(error, error.status);
 
 

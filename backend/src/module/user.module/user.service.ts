@@ -3,6 +3,7 @@ import { User } from 'src/db/entities/user.entity';
 import * as jwt from 'jsonwebtoken';
 import * as bcrypt from 'bcryptjs';
 import { EmailSchema, LoginSchema, NameSchema, RoleSchema, SignUpSchema } from 'src/JoiSchema/joiSchema';
+import { Reservation } from 'src/db/entities/reservation.entity';
 
 
 @Injectable()
@@ -54,7 +55,7 @@ export class UserService {
 
             }
             const user = new User();
-            user.name = name;
+            user.name = name.trim();
             user.email = insensitiveEmail;
             const hashedPassword = await bcrypt.hashSync(password, 10);
             user.password = hashedPassword;
@@ -111,15 +112,28 @@ export class UserService {
                 throw new HttpException(error.message, 400);
 
             }
-            const user = await User.findOne({ where: { id: id } });
+            const user = await User.findOne({
+                where: { id: id }, relations: {
+                    reservations: true,
+                }
+            });
             if (user) {
                 await User.update(id, { name, email: insensitiveEmail, role });
+
+                if (name) {
+                    const reservations = user.reservations;
+                    for (const reservation of reservations) {
+                        await Reservation.update(reservation.id, { userName: name.trim() });
+                    }
+                }
                 return { success: true, statusCode: 200 }
             }
             else throw new NotFoundException('User not found');
 
 
         } catch (error) {
+
+            console.log(error)
             if (error.errno === 19) {
 
                 throw new HttpException("Email already Exist", 400);

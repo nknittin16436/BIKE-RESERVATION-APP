@@ -4,9 +4,7 @@ import { Card, Button, Space, Input, Rate, Typography, Select } from "antd";
 import "../../../App.css";
 import { useNavigate } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
-import {
-  createBikeReservation,
-} from "../../../Service/ReservationService";
+import { createBikeReservation } from "../../../Service/ReservationService";
 import { deleteBike, updateBike } from "../../../Service/BikeService";
 import { useAlert } from "react-alert";
 import { AddBikeSchema } from "../../../JoiSchema/Schema";
@@ -65,7 +63,7 @@ const BikeCard = ({ bike, getAllBikes, duration, setLoading }) => {
         name: editedName,
         color: editedColor,
         location: editedLocation,
-        isAvailable:editedIsAvailable
+        isAvailable: editedIsAvailable,
       });
       setLoading(true);
       const res = await updateBike({
@@ -88,6 +86,7 @@ const BikeCard = ({ bike, getAllBikes, duration, setLoading }) => {
     } catch (error) {
       setIsEditMode(false);
       alert.show(error.message);
+      setLoading(false);
     }
   };
 

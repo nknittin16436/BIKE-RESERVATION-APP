@@ -42,7 +42,7 @@ const Bike = ({}) => {
   const [name, setName] = useState("");
   const [color, setColor] = useState("");
   const [location, setLocation] = useState("");
-  const [duration, setDuration] = useState([null, null]);
+  const [duration, setDuration] = useState([]);
   const [isModalVisible, setIsModalVisible] = useState(false);
   const [addBikeName, setAddBikeName] = useState("");
   const [addBikeColor, setAddBikeColor] = useState("");
@@ -117,7 +117,7 @@ const Bike = ({}) => {
   };
 
   const handleFilterSubmit = async () => {
-    console.log(name, location, color, rating, duration);
+    console.log(name, location, color, rating,"DURATION", duration);
     try {
       dispatch({ type: "filterMode", payload: true });
       const data = await getFilteredBikes({
@@ -149,13 +149,13 @@ const Bike = ({}) => {
 
   const handleRemoveFilter = () => {
     dispatch({ type: "filterMode", payload: false });
+    dispatch({ type: "isDateFilterAdded", payload: false });
     handleChange();
     setName("");
     setColor("");
     setLocation("");
     setRating(0);
     console.log(duration);
-    dispatch({ type: "isDateFilterAdded", payload: false });
   };
 
   return (
