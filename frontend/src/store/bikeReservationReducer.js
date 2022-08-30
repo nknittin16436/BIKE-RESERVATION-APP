@@ -13,7 +13,11 @@ const initialState = {
     totalBikes: 0,
     filterMode: false,
     fromDate: '',
-    toDate: ''
+    toDate: '',
+    filterName: "",
+    filterColor: "",
+    filterLocation: "",
+    filterRating: "0",
 };
 
 export const bikeReservationReducer = createReducer(initialState, {
@@ -64,5 +68,17 @@ export const bikeReservationReducer = createReducer(initialState, {
     },
     toDate: (state, action) => {
         state.toDate = action.payload
+    },
+    filterName: (state, action) => {
+        state.filterName = action.payload
+    },
+    filterLocation: (state, action) => {
+        state.filterLocation = action.payload
+    },
+    filterColor: (state, action) => {
+        state.filterColor = action.payload
+    },
+    filterRating: (state, action) => {
+        state.filterRating = action.payload
     },
 })

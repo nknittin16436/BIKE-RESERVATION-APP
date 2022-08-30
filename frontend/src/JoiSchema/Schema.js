@@ -1,18 +1,5 @@
 import * as Joi from 'joi';
 
-const method = (value, helpers) => {
-    // for example if the username value is (something) then it will throw an error with flowing message but it throws an error inside (value) object without error message. It should throw error inside the (error) object with a proper error message
-
-    if (value === "something") {
-        return helpers.error("any.invalid");
-    }
-
-    // Return the value unchanged
-    return value;
-};
-
-
-
 export const LoginSchema = Joi.object({
     email: Joi.string()
         .email({ minDomainSegments: 2, tlds: { allow: ['com', 'net'] } })

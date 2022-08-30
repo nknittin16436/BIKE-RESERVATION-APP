@@ -47,16 +47,20 @@ const Bike = () => {
     filterMode,
     totalBikes,
     isDateFilterAdded,
+    filterName,
+    filterColor,
+    filterLocation,
+    filterRating,
     fromDate,
     toDate,
   } = useSelector((state) => state.bikeReservation);
 
   const dispatch = useDispatch();
-  const [rating, setRating] = useState("0");
-  const [name, setName] = useState("");
-  const [color, setColor] = useState("");
-  const [location, setLocation] = useState("");
-  const [duration, setDuration] = useState([]);
+  const [rating, setRating] = useState(filterRating);
+  const [name, setName] = useState(filterName);
+  const [color, setColor] = useState(filterColor);
+  const [location, setLocation] = useState(filterLocation);
+  const [duration, setDuration] = useState();
   const [isModalVisible, setIsModalVisible] = useState(false);
   const [addBikeName, setAddBikeName] = useState("");
   const [addBikeColor, setAddBikeColor] = useState("");
@@ -137,6 +141,10 @@ const Bike = () => {
       dispatch({ type: "filterMode", payload: true });
       dispatch({ type: "toDate", payload: duration[1] });
       dispatch({ type: "fromDate", payload: duration[0] });
+      dispatch({ type: "filterName", payload: name });
+      dispatch({ type: "filterColor", payload: color });
+      dispatch({ type: "filterLocation", payload: location });
+      dispatch({ type: "filterRating", payload: rating });
       const data = await getFilteredBikes({
         name,
         location,
@@ -168,7 +176,11 @@ const Bike = () => {
     form.resetFields();
     dispatch({ type: "filterMode", payload: false });
     dispatch({ type: "isDateFilterAdded", payload: false });
-    setDuration(['','']);
+    dispatch({ type: "filterName", payload: "" });
+    dispatch({ type: "filterColor", payload: "" });
+    dispatch({ type: "filterLocation", payload: "" });
+    dispatch({ type: "filterRating", payload: "0" });
+    setDuration(["", ""]);
     setName("");
     setColor("");
     setLocation("");
@@ -253,10 +265,10 @@ const Bike = () => {
                       <Form.Item name="date" label="Duration">
                         <RangePicker
                           showTime
-                          // defaultValue={[
-                          //   moment(fromDate, "YYYY-MM-DD H:mm:ss"),
-                          //   moment(toDate, "YYYY-MM-DD H:mm:ss"),
-                          // ]}
+                          value={[
+                            moment(fromDate, "YYYY-MM-DD H:mm:ss"),
+                            moment(toDate, "YYYY-MM-DD H:mm:ss"),
+                          ]}
                           onChange={handleChange}
                           disabledDate={(current) => {
                             return moment().add(-1, "days") >= current;
