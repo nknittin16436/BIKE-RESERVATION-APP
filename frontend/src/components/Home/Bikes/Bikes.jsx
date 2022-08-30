@@ -60,7 +60,7 @@ const Bike = () => {
   const [name, setName] = useState(filterName);
   const [color, setColor] = useState(filterColor);
   const [location, setLocation] = useState(filterLocation);
-  const [duration, setDuration] = useState();
+  const [duration, setDuration] = useState([fromDate,toDate]);
   const [isModalVisible, setIsModalVisible] = useState(false);
   const [addBikeName, setAddBikeName] = useState("");
   const [addBikeColor, setAddBikeColor] = useState("");
@@ -173,7 +173,8 @@ const Bike = () => {
   };
 
   const handleRemoveFilter = () => {
-    form.resetFields();
+    dispatch({ type: "toDate", payload: "0" });
+    dispatch({ type: "fromDate", payload: "0" });
     dispatch({ type: "filterMode", payload: false });
     dispatch({ type: "isDateFilterAdded", payload: false });
     dispatch({ type: "filterName", payload: "" });
@@ -184,8 +185,9 @@ const Bike = () => {
     setName("");
     setColor("");
     setLocation("");
-    setRating(0);
+    setRating("0");
     console.log(duration);
+    form.resetFields();
   };
 
   return (
@@ -263,17 +265,24 @@ const Bike = () => {
                   <Space direction="vertical" size="large">
                     <Form form={form}>
                       <Form.Item name="date" label="Duration">
-                        <RangePicker
-                          showTime
-                          value={[
-                            moment(fromDate, "YYYY-MM-DD H:mm:ss"),
-                            moment(toDate, "YYYY-MM-DD H:mm:ss"),
-                          ]}
-                          onChange={handleChange}
-                          disabledDate={(current) => {
-                            return moment().add(-1, "days") >= current;
-                          }}
-                        />
+                        {isDateFilterAdded ? (
+                          <RangePicker
+                            showTime
+                            defaultValue={[moment(fromDate), moment(toDate)]}
+                            onChange={handleChange}
+                            disabledDate={(current) => {
+                              return moment().add(-1, "days") >= current;
+                            }}
+                          />
+                        ) : (
+                          <RangePicker
+                            showTime
+                            onChange={handleChange}
+                            disabledDate={(current) => {
+                              return moment().add(-1, "days") >= current;
+                            }}
+                          />
+                        )}
                       </Form.Item>
                     </Form>
                   </Space>
