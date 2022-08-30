@@ -2,7 +2,16 @@ import React, { useState, useEffect } from "react";
 import "antd/dist/antd";
 import "../../../index.css";
 import Pagination from "react-js-pagination";
-import { Layout, Input, Space, DatePicker, Button, Select, Modal } from "antd";
+import {
+  Layout,
+  Input,
+  Space,
+  DatePicker,
+  Button,
+  Select,
+  Modal,
+  Form,
+} from "antd";
 import BikeCard from "./BikeCard";
 import { createTheme, Grid } from "@mui/material";
 import {
@@ -32,10 +41,15 @@ const theme = createTheme({
   },
 });
 
-const Bike = ({}) => {
-  const { isManager, filterMode, totalBikes, isDateFilterAdded } = useSelector(
-    (state) => state.bikeReservation
-  );
+const Bike = () => {
+  const {
+    isManager,
+    filterMode,
+    totalBikes,
+    isDateFilterAdded,
+    fromDate,
+    toDate,
+  } = useSelector((state) => state.bikeReservation);
 
   const dispatch = useDispatch();
   const [rating, setRating] = useState("0");
@@ -52,6 +66,7 @@ const Bike = ({}) => {
   const [bikes, setBikes] = useState([]);
   const [loading, setLoading] = useState(false);
   const alert = useAlert();
+  const [form] = Form.useForm();
 
   const handleSubmitAddBike = async () => {
     try {
@@ -117,9 +132,11 @@ const Bike = ({}) => {
   };
 
   const handleFilterSubmit = async () => {
-    console.log(name, location, color, rating,"DURATION", duration);
+    console.log(name, location, color, rating, "DURATION", duration);
     try {
       dispatch({ type: "filterMode", payload: true });
+      dispatch({ type: "toDate", payload: duration[1] });
+      dispatch({ type: "fromDate", payload: duration[0] });
       const data = await getFilteredBikes({
         name,
         location,
@@ -148,9 +165,10 @@ const Bike = ({}) => {
   };
 
   const handleRemoveFilter = () => {
+    form.resetFields();
     dispatch({ type: "filterMode", payload: false });
     dispatch({ type: "isDateFilterAdded", payload: false });
-    handleChange();
+    setDuration(['','']);
     setName("");
     setColor("");
     setLocation("");
@@ -231,14 +249,21 @@ const Bike = ({}) => {
                   <br />
                   <br />
                   <Space direction="vertical" size="large">
-                    Duration :{" "}
-                    <RangePicker
-                      showTime
-                      onChange={handleChange}
-                      disabledDate={(current) => {
-                        return moment().add(-1, "days") >= current;
-                      }}
-                    />
+                    <Form form={form}>
+                      <Form.Item name="date" label="Duration">
+                        <RangePicker
+                          showTime
+                          // defaultValue={[
+                          //   moment(fromDate, "YYYY-MM-DD H:mm:ss"),
+                          //   moment(toDate, "YYYY-MM-DD H:mm:ss"),
+                          // ]}
+                          onChange={handleChange}
+                          disabledDate={(current) => {
+                            return moment().add(-1, "days") >= current;
+                          }}
+                        />
+                      </Form.Item>
+                    </Form>
                   </Space>
                   <br />
                   <br />

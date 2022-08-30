@@ -8,11 +8,12 @@ const initialState = {
     isManager: false,
     loggedInUser: {},
     page: 1,
-    isDateFilterAdded:false,
-    reservations:[],
-    totalBikes:0,
-    filterMode:false
-
+    isDateFilterAdded: false,
+    reservations: [],
+    totalBikes: 0,
+    filterMode: false,
+    fromDate: '',
+    toDate: ''
 };
 
 export const bikeReservationReducer = createReducer(initialState, {
@@ -57,5 +58,11 @@ export const bikeReservationReducer = createReducer(initialState, {
     },
     filterMode: (state, action) => {
         state.filterMode = action.payload
+    },
+    fromDate: (state, action) => {
+        state.fromDate = action.payload
+    },
+    toDate: (state, action) => {
+        state.toDate = action.payload
     },
 })
