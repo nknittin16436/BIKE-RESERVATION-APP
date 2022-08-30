@@ -131,12 +131,12 @@ const Bike = () => {
   }, [currentPage, filterMode, isDateFilterAdded]);
 
   const handleChange = (date, dateString) => {
-    console.log(date, dateString);
+    // console.log(date, dateString);
     setDuration(dateString);
   };
 
   const handleFilterSubmit = async () => {
-    console.log(name, location, color, rating, "DURATION", duration);
+    // console.log(name, location, color, rating, "DURATION", duration);
     try {
       dispatch({ type: "filterMode", payload: true });
       dispatch({ type: "toDate", payload: duration[1] });
@@ -186,7 +186,7 @@ const Bike = () => {
     setColor("");
     setLocation("");
     setRating("0");
-    console.log(duration);
+    // console.log(duration);
     form.resetFields();
   };
 

@@ -92,7 +92,7 @@ export class UserService {
 
 
     async updateUser(id: string, name: string, email: string, role: string): Promise<any> {
-        console.log(name, email, role);
+        // console.log(name, email, role);
         try {
             const insensitiveEmail = email.slice(0, email.indexOf("@")).toLowerCase() +
                 email.slice(email.indexOf("@"));
@@ -133,7 +133,7 @@ export class UserService {
 
         } catch (error) {
 
-            console.log(error)
+            // console.log(error)
             if (error.errno === 19) {
 
                 throw new HttpException("Email already Exist", 400);

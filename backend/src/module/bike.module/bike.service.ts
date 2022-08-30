@@ -76,7 +76,7 @@ export class BikeService {
             if (query.fromDate && query.toDate) {
                 bikes = bikes.filter((bike) => {
                     let reservations = bike.reservations;
-                    console.log(bike.name, reservations)
+                    // console.log(bike.name, reservations)
                     reservations = reservations.filter(reservation => reservation.status === true)
                     if (reservations.length === 0) {
                         return true;
@@ -85,11 +85,11 @@ export class BikeService {
                     for (const reservation of reservations) {
 
                         if (query.fromDate < reservation.fromDate && query.toDate < reservation.fromDate) {
-                            console.log("1");
+                            // console.log("1");
                             trueCount++;
                         }
                         if ((query.fromDate > reservation.fromDate) && (query.fromDate > reservation.toDate)) {
-                            console.log("2", query.fromDate, reservation);
+                            // console.log("2", query.fromDate, reservation);
                             trueCount++;
                         }
 
@@ -109,7 +109,7 @@ export class BikeService {
                 });
             }
 
-            console.log(bikes);
+            // console.log(bikes);
             // const filterdBikes = await Bike.createQueryBuilder("bike")
             //     .where(`bike.name like :name`, { name: `${bikeName}` })
             //     .andWhere(`bike.color like :color`, { color: `${bikeColor}` })
@@ -124,7 +124,6 @@ export class BikeService {
     }
 
     async createBike({ name, color, location, isAvailable }): Promise<any> {
-        console.log("9hello");
         try {
             try {
                 await AddBikeSchema.validateAsync({ color: color.trim(), location: location.trim(), name: name.trim(), isAvailable: isAvailable });
@@ -137,11 +136,10 @@ export class BikeService {
             bike.location = location.trim();
             bike.isAvailable = isAvailable;
             await bike.save();
-            console.log("9hello succss");
-            console.log(bike);
+            // console.log(bike);
             return { success: true, statusCode: 201 };
         } catch (error) {
-            console.log(error);
+            // console.log(error);
             throw new HttpException(error, error.status);
 
         }
@@ -149,15 +147,11 @@ export class BikeService {
 
     async updateBike({ id, name, color, location, isAvailable }): Promise<any> {
         try {
-            console.log("try1")
             try {
-                console.log("try2")
                 if (name === "" || name) {
-                    console.log(name);
                     await NameSchema.validateAsync({ name: name.trim() });
                 }
                 if (location === "" || location) {
-                    console.log(location);
                     await LocationSchema.validateAsync({ location: location.trim() });
                 }
                 if (color === "" || color) {
@@ -186,7 +180,6 @@ export class BikeService {
             }
             else throw new HttpException('Unable to update Bike Invalid bike Id', 400);
         } catch (error) {
-            console.log(error)
             throw new HttpException(error, error.status);
 
 
@@ -196,7 +189,6 @@ export class BikeService {
     async deleteBike(id: string): Promise<any> {
         try {
             const bike = await Bike.findOne({ where: { id: id } });
-            console.log(bike)
             if (bike) {
                 await Bike.delete(id);
                 return { success: true, statusCode: 200 }
