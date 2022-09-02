@@ -45,10 +45,16 @@ const Login = () => {
       });
       if (res.success) {
         localStorage.setItem("bike-user", res.accessToken);
+        localStorage.setItem("bike-user-loggedIn", true);
         dispatch({ type: "isAuthenticated", payload: true });
         dispatch({ type: "loggedInUser", payload: res.user });
         if (res.user.role === "manager") {
+          localStorage.setItem("bike-user-role", true);
           dispatch({ type: "isManager", payload: true });
+        }
+        if (res.user.role === "regular") {
+          localStorage.setItem("bike-user-role", false);
+          dispatch({ type: "isManager", payload: false });
         }
         alert.show(`Welcome ${res.user.name}`);
         navigate("/");

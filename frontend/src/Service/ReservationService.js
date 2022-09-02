@@ -1,5 +1,5 @@
 import axios from "axios";
-// const url= "https://restaurant-review-nand-kumar.herokuapp.com";
+import jwt_decode from "jwt-decode";
 const url = "http://localhost:5000";
 
 
@@ -38,15 +38,16 @@ export const createBikeReservation = async ({ bikeId, fromDate, toDate }) => {
     }
 }
 
-export const getUserReservations = async (userId) => {
+export const getUserReservations = async () => {
     const token = localStorage.getItem('bike-user');
+    const decoded = jwt_decode(token);
+    const userId = decoded.id;
 
     try {
         const res = await axios.get(`${url}/reservations/user?userId=${userId}`, {
             headers: { authtoken: token }
         });
         // console.log(res);
-
         return res.data;
 
     } catch (error) {

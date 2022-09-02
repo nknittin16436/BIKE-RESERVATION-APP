@@ -3,7 +3,6 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 
 import Login from './components/Auth/SignIn';
 import {
-  BrowserRouter,
   Routes,
   Route,
 } from "react-router-dom";
@@ -23,22 +22,31 @@ import AllReservation from './components/Reservation/AllReservations';
 import ForbiddenAccess from './components/ProtectedRoute/Forbidden';
 import AdminRoute from './components/ProtectedRoute/AdminRoute';
 import LoggedIn from './components/ProtectedRoute/LoggedInRoute';
-import { useSelector } from 'react-redux'
 
 const App = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
-  const { loggedInUser } = useSelector((state) => state.bikeReservation)
+  const isAuthenticated = localStorage.getItem("bike-user-loggedIn");
+  const isManager = localStorage.getItem("bike-user-role");
+  console.log(isAuthenticated, "isAuthenticated", isManager)
   const getLoggedInUser = async () => {
     const token = localStorage.getItem('bike-user');
     if (token) {
-      const data = await getUserDetails(token);
-      dispatch({ type: "loggedInUser", payload: data.user });
-      if (data.user.role === "manager") {
-        dispatch({ type: "isManager", payload: true });
 
+      try {
+        const data = await getUserDetails(token);
+        if (data.success) {
+
+          dispatch({ type: "isAuthenticated", payload: true });
+          dispatch({ type: "loggedInUser", payload: data.user });
+          if (data.user.role === "manager") {
+            dispatch({ type: "isManager", payload: true });
+          }
+        }
+        console.log(data);
+      } catch (error) {
+        alert.show(error.message);
       }
-      console.log(data);
     }
     else {
       navigate('/login')
@@ -48,22 +56,30 @@ const App = () => {
 
   useEffect(() => {
     getLoggedInUser();
-  }, []);
+  }, [isAuthenticated]);
 
   return (
     <div>
-      {loggedInUser && loggedInUser.name && <Navbar />}
+      {isAuthenticated && <Navbar />}
       <Routes>
         <Route path="/login" element={<Login />} />
         <Route path="/register" element={<SignUp />} />
-        <Route path="/" element={<LoggedIn element={<Home />} />} />
-        <Route path="/home" element={<LoggedIn element={<Home />} />} />
-        <Route path="/bikes" element={<LoggedIn element={<Bike />} />} />
-        <Route path="/users" element={<AdminRoute element={<Users />} />} />
-        <Route path="/reservations" element={<AdminRoute element={<AllReservation />} />} />
-        <Route path="/reservation" element={<LoggedIn element={<Reservation />} />} />
-        <Route path="/reservations/bike" element={<AdminRoute element={<BikeReservation />} />} />
-        <Route path="/reservations/user" element={<AdminRoute element={<UserReservation />} />} />
+
+        <Route element={<LoggedIn isAuthenticated={isAuthenticated === "true" ? true : false} />} >
+          <Route path="/bikes" element={<Bike />} />
+          <Route path="" element={<Home />} />
+          <Route path="/home" element={<Home />} />
+          <Route path="/reservation" element={<Reservation />} />
+        </Route>
+
+        <Route element={<AdminRoute isAuthenticated={isAuthenticated === "true" ? true : false} isManager={isManager === "true" ? true : false} />} >
+          <Route path="/users" element={<Users />} />
+          <Route path="/reservations" element={<AllReservation />} />
+          <Route path="/reservations/bike" element={<BikeReservation />} />
+          <Route path="/reservations/user" element={<UserReservation />} />
+        </Route>
+
+
         <Route path="/forbidden" element={<ForbiddenAccess />} />
       </Routes>
     </div>

@@ -1,13 +1,13 @@
-import { Navigate } from "react-router-dom";
-import { useSelector } from "react-redux";
+import { Navigate, Outlet } from "react-router-dom";
 
-const LoggedIn = ({ element }) => {
-  const { loggedInUser } = useSelector((state) => state.bikeReservation);
-  const token = localStorage.getItem("bike-user");
-  if (loggedInUser) {
-    return element;
+const LoggedIn = ({ isAuthenticated }) => {
+  if (!isAuthenticated) {
+    console.log('Regular not authenticated');
+    return <Navigate to="/login" />;
+    
   }
-  return <Navigate to="/login" replace={true} />;
+  console.log('Regular success');
+  return <Outlet />;
 };
 
 export default LoggedIn;

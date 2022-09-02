@@ -48,6 +48,9 @@ const Navbar = () => {
   const handleClickLogout = () => {
     handleCloseNavMenu();
     localStorage.removeItem("bike-user");
+    localStorage.removeItem("bike-user-role");
+    localStorage.removeItem("bike-user-loggedIn");
+    dispatch({ type: "isAuthenticated", payload: false });
     dispatch({ type: "loggedInUser", payload: {} });
     dispatch({ type: "isManager", payload: false });
 
