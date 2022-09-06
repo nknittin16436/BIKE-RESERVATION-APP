@@ -20,7 +20,6 @@ export class BikeService {
                     }
                 });
             }
-
             if (user.role === "regular") {
                 var bikes = await Bike.find();
                 bikes = bikes.filter((bike) => bike.isAvailable === true)
@@ -170,7 +169,6 @@ export class BikeService {
                 }
             });
             if (bike) {
-
                 await Bike.update(id, { name: name.trim(), color: color.trim(), location: location.trim(), isAvailable });
                 const reservations = bike.reservations;
                 for (const reservation of reservations) {

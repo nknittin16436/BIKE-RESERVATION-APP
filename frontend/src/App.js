@@ -28,7 +28,7 @@ const App = () => {
   const dispatch = useDispatch();
   const isAuthenticated = localStorage.getItem("bike-user-loggedIn");
   const isManager = localStorage.getItem("bike-user-role");
-  console.log(isAuthenticated, "isAuthenticated", isManager)
+  // console.log(isAuthenticated, "isAuthenticated", isManager)
   const getLoggedInUser = async () => {
     const token = localStorage.getItem('bike-user');
     if (token) {
@@ -43,7 +43,7 @@ const App = () => {
             dispatch({ type: "isManager", payload: true });
           }
         }
-        console.log(data);
+        // console.log(data);
       } catch (error) {
         alert.show(error.message);
       }
