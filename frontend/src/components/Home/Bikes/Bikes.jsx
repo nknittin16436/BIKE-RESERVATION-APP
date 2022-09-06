@@ -60,7 +60,7 @@ const Bike = () => {
   const [name, setName] = useState(filterName);
   const [color, setColor] = useState(filterColor);
   const [location, setLocation] = useState(filterLocation);
-  const [duration, setDuration] = useState([fromDate,toDate]);
+  const [duration, setDuration] = useState([fromDate, toDate]);
   const [isModalVisible, setIsModalVisible] = useState(false);
   const [addBikeName, setAddBikeName] = useState("");
   const [addBikeColor, setAddBikeColor] = useState("");
@@ -159,8 +159,10 @@ const Bike = () => {
         alert.show("No bikes Found For Given Filter");
       }
       setBikes(data.bikes);
-
+      console.log(duration);
       if (duration.length === 0) {
+        dispatch({ type: "isDateFilterAdded", payload: false });
+      } else if (duration[0] === "0" && duration[1] === "0") {
         dispatch({ type: "isDateFilterAdded", payload: false });
       } else if (duration[0] !== "" && duration[1] !== "") {
         dispatch({ type: "isDateFilterAdded", payload: true });

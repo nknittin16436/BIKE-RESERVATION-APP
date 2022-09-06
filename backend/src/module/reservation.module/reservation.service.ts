@@ -51,10 +51,13 @@ export class ReservationService {
                 throw new HttpException('Invalid User', 400);
             }
 
+            if (!fromDate || !toDate) {
+                throw new HttpException('Enter valid from and to date', 400);
+            }
             if (fromDate < moment(Date.now()).format('YYYY-MM-DD H:mm:ss')) {
                 throw new HttpException('Start date should be greater then current date', 400);
             }
-            if (fromDate < moment(Date.now()).format('YYYY-MM-DD H:mm:ss') || fromDate > toDate) {
+            if ( fromDate > toDate) {
                 throw new HttpException('From date cannot be greater than to date', 400);
             }
             let isReservationAvailable = false;
@@ -141,9 +144,9 @@ export class ReservationService {
                     await Bike.update(reservation.bikeId, { averageRating: averageRating });
                     return { success: true, statusCode: 200 }
                 }
-                else throw new HttpException('Unable to Add Reservation Rating', 400);
+                else throw new HttpException('Unable to Add Reservation Rating You have already rated or cancelled this reservation', 400);
             }
-            else throw new HttpException('Invalid Rating', 400);
+            else throw new HttpException('Invalid Rating :Rating should be between 1 and 5', 400);
 
         } catch (error) {
             throw new HttpException(error, error.status);
@@ -158,7 +161,7 @@ export class ReservationService {
                 await Reservation.delete(id);
                 return { success: true, statusCode: 200 }
             }
-            else throw new HttpException('Unable to delete user', 400);
+            else throw new HttpException('Unable to delete reservation', 400);
         } catch (error) {
             throw new HttpException(error, error.status);
 
