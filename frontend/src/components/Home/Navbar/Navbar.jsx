@@ -53,6 +53,14 @@ const Navbar = () => {
     dispatch({ type: "isAuthenticated", payload: false });
     dispatch({ type: "loggedInUser", payload: {} });
     dispatch({ type: "isManager", payload: false });
+    dispatch({ type: "toDate", payload: "0" });
+    dispatch({ type: "fromDate", payload: "0" });
+    dispatch({ type: "filterMode", payload: false });
+    dispatch({ type: "isDateFilterAdded", payload: false });
+    dispatch({ type: "filterName", payload: "" });
+    dispatch({ type: "filterColor", payload: "" });
+    dispatch({ type: "filterLocation", payload: "" });
+    dispatch({ type: "filterRating", payload: "0" });
 
     navigate("login");
   };

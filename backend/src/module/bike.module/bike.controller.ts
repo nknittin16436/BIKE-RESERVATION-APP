@@ -38,10 +38,4 @@ export class BikeController {
         return this.bikeService.deleteBike(id);
     }
 
-
-    // @Get('/info')
-    // getUser(@Headers('authtoken') token:string): any {
-    //     return this.bikeService.getUser(token);
-    // }
-
 }

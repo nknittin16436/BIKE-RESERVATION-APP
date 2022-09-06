@@ -146,9 +146,9 @@ const Bike = () => {
       dispatch({ type: "filterLocation", payload: location });
       dispatch({ type: "filterRating", payload: rating });
       const data = await getFilteredBikes({
-        name,
-        location,
-        color,
+        name: name.trim(),
+        location: location.trim(),
+        color: color.trim(),
         rating,
         fromDate: duration[0],
         toDate: duration[1],

@@ -4,6 +4,7 @@ import { User } from 'src/db/entities/user.entity';
 import { AddBikeSchema, BikeStatusSchema, ColorSchema, LocationSchema, NameSchema } from 'src/JoiSchema/joiSchema';
 import * as jwt from 'jsonwebtoken';
 import { Reservation } from 'src/db/entities/reservation.entity';
+import * as  moment from 'moment';
 const pageSize = 5;
 @Injectable()
 export class BikeService {
@@ -72,6 +73,15 @@ export class BikeService {
 
                 bikes = bikes.filter(bike => bike.location.toLowerCase().includes(query.location.toLowerCase()));
             }
+            if (!query.fromDate || !query.toDate) {
+                throw new HttpException('Enter valid from and to date', 400);
+            }
+            if (query.fromDate < moment(Date.now()).format('YYYY-MM-DD H:mm:ss')) {
+                throw new HttpException('Start date should be greater then current date', 400);
+            }
+            if (query.fromDate > query.toDate) {
+                throw new HttpException('From date cannot be greater than to date', 400);
+            }
             if (query.fromDate && query.toDate) {
                 bikes = bikes.filter((bike) => {
                     let reservations = bike.reservations;
@@ -117,6 +127,7 @@ export class BikeService {
             // console.log(filterdBikes);
             return { bikes, totalBikes, success: true }
         } catch (error) {
+            console.log(error)
             throw new HttpException(error, error.status);
 
         }
