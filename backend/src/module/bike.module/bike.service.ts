@@ -73,14 +73,22 @@ export class BikeService {
 
                 bikes = bikes.filter(bike => bike.location.toLowerCase().includes(query.location.toLowerCase()));
             }
-            if (!query.fromDate || !query.toDate) {
-                throw new HttpException('Enter valid from and to date', 400);
-            }
-            if (query.fromDate < moment(Date.now()).format('YYYY-MM-DD H:mm:ss')) {
-                throw new HttpException('Start date should be greater then current date', 400);
-            }
-            if (query.fromDate > query.toDate) {
-                throw new HttpException('From date cannot be greater than to date', 400);
+            if (query.fromDate || query.toDate) {
+                if (!query.fromDate || !moment(query.fromDate, 'YYYY-MM-DD H:mm:ss').isValid()) {
+                    throw new HttpException('Enter valid from date', 400);
+                }
+                if (!query.toDate || !moment(query.toDate, 'YYYY-MM-DD H:mm:ss', true).isValid()) {
+                    throw new HttpException('Enter valid to date', 400);
+                }
+                if (!query.fromDate || !query.toDate) {
+                    throw new HttpException('Enter valid from and to date', 400);
+                }
+                if (query.fromDate < moment(Date.now()).format('YYYY-MM-DD H:mm:ss')) {
+                    throw new HttpException('Start date should be greater then current date', 400);
+                }
+                if (query.fromDate > query.toDate) {
+                    throw new HttpException('From date cannot be greater than to date', 400);
+                }
             }
             if (query.fromDate && query.toDate) {
                 bikes = bikes.filter((bike) => {
@@ -94,11 +102,9 @@ export class BikeService {
                     for (const reservation of reservations) {
 
                         if (query.fromDate < reservation.fromDate && query.toDate < reservation.fromDate) {
-                            // console.log("1");
                             trueCount++;
                         }
                         if ((query.fromDate > reservation.fromDate) && (query.fromDate > reservation.toDate)) {
-                            // console.log("2", query.fromDate, reservation);
                             trueCount++;
                         }
 
