@@ -4,12 +4,13 @@ import * as jwt from 'jsonwebtoken';
 import * as bcrypt from 'bcryptjs';
 import { EmailSchema, LoginSchema, NameSchema, RoleSchema, SignUpSchema } from 'src/JoiSchema/joiSchema';
 import { Reservation } from 'src/db/entities/reservation.entity';
-
+import { CreateUser, GetUser, GetUsers, Login, LoginUser, Success, UpdateUser } from 'src/dtos/user.dto';
+import { validateUpdateUserData } from 'src/dtos/UtilityFunctions';
 
 @Injectable()
 export class UserService {
 
-    async getAllUsers(): Promise<any> {
+    async getAllUsers(): Promise<GetUsers> {
         try {
             const users = await User.find({
                 relations: {
@@ -22,7 +23,7 @@ export class UserService {
         }
     }
 
-    async getUser(token: string): Promise<any> {
+    async getUser(token: string): Promise<GetUser> {
         try {
             var decoded = jwt.verify(token, 'bikeReservation');
             const userId = decoded.id;
@@ -30,7 +31,7 @@ export class UserService {
 
             if (user) {
                 delete user.password;
-                return { user, success: true, statusCode: 200 }
+                return { user, success: true }
             }
             else throw new HttpException('User does not exist', 400);
         } catch (error) {
@@ -39,49 +40,49 @@ export class UserService {
     }
 
 
-    async createUser(name: string, email: string, password: string, confirmPassword): Promise<any> {
+    async createUser(createUserData: CreateUser): Promise<Success> {
         try {
-            const insensitiveEmail = email.slice(0, email.indexOf("@")).toLowerCase() +
-                email.slice(email.indexOf("@"));
+            const insensitiveEmail = createUserData.email.slice(0, createUserData.email.indexOf("@")).toLowerCase() +
+                createUserData.email.slice(createUserData.email.indexOf("@"));
             const isUser = await User.findOne({ where: { email: insensitiveEmail } });
             if (isUser) {
                 throw new HttpException('Email already Exist', 400);
             }
             try {
 
-                await SignUpSchema.validateAsync({ email: insensitiveEmail, password: password, confirmPassword: confirmPassword, name: name });
+                await SignUpSchema.validateAsync({ email: insensitiveEmail, password: createUserData.password, confirmPassword: createUserData.confirmPassword, name: createUserData.name });
             } catch (error) {
                 throw new HttpException(error.message, 400);
 
             }
             const user = new User();
-            user.name = name.trim();
+            user.name = createUserData.name.trim();
             user.email = insensitiveEmail;
-            const hashedPassword = await bcrypt.hashSync(password, 10);
+            const hashedPassword = await bcrypt.hashSync(createUserData.password, 10);
             user.password = hashedPassword;
             await user.save();
-            return { success: true, statusCode: 201 };
+            return { success: true };
         } catch (error) {
             throw new HttpException(error, error.status);
         }
     }
 
 
-    async doUserLogin(email: string, password: string): Promise<any> {
+    async doUserLogin(loginData: LoginUser): Promise<Login> {
         try {
-            const insensitiveEmail = email.slice(0, email.indexOf("@")).toLowerCase() +
-                email.slice(email.indexOf("@"));
+            const insensitiveEmail = loginData.email.slice(0, loginData.email.indexOf("@")).toLowerCase() +
+                loginData.email.slice(loginData.email.indexOf("@"));
             try {
-                await LoginSchema.validateAsync({ email: insensitiveEmail, password: password });
+                await LoginSchema.validateAsync({ email: insensitiveEmail, password: loginData.password });
             } catch (error) {
                 throw new HttpException(error.message, 400);
 
             }
             const user = await User.findOne({ where: { email: insensitiveEmail } });
-            if (user && bcrypt.compareSync(password, user.password)) {
+            if (user && bcrypt.compareSync(loginData.password, user.password)) {
                 const token = jwt.sign({ id: user.id, time: Date.now() }, 'bikeReservation', { expiresIn: '24h' });
                 delete user.password;
-                return { user, accessToken: token, success: true, statusCode: 200 };
+                return { user, accessToken: token, success: true };
             }
             else throw new HttpException('Invalid email or password', 400);
         } catch (error) {
@@ -91,63 +92,48 @@ export class UserService {
 
 
 
-    async updateUser(id: string, name: string, email: string, role: string): Promise<any> {
-        // console.log(name, email, role);
+    async updateUser(id: string, updateUserData: UpdateUser): Promise<Success> {
+        console.log("Data", updateUserData);
+        const { name, role } = updateUserData
         try {
-            const insensitiveEmail = email.slice(0, email.indexOf("@")).toLowerCase() +
-                email.slice(email.indexOf("@"));
-
-            try {
-                if (name === "" || name) {
-                    await NameSchema.validateAsync({ name: name });
-                }
-                if (email === "" || email) {
-                    await EmailSchema.validateAsync({ email: insensitiveEmail });
-                }
-                if (role === "" || role) {
-                    await RoleSchema.validateAsync({ role: role });
-
-                }
-            } catch (error) {
-                throw new HttpException(error.message, 400);
-
+            if (updateUserData.email) {
+                var email = updateUserData.email.slice(0, updateUserData.email.indexOf("@")).toLowerCase() +
+                    updateUserData.email.slice(updateUserData.email.indexOf("@"));
             }
+            console.log("Before call")
+            await validateUpdateUserData(updateUserData);
+            console.log("After call")
             const user = await User.findOne({
                 where: { id: id }, relations: {
                     reservations: true,
                 }
             });
             if (user) {
-                await User.update(id, { name, email: insensitiveEmail, role });
-
-                if (name) {
+                await User.update(id, { name, email, role });
+                if (updateUserData.name) {
                     const reservations = user.reservations;
                     for (const reservation of reservations) {
-                        await Reservation.update(reservation.id, { userName: name.trim() });
+                        await Reservation.update(reservation.id, { userName: updateUserData.name.trim() });
                     }
                 }
-                return { success: true, statusCode: 200 }
+                return { success: true }
             }
             else throw new NotFoundException('User not found');
 
-
         } catch (error) {
-
-            // console.log(error)
             if (error.errno === 19) {
-
                 throw new HttpException("Email already Exist", 400);
             }
-            throw new HttpException(error, error.status);
+            throw new HttpException(error.message, error.status);
         }
     }
 
-    async deleteUser(id: string): Promise<any> {
+    async deleteUser(id: string): Promise<Success> {
         try {
             const user = await User.findOne({ where: { id: id } });
             if (user) {
                 await User.delete(id);
-                return { success: true, statusCode: 200 }
+                return { success: true }
             }
             else throw new HttpException('Unable to delete user', 400);
         } catch (error) {

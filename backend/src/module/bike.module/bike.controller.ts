@@ -1,4 +1,6 @@
 import { Body, Controller, Get, Post, Param, Delete, Patch, UseGuards, Headers, Query } from '@nestjs/common';
+import { CreateBike, FilterQuery, GetBikes, UpdateBike } from 'src/dtos/bike.dto';
+import { Success } from 'src/dtos/user.dto';
 import { AdminGuard } from 'src/guards/admin.guard';
 import { AuthGuard } from 'src/guards/auth.guard';
 import { BikeService } from './bike.service';
@@ -8,33 +10,32 @@ export class BikeController {
 
     @UseGuards(AuthGuard)
     @Get('')
-    getBikes(@Query() query, @Headers() { authtoken }): any {
-        return this.bikeService.getAllBikes({ query, authtoken });
+    getBikes(@Query() query: FilterQuery, @Headers('authtoken') authtoken: string): Promise<GetBikes> {
+        return this.bikeService.getAllBikes(query, authtoken);
     }
 
     @UseGuards(AuthGuard)
     @Get('/filtered')
-    getFilteredBikes(@Query() query, @Headers() { authtoken }): any {
-        return this.bikeService.getAllFilteredBikes({ query, authtoken });
+    getFilteredBikes(@Query() query: FilterQuery, @Headers('authtoken') authtoken: string): Promise<GetBikes> {
+        return this.bikeService.getAllFilteredBikes(query, authtoken);
     }
-
 
 
     @UseGuards(AdminGuard)
     @Post('')
-    createBike(@Body() { name, color, location, isAvailable }): any {
-        return this.bikeService.createBike({ name, color, location, isAvailable });
+    createBike(@Body() createBikeData: CreateBike): Promise<Success> {
+        return this.bikeService.createBike(createBikeData);
     }
 
     @UseGuards(AdminGuard)
     @Patch('/:id')
-    updateBike(@Body() { name, color, location, isAvailable }, @Param('id') id: string): any {
-        return this.bikeService.updateBike({ id, name, color, location, isAvailable });
+    updateBike(@Body() updateBikeData: UpdateBike, @Param('id') id: string): Promise<Success> {
+        return this.bikeService.updateBike(id, updateBikeData);
     }
 
     @UseGuards(AdminGuard)
     @Delete('/:id')
-    deleteUser(@Param('id') id: string): any {
+    deleteUser(@Param('id') id: string): Promise<Success> {
         return this.bikeService.deleteBike(id);
     }
 

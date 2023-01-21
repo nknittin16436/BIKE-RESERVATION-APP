@@ -1,4 +1,6 @@
 import { Body, Controller, Get, Post, Param, Delete, Patch, UseGuards, Headers, Query } from '@nestjs/common';
+import { CreateReservation, GetReservations } from 'src/dtos/reservation.dto';
+import { Success } from 'src/dtos/user.dto';
 import { AdminGuard } from 'src/guards/admin.guard';
 import { AdminRegular } from 'src/guards/adminregular.guard';
 import { AuthGuard } from 'src/guards/auth.guard';
@@ -12,41 +14,41 @@ export class ReservationController {
 
     @UseGuards(AdminGuard)
     @Get('')
-    getReservations(): any {
+    getReservations(): Promise<GetReservations> {
         return this.reservationService.getAllReservations();
     }
     @UseGuards(UserReservationGuard)
     @Get('/user')
-    getUserReservations(@Query('userId') userId: string): any {
+    getUserReservations(@Query('userId') userId: string): Promise<GetReservations> {
         return this.reservationService.getAllUserReservations(userId);
     }
-   @UseGuards(AdminGuard)
+    @UseGuards(AdminGuard)
     @Get('/bike')
-    getBikeReservations(@Query('bikeId') bikeId: string): any {
+    getBikeReservations(@Query('bikeId') bikeId: string): Promise<GetReservations> {
         return this.reservationService.getAllBikeReservations(bikeId);
     }
 
 
     @UseGuards(AuthGuard)
     @Post('')
-    createReservation(@Body() { bikeId, fromDate, toDate}, @Headers() {authtoken}): any {
-        return this.reservationService.createReservation({ bikeId, fromDate, toDate,authtoken });
+    createReservation(@Body() createReservationData: CreateReservation, @Headers('authtoken') authtoken: string): Promise<Success> {
+        return this.reservationService.createReservation(createReservationData, authtoken);
     }
 
     @UseGuards(AdminRegular)
     @Get('/:id')
-    updateReservation(@Param('id') id: string): any {
+    updateReservation(@Param('id') id: string): Promise<Success> {
         return this.reservationService.updateReservationStatus(id);
     }
     @UseGuards(RatingGuard)
     @Post('/:id')
-    updateReservationRating(@Param('id') id: string, @Body() { rating }): any {
-        return this.reservationService.updateReservationRating({ id, rating });
+    updateReservationRating(@Param('id') id: string, @Body('rating') rating: number): Promise<Success> {
+        return this.reservationService.updateReservationRating(id, rating);
     }
 
     // // @UseGuards(RoleGuard)
     @Delete('/:id')
-    deleteReservation(@Param('id') id: string): any {
+    deleteReservation(@Param('id') id: string): Promise<Success> {
         return this.reservationService.deleteReservation(id);
     }
 
