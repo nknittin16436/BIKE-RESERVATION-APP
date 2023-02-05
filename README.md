@@ -33,9 +33,18 @@ Yay!! you should see the web interface now
 
 
 ## HomeScreen
+
 ![Screenshot (585)](https://user-images.githubusercontent.com/84726597/216817640-7f1d79bb-4c4e-4998-a6f9-7880652f93f5.png)
 
 ## By selecting Valid Date and other filter values You will be able to Book Bikes
+
+![Screenshot (590)](https://user-images.githubusercontent.com/84726597/216818148-e03be79a-6611-412d-826b-0d82dd81e54b.png)
+
+## Bikes are Paginated (will show 5 bikes at a time)
+![Screenshot (591)](https://user-images.githubusercontent.com/84726597/216818149-f520ff18-5d82-4544-a0cb-eb572a50fa1f.png)
+
+
+## If the user is admin it can add, edit or delete bike
 ![Screenshot (586)](https://user-images.githubusercontent.com/84726597/216817641-414a6678-eff5-4d1a-86b5-b715ce36811a.png)
 
 ## User can view , Cancel or Rate its reservations
