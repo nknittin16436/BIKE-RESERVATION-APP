@@ -38,7 +38,7 @@ Yay!! you should see the web interface now
 
 ## By selecting Valid Date and other filter values You will be able to Book Bikes
 
-![Screenshot (590)](https://user-images.githubusercontent.com/84726597/216818148-e03be79a-6611-412d-826b-0d82dd81e54b.png)
+![Screenshot (590)](https://user-images.githubusercontent.com/84726597/222880788-b1d55756-d18c-41e1-852c-4746ff409e3c.png)
 
 ## Bikes are Paginated (will show 5 bikes at a time)
 ![Screenshot (591)](https://user-images.githubusercontent.com/84726597/216818149-f520ff18-5d82-4544-a0cb-eb572a50fa1f.png)
@@ -48,11 +48,11 @@ Yay!! you should see the web interface now
 ![Screenshot (586)](https://user-images.githubusercontent.com/84726597/216817641-414a6678-eff5-4d1a-86b5-b715ce36811a.png)
 
 ## User can view , Cancel or Rate its reservations
-![Screenshot (583)](https://user-images.githubusercontent.com/84726597/216817637-02d7e79e-5db0-4f5b-9c38-b18a7c41733a.png)
+![Screenshot (583)](https://user-images.githubusercontent.com/84726597/222880786-e4cbdcba-b941-4857-a8f9-7882ca18923d.png)
 
 
 ## Admin can Permorm CRUD on all users;
-![Screenshot (584)](https://user-images.githubusercontent.com/84726597/216817639-eaf7bdda-7517-4b8c-b8f4-45465a6cd6f6.png)
+![Screenshot (584)](https://user-images.githubusercontent.com/84726597/222880787-67bc79b1-c2f8-4f00-9a92-9874cd484c1d.png)
 
 ## Admin can see all the reservations .
 ![Screenshot (588)](https://user-images.githubusercontent.com/84726597/216817643-a0a4ca78-59c6-4ad8-ac94-b4bc56fc2979.png)
