@@ -45,7 +45,7 @@ Yay!! you should see the web interface now
 
 
 ## If the user is admin it can add, edit or delete bike
-![Screenshot (586)](https://user-images.githubusercontent.com/84726597/216817641-414a6678-eff5-4d1a-86b5-b715ce36811a.png)
+![Screenshot (586)](https://user-images.githubusercontent.com/84726597/222880783-8da2e2e7-6ee1-4f71-a087-b415b6773a89.png)
 
 ## User can view , Cancel or Rate its reservations
 ![Screenshot (583)](https://user-images.githubusercontent.com/84726597/222880786-e4cbdcba-b941-4857-a8f9-7882ca18923d.png)
